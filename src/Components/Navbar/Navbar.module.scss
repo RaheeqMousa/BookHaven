@@ -1,0 +1,21 @@
+
+header{
+    gap:159px;
+    height: 64px;
+
+    h1{
+        color: var(--mainColor);
+        font-size: 20px;
+        line-height: 28px;
+    }
+
+    div{
+        &:first-of-type{
+            gap: 8px;
+        }
+
+        &:nth-of-type(2){
+            padding: 0px 32px;
+        }
+    }
+}
