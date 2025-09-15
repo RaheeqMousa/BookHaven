@@ -9,7 +9,7 @@
         text-align: center;
 
         span {
-            color: #FFD700;
+            color: var(--gold);
             text-align: center;
         }
     }
@@ -59,7 +59,7 @@
 
 
             button {
-                background-color: #FFD700;
+                background-color: var(--gold);
                 color: var(--mainColor);
                 border: none;
                 font-weight: bold;
@@ -103,12 +103,12 @@
 
         .tag {
             background-color: white;
-            color: #0d1a73;
+            color: var(--mainColor);
             padding: 6px 13px;
             border-radius: 6px;
             font-weight: bold;
-            border: 1px solid #FFD700;
-            color: #FFD700;
+            border: 1px solid var(--gold);
+            color: var(--gold);
         }
 
         @media screen and (max-width:426px) {
@@ -125,7 +125,7 @@
     .stat {
         gap: 8px;
         width: 350px;
-        color: #FFD700;
+        color: var(--gold);
         font-size: 32px;
         
 
