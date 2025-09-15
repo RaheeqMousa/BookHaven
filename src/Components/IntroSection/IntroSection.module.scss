@@ -1,0 +1,152 @@
+.hero {
+    background-color: var(--mainColor);
+    color: white;
+    width: 100%;
+    padding: 64px 0px;
+
+    h1 {
+        font-size: 48px;
+        text-align: center;
+
+        span {
+            color: #FFD700;
+            text-align: center;
+        }
+    }
+
+    .hero-row {
+        gap: 16px;
+    }
+
+    .subtitle {
+        text-align: center;
+        line-height: 27px;
+        max-width: 672px;
+    }
+
+
+
+    .search-field {
+        padding-top: 16px;
+        gap: 16px;
+        justify-content: center;
+        width: 768px;
+        max-width: 768px;
+        p {
+            color: #BEDBFF;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            width: 100%;
+
+            .search-input{
+                margin-left: 8px;
+                flex-grow: 1;
+            input {
+                flex: 1;
+                border: none;
+                font-size: 1rem;
+                width: 90%;
+                height: 56px;
+                
+            }
+        }
+
+
+            button {
+                background-color: #FFD700;
+                color: var(--mainColor);
+                border: none;
+                font-weight: bold;
+                margin-right: 5px;
+                padding: 8px 24px;
+                border-radius: 6px;
+                height: 40px;
+            }
+
+       
+        }     
+        @media screen and (max-width:768px) {
+            width: 100%;
+        }
+
+            .tips {
+        font-size: 14px;
+        line-height: 20px;
+        text-align: center;
+    }
+    }
+}
+
+.tags-container {
+    gap: 8px;
+    justify-content: center;
+    padding-top: 16px;
+
+    p {
+        &:first-of-type {
+            padding-right: 12px;
+        }
+    }
+
+    div:first-of-type {
+        gap: 8px;
+    }
+
+    .tags {
+        gap: 8px;
+
+        .tag {
+            background-color: white;
+            color: #0d1a73;
+            padding: 6px 13px;
+            border-radius: 6px;
+            font-weight: bold;
+            border: 1px solid #FFD700;
+            color: #FFD700;
+        }
+
+        @media screen and (max-width:426px) {
+            justify-content: center;
+        }
+    }
+}
+
+.stats {
+    gap: 32px;
+    padding-top: 32px;
+    flex-wrap: nowrap;
+
+    .stat {
+        gap: 8px;
+        width: 350px;
+        color: #FFD700;
+        font-size: 32px;
+        
+
+        p {
+            font-size: 14px;
+            color: #DBEAFE;
+            
+        }
+
+        @media screen and (max-width:425px) {
+            width: fit-content;
+        }
+    }
+
+    @media screen and (max-width:1200px) {
+        width: 100%;
+    }
+
+    @media screen and (max-width:600px) {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}
+
