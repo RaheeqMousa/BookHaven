@@ -1,0 +1,25 @@
+.feature-books-wrapper{
+
+    padding: 32px 48px;
+    gap:32px;
+    width: 1200px;
+
+    h2{
+        font-size: 32px;
+    }
+
+    .featured-section{
+        display: grid;
+        grid-template-columns: 1fr 4fr ;
+        gap:32px;
+        width: 100%;
+    }
+    .section-intro{
+        gap: 8px;
+        align-items: flex-start;
+        width: 100%;
+        h1, p{
+            text-align: left;
+        }
+    }
+}
