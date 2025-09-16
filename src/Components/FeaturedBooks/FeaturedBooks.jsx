@@ -1,12 +1,14 @@
 import Style from './FeaturedBooks.module.scss';
 import BooksFilter from '../BooksFilter/BooksFilter';
 import axios from 'axios';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import BookList from '../BooksList/BooksList';
 
 function FeatureBooks() {
     const [books,setBooks]=useState([]);
 
-    const filterChange = (apiUrl) => {
+    const filterChange = useCallback((apiUrl) => {
+        console.log(apiUrl);
         try{
             const res= axios.get(apiUrl);
 
@@ -17,8 +19,13 @@ function FeatureBooks() {
         }catch(e){
             console.log(e);
         }
-    }
-    
+    },[books])
+ 
+    useEffect(()=>{
+        filterChange();
+    },[books,filterChange]);
+
+
     return (
         <div className={` container row flex-direction-column ${Style['feature-books-wrapper']}`}>
             <div className={`row flex-direction-column ${Style['section-intro']}`}>
@@ -28,9 +35,7 @@ function FeatureBooks() {
             <section className={`${Style['featured-section']}`}>
                 <BooksFilter filterChange={filterChange} />
 
-                <section>
-
-                </section>
+                <BookList books={books} />
             </section>
         </div>
     );

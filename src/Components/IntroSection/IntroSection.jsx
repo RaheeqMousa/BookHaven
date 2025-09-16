@@ -13,7 +13,7 @@ function IntroSection() {
                     <div className={`row flex-direction-column ${Style['search-field']}`}>
                         <div className={`row ${Style['search-box']}`}>
                             <div className={Style['search-input']}>
-                                <img src={SearchImg}  width={16} height={16}/>
+                                <img src={SearchImg}  width={16} height={16} alt="" title='search icon'/>
                                 <input type="text" placeholder="Search books..." />
                             </div>
                             
@@ -26,7 +26,7 @@ function IntroSection() {
 
                     <div className={`row ${Style['tags-container']}`}>
                         <div className='row'>
-                            <img src={UpsideImg} width={16} height={16} />
+                            <img src={UpsideImg} width={16} height={16} alt='' title='Increasing arrow' />
                             <p>Trending:</p>
                         </div>
 

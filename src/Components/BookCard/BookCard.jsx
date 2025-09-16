@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import Style from './BookCard.module.scss'
 function BookCard(props){
     const {book} = props;
@@ -8,6 +9,7 @@ function BookCard(props){
                 <img 
                     src={book.imageLinks?.thumbnail || book.imageLinks?.smallThumbnail} 
                     alt={book.title} 
+                    title={book.title}  width={168} height={180}
                 />
                 <p>{book.printType}</p>
             </div>
@@ -23,4 +25,16 @@ function BookCard(props){
         </div >
     );
 }
+
+BookCard.PropTypes={
+    book:PropTypes.shape({
+        imageLink: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+        printType: PropTypes.string.isRequired,
+        info: PropTypes.string.isRequired,
+        category: PropTypes.string.isRequired,
+        saleability: PropTypes.string.isRequired,
+        pageCount: PropTypes.number.isRequired,
+    })
+};
 export default BookCard;

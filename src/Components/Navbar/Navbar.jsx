@@ -10,7 +10,7 @@ function Navbar() {
         <header className='row justify-content-center'>
             <div className={`row container ${Style['header-container']}`}>
                 <div className='row'>
-                    <img src='/logo.png' width={32} height={32} />
+                    <img src='/logo.png' width={32} height={32} alt='Book Haven logo' title='Book Haven logo' />
                     <h1>BookHaven</h1>
                 </div>
                 <div className={`row justify-content-center ${Style.search}`}>
@@ -18,13 +18,13 @@ function Navbar() {
                 </div>
                 <div className='row'>
                     <button aria-label='Wishlist button'>
-                        <img src={WishlistImg} width={16} height={16} />
+                        <img src={WishlistImg} width={16} height={16} alt='Wishlist button' title='Wishlist button' />
                     </button>
                     <button aria-label='Cart button'>
-                        <img src={CartImg} width={16} height={16} />
+                        <img src={CartImg} width={16} height={16}alt='Cart button' title='Cart button' />
                     </button>
                     <button aria-label='profile button'>
-                        <img src={ProfileImg} width={16} height={16} />
+                        <img src={ProfileImg} width={16} height={16} alt='profile button' title='profile button'/>
                     </button>
                 </div>
             </div>
