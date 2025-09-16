@@ -30,7 +30,7 @@ select {
         background: none;
         cursor: pointer;
     &.clear-all{
-        color: #666666;
+        color: var(--gray);
     }
 }
 
