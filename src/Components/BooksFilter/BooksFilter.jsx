@@ -5,16 +5,11 @@ import { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 
 function BooksFilter(props) {
-    const { filterChange } = props;
+    const { filterChange,handleFilterChange,setSelectedFilters,selectedFilters } = props;
 
     const BASE_URL = import.meta.env.VITE_API_BASE_URL;
     const API_KEY = import.meta.env.VITE_API_KEY;
 
-    const [selectedFilters, setSelectedFilters] = useState({
-        Categories: [],
-        Language: "",
-        'Price Range': { min: "", max: "" }
-    });
     const [expandedCategories, setExpandedCategories] = useState({});
 
     const toggleCategory = (title) => {
@@ -33,55 +28,10 @@ function BooksFilter(props) {
         
         setSelectedFilters(defaultFilters);
 
-        let apiUrl = `${BASE_URL}/books/v1/volumes?q=search+terms&key=${API_KEY}`;
-        if (filterChange) filterChange(apiUrl);
-    },[filterChange, API_KEY, BASE_URL]);
+        let apiUrl = `${BASE_URL}/books/v1/volumes?q=search+terms$maxResults=20&key=${API_KEY}`;
+        if (filterChange) filterChange(0,apiUrl);
+    },[filterChange, API_KEY, BASE_URL,setSelectedFilters]);
 
-    const handleFilterChange = useCallback((category, value,field) =>
-        () => {
-            setSelectedFilters((val) => {
-                let newFilters;
-                const current = val[category];
-                if (Array.isArray(current)) {
-                    if (current.includes(value)) {
-                        newFilters = { ...val, [category]: current.filter(v => v !== value) };
-                    } else {
-                        newFilters = { ...val, [category]: [...current, value] };
-                    }
-                }else if (typeof current === "object" && current !== null) {
-        newFilters = {
-          ...val,
-          [category]: { ...current, [field]: value },
-        };
-
-      } else {
-                    newFilters = { ...val, [category]: value };
-                }
-
-
-                let apiUrl = `${BASE_URL}/books/v1/volumes?q=search+terms&key=${API_KEY}`;
-
-                Object.entries(newFilters).forEach(([key, val]) => {
-                    if (key === "Price Range") {
-                        if (val.min) apiUrl += `&minPrice=${val.min}`;
-                        if (val.max) apiUrl += `&maxPrice=${val.max}`;
-
-                    } else if (Array.isArray(val)) {
-                        val.forEach((v) => {
-                            apiUrl += `&${key}=${encodeURIComponent(v)}`
-                        });
-                    } else if (val)
-                        apiUrl += `&${key}=${val}`;
-                });
-
-                if (filterChange) filterChange(apiUrl);
-
-                return newFilters;
-
-            });
-
-
-        }, [filterChange, BASE_URL, API_KEY]);
 
 
     return (
@@ -124,7 +74,7 @@ function BooksFilter(props) {
                                         {category.filterby.map((f) => (
                                             <div className={`row ${Style.price}`} key={`${category.title}-${f}`}>
                                                 <label htmlFor={f}>{f}</label>
-                                                <input min={0} type='number' name={f} value={selectedFilters["Price Range"][f] || ""} onChange={(e) => handleFilterChange(category.title, e.target.value, `${f}`)()} />
+                                                <input min={0} type='number' name={f} value={selectedFilters["Price Range"][f] || ""} onChange={(e) => handleFilterChange(category.name, e.target.value, `${f}`)()} />
                                             </div>
                                         ))}
                                     </>
@@ -134,12 +84,12 @@ function BooksFilter(props) {
                                         <div className={`row align-start flex-direction-column ${Style.options}`}>
                                             <select
                                                 name={category.title}
-                                                onChange={(e) => handleFilterChange(category.title, e.target.value)()}
+                                                onChange={(e) => handleFilterChange(category.name, e.target.value)()}
                                                 value={selectedFilters[category.title] || ""}
                                             >
-                                                {category.filterby.map((f) => (
-                                                    <option key={f} value={f}>
-                                                        {f}
+                                                {category.filterby.map((f,i) => (
+                                                    <option key={i} value={typeof f === "object" ? f.value : f}>
+                                                        {typeof f === "object" ? f.label : f}
                                                     </option>
                                                 ))}
                                             </select>
@@ -152,22 +102,22 @@ function BooksFilter(props) {
                                                         <input
                                                             type="checkbox"
                                                             name={category.title}
-                                                            onChange={handleFilterChange(category.title, f)}
-                                                            checked={selectedFilters[category.title]?.includes(f) || false}
+                                                            onChange={handleFilterChange(category.name, typeof f === "object" ? f.value : f)}
+                                                            checked={selectedFilters[category.title]?.includes(typeof f === "object" ? f.value : f) || false}
                                                         />
-                                                        {f}
+                                                        {typeof f === "object" ? f.label : f}
                                                     </label>
                                                 ))
                                             ) : (
-                                                category.filterby.map((f) => (
-                                                    <label key={f} className="row">
+                                                category.filterby.map((f,index) => (
+                                                    <label key={index} className="row">
                                                         <input
                                                             type="radio"
                                                             name={category.title}
-                                                            onChange={handleFilterChange(category.title, f)}
+                                                            onChange={handleFilterChange(category.name, typeof f === "object" ? f.value : f)}
                                                         // checked={selectedFilters[category.title] === f}
                                                         />
-                                                        {f}
+                                                        {typeof f === "object" ? f.label : f}
                                                     </label>
                                                 ))
                                             )}
@@ -220,8 +170,11 @@ function BooksFilter(props) {
 
 }
 
-BooksFilter.PropTypes = {
-    filterChange: PropTypes.func.isRequired
+BooksFilter.propTypes = {
+    filterChange: PropTypes.func.isRequired,
+    handleFilterChange: PropTypes.func.isRequired,
+    setSelectedFilters: PropTypes.func.isRequired,
+    selectedFilters: PropTypes.object.isRequired
 }
 
 export default BooksFilter;

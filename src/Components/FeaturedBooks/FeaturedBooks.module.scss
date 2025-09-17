@@ -22,4 +22,24 @@
             text-align: left;
         }
     }
+
+    .by-category{
+        padding-top: 32px;
+        gap: 32px;
+        .category{
+            gap: 16px;
+            button{
+                border: 1px solid #E0E0E0;
+                text-align: center;
+                border-radius: 6px;
+                width: 150px;
+                height: 64px;
+                cursor: pointer;
+            }
+
+            h2{
+                text-align: center;
+            }
+        }
+    }
 }

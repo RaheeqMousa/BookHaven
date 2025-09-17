@@ -1,8 +1,11 @@
 .book-card{
-    width: 186px;
+    width: 23%;
+    height: 438px;
     overflow: hidden;
     border-radius: 8px;
     box-shadow: 0px 4px 12px 0px #00000014;
+    align-self: flex-start;
+    // padding-bottom: 24px;
 
     .book-cover{
         position: relative;
@@ -20,18 +23,38 @@
             border-radius: 6px;
             left: 10px;
             bottom: 10px;
+            padding: 3px 9px;
+            font-size: 12px;
         }
     }
 
     .info{
-        padding-left: 19px 0px 19px 16px;
+        padding: 19px 0px 19px 16px;
+        gap:15px;
         color: var(--gray);
+        align-items: flex-start;
         .category{
             border:1px solid #E0E0E0;
             border-radius: 6px;
+            width: fit-content;
+            border-radius: 6px;
+            padding: 3px 9px;
+            align-self: flex-start;
         }
         h3{
             color: black;
         }
     }
 }
+
+    .list-display{
+        width: 100% !important;
+        height: fit-content;
+        padding: 0;
+        img{
+            width:168px !important;
+        }
+
+        display: flex;
+        align-items: center;
+    }

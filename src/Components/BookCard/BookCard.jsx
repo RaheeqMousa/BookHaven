@@ -1,26 +1,39 @@
 import PropTypes from 'prop-types';
 import Style from './BookCard.module.scss'
+import { useCallback } from 'react';
 function BookCard(props){
-    const {book} = props;
+    const {book, isGridDisplay} = props;
+    console.log(isGridDisplay)
+
+    const joinAuthors = useCallback((authors) => {
+        if (authors.length === 0) return "";
+        if (authors.length === 1) return authors[0];
+        if (authors.length === 2) return authors.join(" and ");
+        return authors.slice(0, -1).join(", ") + ", and " + authors[authors.length - 1];
+    },[]);
 
     return (
-        <div className={Style['book-card']}>
+        <div className={`${isGridDisplay? '':Style['list-display']} ${Style['book-card']}`}>
             <div className={Style['book-cover']}>
                 <img 
-                    src={book.imageLinks?.thumbnail || book.imageLinks?.smallThumbnail} 
-                    alt={book.title} 
-                    title={book.title}  width={168} height={180}
+                    src={book.volumeInfo.imageLinks?.smallThumbnail || book.volumeInfo.imageLinks?.thumbnail}
+                    alt={book.volumeInfo.title} 
+                    title={book.volumeInfo.title}  width={168} height={180}
                 />
-                <p>{book.printType}</p>
+                <p>{book.volumeInfo.printType}</p>
             </div>
-            <div className={Style.info}>
-                <p className={Style.category}>{book.categories[0]}</p>
-                <h3>{book.title}</h3>
-                <p className="book-subtitle">{book.subtitle || `by ${book.authors?.join(', ')}`}</p>
-                <p className="book-availability">
-                <span><strong>{book.saleability}</strong> {book.pageCount ? `${book.pageCount} pages` : ''}</span>
-                </p>
+
+            <div className={`row flex-direction-column ${Style.info}`}>
+                {book.volumeInfo.categories? <p className={Style.category}>{ book.volumeInfo.categories[0]}</p> : ''}
+                <div className={Style.titles}>    
+                    <h3>{book.volumeInfo.title}</h3>
+                    <p className={`${Style['book-subtitle']}`}>
+                        {`${book.volumeInfo.subtitle? book.volumeInfo.subtitle: ''} ${book.volumeInfo.authors? `by  ${joinAuthors(book.volumeInfo.authors)}`: ''}`}
+                    </p>
+                </div>
+                <span className={`${Style['book-availability']}`}><strong>{book.saleInfo.saleability}</strong> {book.volumeInfo.pageCount ? `${book.volumeInfo.pageCount} pages` : ''}</span>
             </div>
+
 
         </div >
     );
@@ -35,6 +48,7 @@ BookCard.PropTypes={
         category: PropTypes.string.isRequired,
         saleability: PropTypes.string.isRequired,
         pageCount: PropTypes.number.isRequired,
-    })
+    }),
+    isGridDisplay: PropTypes.bool.isRequired
 };
 export default BookCard;
