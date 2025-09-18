@@ -3,6 +3,7 @@ import Style from './BookCard.module.scss'
 import { useCallback } from 'react';
 import { CiHeart } from "react-icons/ci";
 import { LuShoppingCart } from "react-icons/lu";
+import {Link} from 'react-router-dom'
 
 function BookCard(props){
     const {book, isGridDisplay} = props;
@@ -16,7 +17,11 @@ function BookCard(props){
     },[]);
 
     return (
-        <div className={`${isGridDisplay? '':Style['list-display']} ${Style['book-card']}`}>
+        <Link 
+  to="/bookdetails"
+  state={ book }
+  className={`${isGridDisplay ? '' : Style['list-display']} ${Style['book-card']}`}
+>
             <div className={Style['book-cover']}>
                 <div>
                     {book.saleInfo.saleability==="FREE"? <p className={Style.free}>FREE</p>:''}
@@ -62,11 +67,11 @@ function BookCard(props){
             </div>
 
 
-        </div >
+        </Link >
     );
 }
 
-BookCard.PropTypes={
+BookCard.propTypes={
     book:PropTypes.shape({
         imageLink: PropTypes.string.isRequired,
         title: PropTypes.string.isRequired,

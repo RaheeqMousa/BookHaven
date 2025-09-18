@@ -3,6 +3,7 @@ import WishlistImg from '../../assets/Images/wishlist.svg'
 import CartImg from '../../assets/Images/cart.svg'
 import Style from './Navbar.module.scss'
 import SearchBar from '../SearchBar/SearchBar'
+import { Link } from 'react-router-dom'
 
 function Navbar() {
 
@@ -17,15 +18,15 @@ function Navbar() {
                     <SearchBar />
                 </div>
                 <div className='row'>
-                    <button aria-label='Wishlist button'>
+                    <Link aria-label='Wishlist button' className='row justify-content-center' to='/user/wishlist'>
                         <img src={WishlistImg} width={16} height={16} alt='Wishlist button' title='Wishlist button' />
-                    </button>
-                    <button aria-label='Cart button'>
+                    </Link>
+                    <Link aria-label='Cart button' className='row justify-content-center' to='/user/wishlist'>
                         <img src={CartImg} width={16} height={16}alt='Cart button' title='Cart button' />
-                    </button>
-                    <button aria-label='profile button'>
+                    </Link>
+                    <Link aria-label='profile button' className='row justify-content-center' to='/user/wishlist'>
                         <img src={ProfileImg} width={16} height={16} alt='profile button' title='profile button'/>
-                    </button>
+                    </Link>
                 </div>
             </div>
         </header>

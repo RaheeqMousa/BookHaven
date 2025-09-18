@@ -15,7 +15,7 @@ function SearchBar(){
             setStartIndex(0);
             const url = `${import.meta.env.VITE_API_BASE_URL}/books/v1/volumes?q=${encodeURIComponent(query)}&startIndex=0&maxResults=20&key=${import.meta.env.VITE_API_KEY}`;
             fetchBooks(0, url);
-        }, 500);
+        }, 300);
 
         return () => clearTimeout(timer);
     }, [query, fetchBooks, setStartIndex]);

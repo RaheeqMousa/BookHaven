@@ -1,0 +1,30 @@
+
+.details-section{
+    padding: 24px 48px;
+    width: 1200px;
+
+  .book-row{
+    gap:23px;
+  }
+
+    a{
+        align-self: flex-start;
+        color: var(--mainColor);
+        padding: 8px 12px;
+        gap: 8px;
+    }
+    .details{
+        gap:48px;
+        div{
+            width: 50%;
+            gap:24px;
+        }
+
+        .read-book{
+            img{
+                object-fit: cover;
+            }
+        }
+
+    }
+}
