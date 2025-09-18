@@ -6,27 +6,24 @@
     padding: 24px;
     height: fit-content;
 
-select {
-  width: 100%;
-
-  padding: 9px 13px;
-  border-radius: 6px;
-  background-color: white;
-  border: none;
-  box-sizing: border-box;
-  height: 36px;
-
-   appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
-  background-color: white;
-  background-image: url('../../assets/Images/down-arrow.svg');
+    select {
+    width: 100%;
+    padding: 9px 13px;
+    border-radius: 6px;
+    background-color: white;
+    border: none;
+    box-sizing: border-box;
+    height: 36px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: white;
+    background-image: url('../../assets/Images/down-arrow.svg');
     background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  background-size: 22px 22px;
-}
-
+    background-position: right 0.75rem center;
+    background-size: 22px 22px;
+    }
+    
     button{
         background: none;
         cursor: pointer;

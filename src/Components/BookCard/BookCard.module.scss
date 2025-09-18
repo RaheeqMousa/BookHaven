@@ -1,12 +1,16 @@
 .book-card{
     width: 23%;
-    height: 438px;
+    height: 450px;
     overflow: hidden;
     border-radius: 8px;
     box-shadow: 0px 4px 12px 0px #00000014;
     align-self: flex-start;
-    // padding-bottom: 24px;
 
+    .title{
+        p{
+            font-size: 14px;
+        }
+    }
     .book-cover{
         position: relative;
         height: 248px;
@@ -26,6 +30,11 @@
             padding: 3px 9px;
             font-size: 12px;
         }
+
+        .free{
+            background-color: #4CAF50;
+            padding: 3px 9px;
+        }
     }
 
     .info{
@@ -33,6 +42,8 @@
         gap:15px;
         color: var(--gray);
         align-items: flex-start;
+        color: #666666;
+
         .category{
             border:1px solid #E0E0E0;
             border-radius: 6px;
@@ -40,9 +51,81 @@
             border-radius: 6px;
             padding: 3px 9px;
             align-self: flex-start;
+            font-size: 12px;
         }
         h3{
             color: black;
+            font-size: 18px;
+        }
+
+        .book-availability{
+            strong{
+                font-size: 16px;
+            }
+            p{
+                font-size: 14px;
+            }
+        }
+
+        .buy-free{
+            color: var(--mainColor);
+        }
+
+    }
+
+
+    .quick-add-wrapper, .wishlist{
+        position: absolute;
+        display: none;
+    }
+
+    .wishlist{
+        width: 30px;
+        height: 30px;
+        right: 10px;
+        top: 10px;
+        border-radius: 50%;
+        background-color: #FFFFFFCC;
+        cursor: pointer;
+    }
+
+    .quick-add-wrapper{
+        width: 100%;
+        position: absolute;
+        bottom: 10px;
+        justify-content: center;
+        .quick-add{
+            width: 90%;
+            background-color: var(--mainColor);
+            color: white;
+            padding: 8px 12px;
+            position: relative;
+            border-radius: 6px;
+            gap: 8px;
+            box-sizing: border-box;
+            cursor: pointer;
+
+            .preview{
+                padding: 3px 9px;
+                position: absolute;
+                color: var(--mainColor);
+                background-color: #FFD700;
+                width: 60px;
+                bottom: 0px;
+                left: 60%;
+            }
+        }
+    }
+
+    &:hover{
+        .printype{
+            display: none;
+        }
+        .wishlist{
+            display: block;
+        }
+        .quick-add-wrapper{
+            display: flex;
         }
     }
 }

@@ -3,10 +3,11 @@ import BookCard from "../../Components/BookCard/BookCard";
 import Style from './BooksList.module.scss';
 import { IoIosList } from "react-icons/io";
 import { MdGridOn } from "react-icons/md";
-import { useCallback, useState } from "react";
+import { useCallback, useContext, useState } from "react";
+import { UseBooksContext } from '../../Context/UseBooksContext.jsx';
 
-function BookList(props) {
-    const { books = [], handleFilterChange, numberOfBooks, startIndex, setStartIndex,fetchBooks } = props;
+function BookList() {
+    const { books = [], handleFilterChange, numberOfBooks, startIndex, setStartIndex,fetchBooks } = useContext(UseBooksContext);
     const [isGridDisplay, setGridDisplay] = useState(true);
     const toggleDisplay = useCallback(
         () => setGridDisplay(prev => !prev), []
@@ -17,7 +18,8 @@ function BookList(props) {
         setStartIndex(newIndex);
         fetchBooks(newIndex); // fetch next page
     };
-
+    console.log(books);
+    
     return (
         <section className={`row flex-direction-column ${Style['books-list']}`}>
             <div className={`row ${Style['list-options']}`}>

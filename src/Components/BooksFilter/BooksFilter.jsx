@@ -28,7 +28,7 @@ function BooksFilter(props) {
         
         setSelectedFilters(defaultFilters);
 
-        let apiUrl = `${BASE_URL}/books/v1/volumes?q=search+terms$maxResults=20&key=${API_KEY}`;
+        let apiUrl = `${BASE_URL}/books/v1/volumes?q=search+terms&maxResults=20&key=${API_KEY}`;
         if (filterChange) filterChange(0,apiUrl);
     },[filterChange, API_KEY, BASE_URL,setSelectedFilters]);
 

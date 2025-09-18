@@ -51,7 +51,14 @@
                     height: 32px;
                     width: 36px;
 
+                    &:first-of-type{
+                        border-bottom-right-radius: 0px;
+                        border-top-right-radius: 0px;
+                    }
+
                     &:nth-of-type(2) {
+                        border-bottom-left-radius: 0px;
+                        border-top-left-radius: 0px;
                         background-color: white;
                     }
                 }
