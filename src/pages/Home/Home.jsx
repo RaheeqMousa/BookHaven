@@ -5,10 +5,10 @@ import { BooksProvider } from "../../Context/BooksProvider";
 function Home(){
 
     return(
-        <BooksProvider>
+        <>
             <IntroSection />
             <FeatureBooks />
-        </BooksProvider>
+        </>
     );
 }
 export default Home;

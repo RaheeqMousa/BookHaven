@@ -3,15 +3,15 @@ import { Outlet } from 'react-router-dom';
 import { BooksProvider } from "../Context/BooksProvider";
 
 function MainLayout(){
-    return (
-        <>
-            <BooksProvider>
-                <Navbar/>
-            </BooksProvider>
-            <main >
-                <Outlet/>
+return (
+        <BooksProvider>
+            <header>
+                <Navbar />
+            </header>
+            <main>
+                <Outlet />
             </main>
-        </>
+        </BooksProvider>
     );
 }
 export default MainLayout;

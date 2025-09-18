@@ -9,7 +9,6 @@ function SearchBar(){
     const { fetchBooks, setStartIndex } = useContext(UseBooksContext);
 
     useEffect(() => {
-        console.log(query)
         if (!query.trim()) return;
 
         const timer = setTimeout(() => {

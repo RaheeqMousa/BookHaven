@@ -16,10 +16,10 @@ function BookList() {
     const loadMore = () => {
         const newIndex = startIndex + numberOfBooks;
         setStartIndex(newIndex);
-        fetchBooks(newIndex); // fetch next page
+        fetchBooks(newIndex);
     };
     console.log(books);
-    
+
     return (
         <section className={`row flex-direction-column ${Style['books-list']}`}>
             <div className={`row ${Style['list-options']}`}>
@@ -44,8 +44,8 @@ function BookList() {
                 </div>
             </div>
             <div className={`row ${Style.cards}`}>
-                {books.map((book, index) => (
-                    <BookCard book={book} isGridDisplay={isGridDisplay} key={index} />
+                {books.map((book) => (
+                    <BookCard book={book} isGridDisplay={isGridDisplay} key={book.id} />
                 ))}
             </div>
             <button onClick={loadMore} className={Style['load-more']}>

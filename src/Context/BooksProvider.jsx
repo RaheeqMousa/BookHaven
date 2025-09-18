@@ -3,7 +3,7 @@ import axios from "axios";
 import { UseBooksContext } from "./UseBooksContext";
 
 export function BooksProvider({ children }) {
-  
+  const [numberOfBooks] = useState(20);
   const [books, setBooks] = useState([]);
   const [startIndex, setStartIndex] = useState(0);
   const [selectedFilters, setSelectedFilters] = useState({
@@ -110,7 +110,8 @@ export function BooksProvider({ children }) {
     setSelectedFilters,
     handleFilterChange,
     handleCategoryClick,
-  }),[books,fetchBooks,handleCategoryClick,handleFilterChange,setSelectedFilters,selectedFilters,startIndex]);
+    numberOfBooks
+  }),[books,fetchBooks,handleCategoryClick,handleFilterChange,setSelectedFilters,selectedFilters,startIndex,numberOfBooks]);
 
   return <UseBooksContext.Provider value={value}>
             {children}
