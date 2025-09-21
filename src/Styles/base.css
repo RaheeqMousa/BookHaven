@@ -2,7 +2,7 @@
     --mainFont:Poppins, Geneva, sans-serif;
     --mainColor: #1A237E;
     --gold:#FFD700;
-    --gray: var(--gray);
+    --gray: #666666;
 }
 
 body{

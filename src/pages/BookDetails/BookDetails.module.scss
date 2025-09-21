@@ -1,30 +1,193 @@
-
-.details-section{
+.details-section {
     padding: 24px 48px;
-    width: 1200px;
 
-  .book-row{
-    gap:23px;
-  }
+    button{
+        cursor: pointer;
+    }
 
-    a{
+    .book-row {
+        gap: 23px;
+    }
+
+    a.back {
         align-self: flex-start;
         color: var(--mainColor);
         padding: 8px 12px;
         gap: 8px;
     }
-    .details{
-        gap:48px;
-        div{
-            width: 50%;
-            gap:24px;
-        }
 
-        .read-book{
-            img{
+    .details {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 48px;
+
+
+        .read-book {
+            align-items: flex-start;
+            justify-content: flex-start;
+            gap: 24px;
+
+            img {
                 object-fit: cover;
+            }
+
+            .book-preview {
+                align-items: flex-start;
+                gap: 8px;
+                
+
+                button {
+                    gap: 8px;
+                    height: 36px;
+                    width: 448px;
+                    background-color: #FFD700;
+                    color: var(--mainColor);
+                    border-radius: 6px;
+                    font-weight: bold;
+                }
+
+                a {
+                    color: var(--gray);
+                }
+            }
+
+            .read-online {
+                border: 1px solid var(--mainColor);
+                color: var(--mainColor);
+                height: 36px;
+                width: 448px;
+                gap: 8px;
+                border-radius: 6px;
+
+
             }
         }
 
+        .book-description {
+           
+            gap: 24px;
+            justify-content: flex-start;
+
+            .titles {
+                gap: 8px;
+                
+                h2,p{
+                    color: var(--gray);
+                }
+                h2{
+                    font-size: 20px;
+                    font-weight: 400;
+                }
+                p {
+                    font-size: 18px;
+                }
+
+                .categories {
+                    color: white;
+                    padding-top: 8px;
+
+                    .category {
+                        font-size: 12px;
+                        width: fit-content;
+                        padding: 3px 9px;
+                        color: white;
+                        text-align: center;
+                        background-color: var(--mainColor);
+                        gap: 8px;
+                        border-radius: 6px;
+                    }
+                }
+
+
+            }
+
+            .book-availability{
+                align-self: flex-start;
+                color: var(--gray);
+            }
+            .buy-free{
+                color: white;
+                background-color: greenyellow;
+
+            }
+
+                .about{
+                    gap:12px;
+             
+                    line-height: 26px;
+                    p{
+                        color: var(--gray);
+                    }
+                    div{
+                        padding: 3px;
+                    }
+                    button{
+                        color: var(--mainColor);
+                        font-weight: bold;
+                        padding: 0px;
+                        gap: 8px;
+                        background: transparent;
+                    }
+                }
+
+                .options{
+                    color: #333333;
+                    width: 100%;
+                    justify-content: flex-start;
+                    gap: 16px;
+                    button{
+                        border-radius: 6px;
+                        border: 1px solid #E0E0E0;
+                        gap:6px;
+                        padding: 6px 11px;
+                    }
+                }
+
+                .download-options{
+                    width: 100%;
+                    gap: 8px;
+                    align-items: flex-start;
+                    color: #333333;
+                    button{
+                        border-radius: 6px;
+                        border: 1px solid #E0E0E0;
+                        gap:6px;
+                        padding: 6px 11px;
+                    }
+                }
+
+        }
+
+        
     }
+
+
+    .details-preview-info{
+        padding-top: 25px;
+        width: 100%;
+        gap: 8px;
+        
+
+        .previewed{
+            padding-top: 24px;
+        }
+
+        .display-settings{
+            border-radius: 12px;
+            background-color: #F8F9FA;
+            padding: 3px;
+            height: 36px;
+            button{
+                width: 50%;
+                padding: 0px;
+                background-color: #F8F9FA;
+                border-radius: 12px;
+                height: 36px;
+            }
+            .selected{
+                background-color: white;
+            }
+        }
+    }
+
 }
