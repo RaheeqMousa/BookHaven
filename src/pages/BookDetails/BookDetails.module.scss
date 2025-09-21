@@ -7,6 +7,7 @@
 
     .book-row {
         gap: 23px;
+        width: fit-content;
     }
 
     a.back {
@@ -34,9 +35,9 @@
             .book-preview {
                 align-items: flex-start;
                 gap: 8px;
-                
+                color: var(--gray);
 
-                button {
+                a:first-of-type {
                     gap: 8px;
                     height: 36px;
                     width: 448px;
@@ -46,9 +47,6 @@
                     font-weight: bold;
                 }
 
-                a {
-                    color: var(--gray);
-                }
             }
 
             .read-online {
@@ -60,6 +58,10 @@
                 border-radius: 6px;
 
 
+            }
+
+            @media screen and (max-width: 768px) {
+                align-items: center;
             }
         }
 
@@ -148,16 +150,24 @@
                     gap: 8px;
                     align-items: flex-start;
                     color: #333333;
-                    button{
+                    a{
                         border-radius: 6px;
                         border: 1px solid #E0E0E0;
                         gap:6px;
                         padding: 6px 11px;
+                        color: #333333;
                     }
                 }
 
+            @media screen and (max-width: 768px) {
+                align-items: center;
+            }
         }
 
+        @media screen and (max-width: 768px) {
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr 1fr;
+        }
         
     }
 
@@ -169,7 +179,21 @@
         
 
         .previewed{
+
             padding-top: 24px;
+            div p:first-of-type{
+                color: var(--gray);
+            }
+            div p:nth-of-type(2){
+                color: #333333;
+            }
+            .cells{
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 1fr 1fr 1fr 1fr;
+                align-items: flex-start;
+                gap: 24px;
+            }
         }
 
         .display-settings{
@@ -190,4 +214,8 @@
         }
     }
 
+    @media screen and (max-width:500px) {
+        padding: 10px 20px;
+        width: fit-content;
+    }
 }

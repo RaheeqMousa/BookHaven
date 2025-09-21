@@ -1,0 +1,28 @@
+
+.notify {
+  padding: 10 20px;
+  background-color: greenyellow; // green for success
+  color: white;
+  border-radius: 6px;
+  position: fixed;
+  top: 20px;
+  right: 0px;
+  animation: fadeInOut 2s forwards;
+  z-index: 999;
+  opacity: 0;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
