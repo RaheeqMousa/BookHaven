@@ -139,7 +139,6 @@ function Signin() {
                                 <Login
                                     autoLoad={false}
                                     fields="id,name,email,picture"
-                                    scope="email"
                                     callback={handleFacebookResponse}
                                     onError={error => {
                                         console.error("Facebook login error:", error);
