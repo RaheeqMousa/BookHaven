@@ -2,23 +2,80 @@ import ReadingImg from '../../assets/Images/Reading.jpg'
 import { IoBookOutline } from "react-icons/io5";
 import Style from '../../Styles/Auth.module.scss';
 import LoginForm from '../../Components/LoginForm/LoginForm';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa6";
 import FormContainer from '../../Container/FormContainer';
 import { useCallback } from 'react';
 import { useState } from 'react';
 import { RiFacebookCircleFill } from "react-icons/ri";
 import { RiGoogleFill } from "react-icons/ri";
+import { useGoogleLogin } from "@react-oauth/google";
+import * as jwt_decode from "jwt-decode";
+import { FacebookProvider, Login } from 'react-facebook';
 
 
 function Signin() {
-    console.log(Style);
+    const FACEBOOK_KEY=import.meta.env.VITE_FACEBOOK_APP_ID;
     const [serverError, setServerError] = useState('');
+    const navigate = useNavigate();
 
-    const signinProcess = useCallback(() => {
-
+    const handleSignin = useCallback((formData) => {
         setServerError('');
-    }, []);
+
+        if (!formData.email || !formData.password) {
+            setServerError('All fields are required');
+            return;
+        }
+
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const userExists = users.filter(user => user.email === formData.email && user.password === formData.password);
+
+        if (!userExists) {
+            setServerError('Wrong email or password');
+            return;
+        }
+
+        sessionStorage.setItem('user', JSON.stringify(formData)); //if chose remember me
+
+        navigate('/user/profile');
+    }, [setServerError, navigate]);
+
+    const handleFacebookResponse = (response) => {
+        console.log("Facebook Login Success:", response);
+
+        if (response.accessToken) {
+            const user = {
+                name: response.name,
+                email: response.email,
+                facebookId: response.id,
+                accessToken: response.accessToken
+            };
+            localStorage.setItem("user", JSON.stringify(user));
+            navigate('/user/profile');
+        } else {
+            setServerError("Facebook login failed");
+        }
+    };
+
+    const signin = useGoogleLogin({
+        onSuccess: tokenResponse => {
+            const decoded = jwt_decode(tokenResponse.credential);
+            console.log("Google Login Success:", decoded);
+            const user = {
+                name: decoded.name,
+                email: decoded.email,
+                password: decoded.password
+            };
+            localStorage.setItem("user", JSON.stringify(user));
+
+            navigate('/user/profile');
+        },
+        onError: () => {
+            console.log("Login Failed");
+            setServerError("Login Failed");
+        },
+        flow: "implicit"
+    });
 
     return (
         <section className={Style['auth-layout']}>
@@ -58,7 +115,7 @@ function Signin() {
                         <p>Enter your credentials to access your account</p>
                     </div>
                     <div className={`row flex-direction-column ${Style.processes}`}>
-                        <FormContainer onSubmit={signinProcess} serverError={serverError} initialData={null} type="Sign In">
+                        <FormContainer onSubmit={handleSignin} serverError={serverError} initialData={null} type="Sign In">
                             <LoginForm />
                             <div className='row width-100'>
                                 <div className={`row ${Style['remember-me']}`}>
@@ -74,14 +131,28 @@ function Signin() {
 
 
                         <div className={`row flex-direction-column width-100 ${Style['auth-external']}`}>
-                            <button className={`row justify-content-center`}>
+                            <button className={`row justify-content-center`} onClick={signin}>
                                 <RiGoogleFill size={16} color='#333' />
                                 Continue with Google
                             </button>
-                            <button className={`row justify-content-center`}>
-                                <RiFacebookCircleFill size={16} color='#333' />
-                                Continue with Facebook
-                            </button>
+                            <FacebookProvider appId={FACEBOOK_KEY} version="v18.0">
+                                <Login
+                                    autoLoad={false}
+                                    fields="id,name,email,picture"
+                                    scope="email"
+                                    callback={handleFacebookResponse}
+                                    onError={error => {
+                                        console.error("Facebook login error:", error);
+                                        setServerError("Facebook login failed");
+                                    }}
+                                    render={({ onClick }) => (
+                                        <button onClick={onClick} className={`row justify-content-center`}>
+                                            <RiFacebookCircleFill size={16} color='#333' />
+                                            Sign up with Facebook
+                                        </button>
+                                    )}
+                                />
+                            </FacebookProvider>
                         </div>
 
                         <p className={`row ${Style['navigate-other-auth']}`}>

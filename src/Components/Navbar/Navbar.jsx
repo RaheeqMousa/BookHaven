@@ -21,10 +21,10 @@ function Navbar() {
                     <Link aria-label='Wishlist button' className='row justify-content-center' to='/user/wishlist'>
                         <img src={WishlistImg} width={16} height={16} alt='Wishlist button' title='Wishlist button' />
                     </Link>
-                    <Link aria-label='Cart button' className='row justify-content-center' to='/user/wishlist'>
+                    <Link aria-label='Cart button' className='row justify-content-center' to='/user/cart'>
                         <img src={CartImg} width={16} height={16}alt='Cart button' title='Cart button' />
                     </Link>
-                    <Link aria-label='profile button' className='row justify-content-center' to='/user/wishlist'>
+                    <Link aria-label='profile button' className='row justify-content-center' to='/user/profile'>
                         <img src={ProfileImg} width={16} height={16} alt='profile button' title='profile button'/>
                     </Link>
                 </div>
