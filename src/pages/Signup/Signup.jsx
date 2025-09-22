@@ -44,7 +44,7 @@ function Signup() {
                         </div>
                     </div>
                 </div>
-            </div>SignupForm
+            </div>
             <div className={`row justify-content-center ${Style['auth-section']}`}>
                 <div className={`row flex-direction-column align-start ${Style['auth-process']}`}>
                     <div className={`width-100 row justify-content-start ${Style.back}`} >
@@ -56,15 +56,14 @@ function Signup() {
                         <p>Enter your credentials to create an account</p>
                     </div>
                     <div className={`row flex-direction-column ${Style.processes}`}>
-                        <FormContainer onSubmit={signinProcess} serverError={serverError} initialData={null} type="Sign In">
+                        <FormContainer onSubmit={signinProcess} serverError={serverError} initialData={null} type="Sign Up">
                             <SignupForm />
-                            {/* <div className='row width-100'>
+                            <div className='row width-100'>
                                 <div className={`row ${Style['remember-me']}`}>
                                     <input type='checkbox' />
                                     <p>Remember me</p>
                                 </div>
-                                <Link to={'/auth/forgotpassword'} className={Style['forgot-password']}>Forgot password?</Link>
-                            </div> */}
+                            </div>
                         </FormContainer>
 
                         <p className={Style['auth-divider']}>or</p>
