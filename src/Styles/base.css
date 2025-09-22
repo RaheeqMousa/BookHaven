@@ -1,100 +1,142 @@
-:root{
-    --mainFont:Poppins, Geneva, sans-serif;
+:root {
+    --mainFont: Poppins, Geneva, sans-serif;
     --mainColor: #1A237E;
-    --gold:#FFD700;
+    --gold: #FFD700;
     --gray: #666666;
 }
 
-body{
+body {
     font-family: var(--mainFont);
     display: flex;
     align-items: stretch;
     flex-direction: column;
 }
 
-body, h1, h2, h3, h4, h5, h6,
-p, ul, ol, blockquote,dl, dt, dd,figure, fieldset {
-  margin: 0;
-  padding: 0;
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul,
+ol,
+blockquote,
+dl,
+dt,
+dd,
+figure,
+fieldset {
+    margin: 0;
+    padding: 0;
 }
 
 
-main{
+main {
     width: 100%;
 }
 
 
-button{
+button {
     border: none;
 }
 
-ul{
+ul {
     list-style-type: none;
 }
 
-ul li{
+ul li {
     list-style: none;
 }
 
-a{
+a {
     text-decoration: none;
 }
 
-.container{
-    max-width:1200px;
+.container {
+    max-width: 1200px;
     justify-self: center;
 }
 
 
-.row{
+.row {
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
 }
 
-.flex-direction-column{
+.flex-direction-column {
     flex-direction: column;
 }
 
-.flex{
-    display:flex;
+.flex {
+    display: flex;
 }
 
-.align-end{
+.align-end {
     align-items: flex-end;
 }
 
-.align-start{
+.align-start {
     align-items: flex-start;
 }
 
-.align-items-center{
+.align-items-center {
     align-items: center;
 }
 
-.justify-content-center{
+.justify-content-center {
     justify-content: center;
 }
 
-.error{
+.justify-content-start {
+    justify-content: start;
+}
+
+.error {
     color: rgb(197, 0, 0);
     font-weight: bold;
     align-self: flex-start;
     margin-top: -20px;
 }
 
-button{
+button {
     border: none;
     background-color: white;
 }
 
-.width-100{
-    width:100%
+.width-100 {
+    width: 100%
+}
+
+.controls {
+    gap: 24px;
+    width: 100%;
+}
+
+.controls .field {
+    gap: 8px;
+    width: 100%;
+
+}
+
+.field label {
+    font-size: 14px;
+    color: #333333;
+}
+
+.field input {
+    width: 100%;
+    border-radius: 6px;
+    border: 1px solid #E5E7EB;
+    background-color: white !important;
+    height: 36px;
 }
 
 @media screen and (max-width:1200px) {
-    .container{
+    .container {
         width: 100%;
     }
 }

@@ -1,0 +1,190 @@
+.auth-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    .auth-design-wrapper {
+        position: relative;
+        width: auto;
+        height: 100vh;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        p {
+            color: white;
+        }
+
+        .auth-design {
+            background-color: rgb(26, 35, 126, 0.7);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            gap: 20px;
+
+            .logo {
+                margin-bottom: 20px;
+                gap: 12px;
+
+                .icon {
+                    background-color: var(--gold);
+                    border-radius: 12px;
+                    width: 48px;
+                    height: 48px;
+                }
+
+                color: white;
+                font-size: 28px;
+                font-weight: 700;
+            }
+
+            h1 {
+                text-align: center;
+                color: white;
+
+                span {
+                    color: var(--gold);
+                }
+            }
+
+            p {
+                text-align: center;
+                max-width: 448px;
+            }
+
+            .dividers {
+                gap: 16px;
+
+                .divider {
+                    width: 32px;
+                    height: 8px;
+                    background-color: var(--gold);
+                    border-radius: 33554400px;
+                }
+            }
+        }
+    }
+
+
+    .auth-section {
+        padding: 0px 48px;
+
+        .back {
+            gap: 8px;
+            padding: 8px 12px;
+
+            a {
+                color: var(--mainColor);
+            }
+
+        }
+
+        .auth-process {
+            width: 448px;
+            color: #333;
+            gap: 30px;
+
+            .heading {
+                gap: 8px;
+
+                h2 {
+                    font-size: 28px;
+                }
+
+                p {
+                    color: var(--gray);
+                }
+            }
+
+            .processes {
+                gap: 24px;
+                width: 100%;
+
+                button {
+                    width: 100%;
+                    padding: 8px 16px;
+                    border-radius: 6px;
+                    background-color: var(--mainColor);
+                    color: white;
+                    font-weight: bold;
+                }
+
+                .remember-me {
+                    input[type='checkbox'] {
+                        padding-right: 8px;
+                    }
+
+                    color: var(--gray);
+                }
+
+                .auth-divider{
+                    position: relative;
+                    width: 100%;
+                    text-align: center;
+                    color: var(--gray);
+                }
+
+                .auth-divider:after{
+                    content:" ";
+                    height: 1px;
+                    width: 47%;
+                    display: block;
+                    position: absolute;
+                    top: 50%;
+                    right: 0;
+                    background: #E0E0E0;
+                }
+
+                .auth-divider:before{
+                    content:" ";
+                    height: 1px;
+                    width: 47%;
+                    display: block;
+                    position: absolute;
+                    top: 50%;
+                    left: 0;
+                    background: #E0E0E0;
+                }
+
+
+                .forgot-password {
+                    color: var(--mainColor);
+                }
+
+                .auth-external {
+
+                    gap: 12px;
+
+                    button {
+                        gap: 8px;
+                        background-color: white !important;
+                        color: #333;
+                        padding: 8px 13px;
+                        border: 1px solid #E5E7EB;
+                    }
+
+                }
+
+                .navigate-other-auth {
+                    color: var(--gray);
+                    gap: 5px;
+
+                    a {
+                        padding: 8px 0px;
+                        color: var(--mainColor);
+                    }
+                }
+            }
+        }
+    }
+
+    @media screen and (max-width:768px) {
+        .login-design {
+            display: none;
+        }
+    }
+}

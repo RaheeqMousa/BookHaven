@@ -13,6 +13,7 @@ import { useState } from "react";
 import { useMemo } from "react";
 import { getBookDetails } from "./constants";
 import Notify from "../../Components/Notify/Notify";
+import PropTypes from "prop-types";
 
 function BookDetails() {
     const location = useLocation();
@@ -208,4 +209,22 @@ function BookDetails() {
         </section>
     );
 }
+
+
+BookDetails.propTypes = {
+  book: PropTypes.shape({
+    volumeInfo: PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      subtitle: PropTypes.string,
+      authors: PropTypes.arrayOf(PropTypes.string),
+      categories: PropTypes.arrayOf(PropTypes.string),
+      description: PropTypes.string,
+      imageLinks: PropTypes.object,
+      previewLink: PropTypes.string,
+    }).isRequired,
+    saleInfo: PropTypes.object,
+    accessInfo: PropTypes.object,
+  }).isRequired,
+};
+
 export default BookDetails;
