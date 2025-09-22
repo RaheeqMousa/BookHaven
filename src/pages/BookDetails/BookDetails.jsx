@@ -74,7 +74,7 @@ function BookDetails() {
 
 
     const handleAddToWishlist = useCallback((book) => {
-        if (!localStorage.getItem('token')) {
+        if (!localStorage.getItem('user')) {
             navigate('/auth/login');
             return;
         }
