@@ -40,24 +40,31 @@ function Signup() {
     };
 
     const signup = useGoogleLogin({
-        onSuccess: tokenResponse => {
-            const decoded = jwt_decode(tokenResponse.credential);
-            console.log("Google Login Success:", decoded);
-            const user = {
-                name: decoded.name,
-                email: decoded.email,
-                password: decoded.password
-            };
-            localStorage.setItem("user", JSON.stringify(user));
+  onSuccess: async (tokenResponse) => {
+    try {
+      // tokenResponse contains access_token
+      const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+        headers: {
+          Authorization: `Bearer ${tokenResponse.access_token}`,
+        },
+      });
 
-            navigate('/user/profile');
-        },
-        onError: () => {
-            console.log("Login Failed");
-            setServerError("Login Failed");
-        },
-        flow: "implicit"
-    });
+      const user = await res.json();
+      console.log("Google Login Success:", user);
+
+      localStorage.setItem("user", JSON.stringify(user));
+      navigate("/user/profile");
+    } catch (err) {
+      console.error("Fetching Google user failed:", err);
+      setServerError("Google login failed");
+    }
+  },
+  onError: () => {
+    console.log("Login Failed");
+    setServerError("Login Failed");
+  },
+  flow: "implicit", // popup flow, no redirect
+});
 
 
 
