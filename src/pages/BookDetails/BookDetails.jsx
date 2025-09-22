@@ -89,7 +89,7 @@ function BookDetails() {
             setMessage(`${book.volumeInfo.title} is already in your wishlist.`);
             setTimeout(() => setMessage(""), 2000);
         }
-    },[navigate]);
+    }, [navigate]);
 
 
     if (!book) { return <p>No book selected</p>; }
@@ -100,7 +100,7 @@ function BookDetails() {
             <Notify message={message} />
             <div className="container">
                 <div className={`row flex-direction-column ${Style['book-row']}`}>
-                    <Link to='/' className={`row ${Style.back}`} ><IoArrowBack size={16} color="#1A237E" />Back To Books</Link>
+                    <Link to='/' className={`row align-start ${Style.back}`} ><IoArrowBack size={16} color="#1A237E" />Back To Books</Link>
                     <section className={` ${Style.details}`}>
                         <div className={`row flex-direction-column ${Style['read-book']}`}>
                             <img
@@ -166,12 +166,20 @@ function BookDetails() {
                                     <FaRegHeart size={16} color="#333333" />
                                     Add to wishlist
                                 </button>
-                                <button disabled={disableShareBtn} onClick={handleShare}>{shareBtnSuccess ? shareBtnSuccess : <LuShare2 size={16} color="#333333" />}</button>
+                                <button disabled={disableShareBtn} onClick={handleShare} aria-label="Share book button">{shareBtnSuccess ? shareBtnSuccess : <LuShare2 size={16} color="#333333" />}</button>
                             </div>
 
                             <div className={`row flex-direction-column ${Style['download-options']}`}>
                                 <p>Download Options:</p>
-                                <a className="row" href={book.accessInfo.pdf.acsTokenLink} download>
+                                <a className="row" href={
+                                    book.accessInfo?.pdf?.isAvailable
+                                        ? book.accessInfo.pdf.acsTokenLink
+                                        : book.accessInfo?.epub?.isAvailable
+                                            ? book.accessInfo.epub.acsTokenLink
+                                            : "#"
+                                }
+                                    download={`${book.volumeInfo.title}${book.accessInfo?.pdf?.isAvailable ? ".pdf" : ".epub"
+                                        }`}>
                                     <FiDownload color="#333333" size={16} />
                                     PDF
                                 </a>
