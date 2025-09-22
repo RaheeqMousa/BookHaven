@@ -10,7 +10,6 @@ import { useState } from 'react';
 import { RiFacebookCircleFill } from "react-icons/ri";
 import { RiGoogleFill } from "react-icons/ri";
 import { useGoogleLogin } from "@react-oauth/google";
-import * as jwt_decode from "jwt-decode";
 import { FacebookProvider, Login } from 'react-facebook';
 
 
