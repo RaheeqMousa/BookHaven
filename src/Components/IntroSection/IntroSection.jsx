@@ -1,8 +1,22 @@
 import Style from './IntroSection.module.scss'
 import UpsideImg from '../../assets/Images/upside.svg'
 import SearchImg from '../../assets/Images/search.svg'
+import { useContext } from 'react';
+import { UseBooksContext } from '../../Context/UseBooksContext.jsx';
+import useBookSearch from '../../Hooks/useSearchBook.jsx';
 
 function IntroSection() {
+    const { fetchBooks } = useContext(UseBooksContext);
+
+    const {
+        query,
+        suggestions,
+        handleChange,
+        handleKeyDown,
+        handleSuggestionClick
+    } = useBookSearch(fetchBooks);
+
+
     return (
         <section className={`${Style.hero}`}>
             <div className='container'>
@@ -11,19 +25,36 @@ function IntroSection() {
                     <p className={Style.subtitle}>Explore millions of books across all genres. From bestsellers to hidden gems, find
                         your perfect story today.</p>
                     <div className={`row flex-direction-column ${Style['search-field']}`}>
+                    <div className={`row flex-direction-column width-100`}>
                         <div className={`row ${Style['search-box']}`}>
                             <div className={Style['search-input']}>
-                                <img src={SearchImg}  width={16} height={16} alt="" title='search icon'/>
-                                <input type="text" placeholder="Search books..." />
+                                <img src={SearchImg} width={16} height={16} alt="" title='search icon' />
+                                <input
+                                    type="text"
+                                    placeholder="Search books..."
+                                    value={query}
+                                    onChange={handleChange}
+                                    onKeyDown={handleKeyDown}
+                                />
                             </div>
-                            
-                            <button>Search</button>
+
+                            <button className={Style['search-button']} onClick={handleSuggestionClick(query)}>Search</button>
                         </div>
 
-                        <p className={Style.tips}>Search tips: Use quotes for exact phrases, + to include words, - to exclude words</p>
-
+                        {query.trim() && suggestions.length > 0 && (
+                            <ul className={`suggestions`}>
+                                {suggestions.map(function (s, i) {
+                                    return (
+                                        <li key={i} onClick={handleSuggestionClick(s)}>
+                                            {s}
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        )}
                     </div>
-
+                    <p className={Style.tips}>Search tips: Use quotes for exact phrases, + to include words, - to exclude words</p>
+                    </div>
                     <div className={`row ${Style['tags-container']}`}>
                         <div className='row'>
                             <img src={UpsideImg} width={16} height={16} alt='' title='Increasing arrow' />

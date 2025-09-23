@@ -1,0 +1,105 @@
+.wishlist-section {
+
+    width: 1200px;
+    padding: 32px 48px;
+    gap: 32px;
+    justify-self: center;
+
+    .back {
+        width: fit-content;
+    }
+    .filter-section {
+        .filter {
+            gap: 16px;
+
+            select {
+                width: 192px;
+                padding: 9px 13px;
+                border-radius: 6px;
+                background-color: white;
+                border: none;
+                box-sizing: border-box;
+                height: 36px;
+                appearance: none;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                background-image: url('../../assets/Images/down-arrow.svg');
+                background-repeat: no-repeat;
+                background-position: right 0.75rem center;
+                background-size: 22px 22px;
+            }
+
+            button {
+                border: 1px solid #FFD700;
+                color: #FFD700;
+                background-color: white;
+                height: 36px;
+                border-radius: 6px;
+            }
+        }
+    }
+
+    .intro {
+        gap: 16px;
+      
+        div {
+            .share-left-side{
+            gap: 8px;
+        }
+
+            &:last-of-type {
+                button {
+                    border-radius: 6px;
+                    border: 1px solid var(--mainColor);
+                    color: var(--mainColor);
+                    gap: 8px;
+                    align-self: flex-end;
+                    justify-self: flex-end;
+                    height: 36px;
+                }
+            }
+            p{
+                color: var(--gray);
+            }
+        }
+    }
+
+    .books{
+        gap:20px;
+    }
+
+    .purchase {
+        background-color: #F8F9FA;
+        border-radius: 8px;
+        padding: 24px;
+        box-sizing: border-box;
+
+        div {
+            &:first-of-type {
+                gap: 4px;
+
+                p {
+                    color: var(--gray);
+                }
+            }
+
+            &:nth-of-type(2) {
+                gap: 12px;
+
+                .clear {
+                    padding: 8px 17px;
+                    border-radius: 6px;
+                    color: #333;
+                }
+
+                button:nth-child(2) {
+                    padding: 8px 12px;
+                    border-radius: 6px;
+                    color: white;
+                    gap: 8px;
+                    background-color: var(--mainColor);
+                }
+            }
+        }
+    }
+}

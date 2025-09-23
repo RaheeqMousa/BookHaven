@@ -95,6 +95,10 @@ a {
     justify-content: start;
 }
 
+.justify-content-end {
+    justify-content: end;
+}
+
 .error {
     color: rgb(197, 0, 0);
     font-weight: bold;
@@ -105,6 +109,7 @@ a {
 button {
     border: none;
     background-color: white;
+    cursor: pointer;
 }
 
 .width-100 {
@@ -134,6 +139,27 @@ button {
     background-color: white !important;
     height: 36px;
 }
+
+.suggestions {
+    width: 100%;
+    background-color: white;
+}
+
+.suggestions li {
+    color: black;
+    border: 1px solid var(--gray);
+}
+
+.back {
+    gap: 8px;
+    padding: 8px 12px;
+    width: fit-content;
+}
+
+.back a {
+    color: var(--mainColor);
+}
+
 
 @media screen and (max-width:1200px) {
     .container {

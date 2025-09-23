@@ -24,7 +24,7 @@ function Navbar() {
                     <Link aria-label='Cart button' className='row justify-content-center' to='/user/cart'>
                         <img src={CartImg} width={16} height={16}alt='Cart button' title='Cart button' />
                     </Link>
-                    <Link aria-label='profile button' className='row justify-content-center' to='/user/profile'>
+                    <Link aria-label='profile button' className='row justify-content-center' to='/auth/login'>
                         <img src={ProfileImg} width={16} height={16} alt='profile button' title='profile button'/>
                     </Link>
                 </div>

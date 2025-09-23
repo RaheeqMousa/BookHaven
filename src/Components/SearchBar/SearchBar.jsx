@@ -1,35 +1,46 @@
-import SearchImg from '../../assets/Images/search.svg'
-import Style from './SearchBar.module.scss'
-import { useContext, useState,useEffect } from "react";
+import SearchImg from '../../assets/Images/search.svg';
+import Style from './SearchBar.module.scss';
+import { useContext} from "react";
 import { UseBooksContext } from '../../Context/UseBooksContext.jsx';
+import useBookSearch from '../../Hooks/useSearchBook.jsx';
 
-function SearchBar(){
+function SearchBar() {
 
-    const [query, setQuery] = useState("");
-    const { fetchBooks, setStartIndex } = useContext(UseBooksContext);
+  const { fetchBooks } = useContext(UseBooksContext);
+  const {
+    query,
+    suggestions,
+    handleChange,
 
-    useEffect(() => {
-        if (!query.trim()) return;
+    handleKeyDown,
+    handleSuggestionClick
+    } = useBookSearch(fetchBooks);
 
-        const timer = setTimeout(() => {
-            setStartIndex(0);
-            const url = `${import.meta.env.VITE_API_BASE_URL}/books/v1/volumes?q=${encodeURIComponent(query)}&startIndex=0&maxResults=20&key=${import.meta.env.VITE_API_KEY}`;
-            fetchBooks(0, url);
-        }, 300);
 
-        return () => clearTimeout(timer);
-    }, [query, fetchBooks, setStartIndex]);
+  return (
+    <div className={`row ${Style['search-field']}`}>
+      <img src={SearchImg} height={16} width={16} alt="search" />
+      <input
+        type="text"
+        placeholder="Search for books, authors, genres"
+        value={query}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+      />
 
-    return (
-        <div className={`row ${Style['search-field']}`}>
-            <img src={SearchImg} height={16} width={16} />
-            <input
-                type="text"
-                placeholder="Search for books, authors, genres"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-            />
-        </div>
-    )
+      {query.trim() && suggestions.length > 0 && (
+        <ul className={`suggestions`}>
+          {suggestions.map(function(s, i) {
+            return (
+              <li key={i} onClick={handleSuggestionClick(s)}>
+                {s}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
+  );
 }
+
 export default SearchBar;

@@ -35,9 +35,8 @@ function App() {
 
               <Route element={<AuthProtectedRoute />}>
                 <Route path="user/wishlist" element={<Wishlist />} />
-                <Route path="user/profile" element={<Profile />} >
-                  <Route path='user/cart' element={<Cart />} />
-                </Route>
+                {/* <Route path="user/profile" element={<Profile />} /> */}
+                <Route path='user/cart' element={<Cart />} />
               </Route>
             </Route>
 

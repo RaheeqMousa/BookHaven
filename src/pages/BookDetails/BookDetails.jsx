@@ -1,4 +1,4 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import {  useLocation } from "react-router-dom";
 import Style from './BookDetails.module.scss'
 import { Link } from 'react-router-dom'
 import { IoArrowBack } from "react-icons/io5";
@@ -14,16 +14,20 @@ import { useMemo } from "react";
 import { getBookDetails } from "./constants";
 import Notify from "../../Components/Notify/Notify";
 import PropTypes from "prop-types";
+import useWish from '../../Hooks/useWish';
+import { FaHeart } from "react-icons/fa6";
+
 
 function BookDetails() {
     const location = useLocation();
     const book = location.state;
+    const [isWished, toggleWish] = useWish(book);
     const [detailsShow, setDetailsShow] = useState(true);
     const [isExpanded, setIsExpanded] = useState(false);
     const [shareBtnSuccess, setShareBtnSuccess] = useState('')
     const [disableShareBtn, setShareBtnDisable] = useState(false);
-    const [message, setMessage] = useState("");
-    const navigate = useNavigate();
+    // const [message, setMessage] = useState("");
+    // const navigate = useNavigate();
 
     const toggleRead = useCallback(() => {
         setIsExpanded(!isExpanded);
@@ -40,6 +44,15 @@ function BookDetails() {
         return authors.slice(0, -1).join(", ") + ", and " + authors[authors.length - 1];
     }, []);
 
+
+    const handleWishlistClick = useCallback(
+        (e) => {
+            e.stopPropagation();//to prevent <Link> navigation
+            e.preventDefault();
+            toggleWish();
+        },
+        [toggleWish]
+    );
 
     const preview = book.volumeInfo.description
         ? book.volumeInfo.description.slice(0, 200) : "";
@@ -73,24 +86,24 @@ function BookDetails() {
     }, [book, joinAuthors]);
 
 
-    const handleAddToWishlist = useCallback((book) => {
-        if (!localStorage.getItem('user')) {
-            navigate('/auth/login');
-            return;
-        }
+    // const handleAddToWishlist = useCallback((book) => {
+    //     if (!localStorage.getItem('user')) {
+    //         navigate('/auth/login');
+    //         return;
+    //     }
 
-        const storedCart = JSON.parse(localStorage.getItem('wishlist')) || [];
+    //     const storedCart = JSON.parse(localStorage.getItem('wishlist')) || [];
 
-        if (!storedCart.some((item) => item.id === book.id)) {
-            const newCart = [...storedCart, book];
-            localStorage.setItem('cart', JSON.stringify(newCart));
-            setMessage(`${book.volumeInfo.title} added to wishlist!`);
-            setTimeout(() => setMessage(""), 2000);
-        } else {
-            setMessage(`${book.volumeInfo.title} is already in your wishlist.`);
-            setTimeout(() => setMessage(""), 2000);
-        }
-    }, [navigate]);
+    //     if (!storedCart.some((item) => item.id === book.id)) {
+    //         const newCart = [...storedCart, book];
+    //         localStorage.setItem('cart', JSON.stringify(newCart));
+    //         setMessage(`${book.volumeInfo.title} added to wishlist!`);
+    //         setTimeout(() => setMessage(""), 2000);
+    //     } else {
+    //         setMessage(`${book.volumeInfo.title} is already in your wishlist.`);
+    //         setTimeout(() => setMessage(""), 2000);
+    //     }
+    // }, [navigate]);
 
 
     if (!book) { return <p>No book selected</p>; }
@@ -98,7 +111,6 @@ function BookDetails() {
 
     return (
         <section className={`row flex-direction-column ${Style['details-section']}`}>
-            <Notify message={message} />
             <div className="container">
                 <div className={`row flex-direction-column ${Style['book-row']}`}>
                     <Link to='/' className={`row align-start ${Style.back}`} ><IoArrowBack size={16} color="#1A237E" />Back To Books</Link>
@@ -163,9 +175,15 @@ function BookDetails() {
                             </div>
 
                             <div className={`row ${Style.options}`}>
-                                <button className="row justify-content-center" onClick={handleAddToWishlist}>
-                                    <FaRegHeart size={16} color="#333333" />
-                                    Add to wishlist
+                                <button className="row justify-content-center" onClick={handleWishlistClick}>
+                                    {!isWished ? (
+                                        <>
+                                            <FaRegHeart size={16} color="#333333" />
+                                            <span>Add to wishlist</span>
+                                        </>
+                                    ) : (
+                                        <FaHeart size={16} color="red" />
+                                    )}
                                 </button>
                                 <button disabled={disableShareBtn} onClick={handleShare} aria-label="Share book button">{shareBtnSuccess ? shareBtnSuccess : <LuShare2 size={16} color="#333333" />}</button>
                             </div>
@@ -212,19 +230,19 @@ function BookDetails() {
 
 
 BookDetails.propTypes = {
-  book: PropTypes.shape({
-    volumeInfo: PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      subtitle: PropTypes.string,
-      authors: PropTypes.arrayOf(PropTypes.string),
-      categories: PropTypes.arrayOf(PropTypes.string),
-      description: PropTypes.string,
-      imageLinks: PropTypes.object,
-      previewLink: PropTypes.string,
-    }).isRequired,
-    saleInfo: PropTypes.object,
-    accessInfo: PropTypes.object,
-  }).isRequired,
+    book: PropTypes.shape({
+        volumeInfo: PropTypes.shape({
+            title: PropTypes.string.isRequired,
+            subtitle: PropTypes.string,
+            authors: PropTypes.arrayOf(PropTypes.string),
+            categories: PropTypes.arrayOf(PropTypes.string),
+            description: PropTypes.string,
+            imageLinks: PropTypes.object,
+            previewLink: PropTypes.string,
+        }).isRequired,
+        saleInfo: PropTypes.object,
+        accessInfo: PropTypes.object,
+    }),
 };
 
 export default BookDetails;

@@ -19,4 +19,13 @@
         width: 85%;
     }
 
+    .suggestions{
+        width: 100%;
+        background-color: white;
+        li{
+            background-color: #E5E7EB;
+            border: 1px solid var(--gray);
+        }
+    }
+
 }

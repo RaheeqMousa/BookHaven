@@ -12,6 +12,7 @@ import { RiGoogleFill } from "react-icons/ri";
 import { useGoogleLogin } from "@react-oauth/google";
 import * as jwt_decode from "jwt-decode";
 import { FacebookProvider, Login } from 'react-facebook';
+import Back from '../../Components/Back';
 
 
 function Signup() {
@@ -47,7 +48,7 @@ function Signup() {
 
         localStorage.setItem('user', JSON.stringify(formData));
 
-        navigate('/user/profile');
+        navigate('/');
     }, [setServerError, navigate]);
 
 
@@ -62,7 +63,7 @@ function Signup() {
                 accessToken: response.accessToken
             };
             sessionStorage.setItem("user", JSON.stringify(user));
-            navigate('/user/profile');
+            navigate('/');
         } else {
             setServerError("Facebook login failed");
         }
@@ -79,7 +80,7 @@ function Signup() {
             };
             sessionStorage.setItem("user", JSON.stringify(user));
 
-            navigate('/user/profile');
+            navigate('/');
         },
         onError: () => {
             console.log("Login Failed");
@@ -119,10 +120,7 @@ function Signup() {
             </div>
             <div className={`row justify-content-center ${Style['auth-section']}`}>
                 <div className={`row flex-direction-column align-start ${Style['auth-process']}`}>
-                    <div className={`width-100 row justify-content-start ${Style.back}`} >
-                        <FaArrowLeft size={16} color='#1A237E' />
-                        <Link to="/">Back to BookHaven</Link>
-                    </div>
+                    <Back />
                     <div className={`row flex-direction-column align-start ${Style.heading}`}>
                         <h2>Sign Up</h2>
                         <p>Enter your credentials to create an account</p>
