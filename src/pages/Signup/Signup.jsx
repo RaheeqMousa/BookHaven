@@ -13,6 +13,7 @@ import { useGoogleLogin } from "@react-oauth/google";
 import * as jwt_decode from "jwt-decode";
 import { FacebookProvider, Login } from 'react-facebook';
 import Back from '../../Components/Back';
+import { v4 as uuidv4 } from "uuid";
 
 
 function Signup() {
@@ -43,10 +44,10 @@ function Signup() {
             return;
         }
 
-        users.push(formData);
+        users.push({...formData,id: uuidv4()});
         localStorage.setItem('users', JSON.stringify(users));
 
-        localStorage.setItem('user', JSON.stringify(formData));
+        localStorage.setItem('user', JSON.stringify({...formData, id: uuidv4()}));
 
         navigate('/');
     }, [setServerError, navigate]);
@@ -74,6 +75,7 @@ function Signup() {
             const decoded = jwt_decode(tokenResponse.credential);
             console.log("Google Login Success:", decoded);
             const user = {
+                id: uuidv4(),
                 name: decoded.name,
                 email: decoded.email,
                 password: decoded.password

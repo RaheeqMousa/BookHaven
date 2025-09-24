@@ -6,28 +6,26 @@ import { LuShoppingCart } from "react-icons/lu";
 import { Link } from 'react-router-dom'
 import { FaHeart } from "react-icons/fa6";
 import useWish from '../../Hooks/useWish';
+import { joinAuthors } from '../../Utils/JoinAuthors';
+
 
 function BookCard(props) {
-    const { book, isGridDisplay } = props;
-    const [wish, toggleWish] = useWish(book);
-    console.log(isGridDisplay)
-    // const [wish, setWish]= useState(false)
 
-    const joinAuthors = useCallback((authors) => {
-        if (authors.length === 0) return "";
-        if (authors.length === 1) return authors[0];
-        if (authors.length === 2) return authors.join(" and ");
-        return authors.slice(0, -1).join(", ") + ", and " + authors[authors.length - 1];
-    }, []);
+    const { book, isGridDisplay, wishlistChange, showActions = true } = props;
+    const [wish, toggleWish] = useWish(book);
+    console.log(showActions);
+
 
     const handleWishlistClick = useCallback(
         (e) => {
-            e.stopPropagation();//to prevent <Link> navigation
+            e.stopPropagation();
             e.preventDefault();
             toggleWish();
+            if (wishlistChange) wishlistChange();
         },
-        [toggleWish]
+        [toggleWish, wishlistChange]
     );
+
 
     return (
         <Link
@@ -36,7 +34,12 @@ function BookCard(props) {
             className={`${isGridDisplay ? '' : Style['list-display']} ${Style['book-card']}`}
         >
             <div className={Style['book-cover']}>
-                <div>
+                <img
+                    src={book.volumeInfo.imageLinks?.smallThumbnail || book.volumeInfo.imageLinks?.thumbnail}
+                    alt={book.volumeInfo.title}
+                    title={book.volumeInfo.title} width={168} height={180}
+                />
+                <div className={showActions? 'display-block':'display-none'}>
                     {book.saleInfo.saleability === "FREE" ? <p className={Style.free}>FREE</p> : ''}
                     <button aria-label='Add to wishlist button' onClick={handleWishlistClick} className={`row justify-content-center ${Style.wishlist}`}>
                         {
@@ -46,12 +49,7 @@ function BookCard(props) {
                         }
                     </button>
                 </div>
-                <img
-                    src={book.volumeInfo.imageLinks?.smallThumbnail || book.volumeInfo.imageLinks?.thumbnail}
-                    alt={book.volumeInfo.title}
-                    title={book.volumeInfo.title} width={168} height={180}
-                />
-                <div>
+                <div className={showActions? 'display-block':'display-none'}>
                     <p className={Style.printype}>{book.volumeInfo.printType}</p>
                     <div className={`row ${Style['quick-add-wrapper']}`}>
                         <button className={`row justify-content-center ${Style['quick-add']}`}>
@@ -60,7 +58,6 @@ function BookCard(props) {
                         </button>
                     </div>
                 </div>
-
             </div>
 
             <div className={`row flex-direction-column ${Style.info}`}>

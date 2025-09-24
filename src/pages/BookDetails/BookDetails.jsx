@@ -12,11 +12,10 @@ import { LuShare2 } from "react-icons/lu";
 import { useState } from "react";
 import { useMemo } from "react";
 import { getBookDetails } from "./constants";
-import Notify from "../../Components/Notify/Notify";
 import PropTypes from "prop-types";
 import useWish from '../../Hooks/useWish';
 import { FaHeart } from "react-icons/fa6";
-
+import { joinAuthors } from "../../Utils/JoinAuthors";
 
 function BookDetails() {
     const location = useLocation();
@@ -37,12 +36,6 @@ function BookDetails() {
         setDetailsShow(!detailsShow)
     }, [detailsShow, setDetailsShow])
 
-    const joinAuthors = useCallback((authors) => {
-        if (authors.length === 0) return "";
-        if (authors.length === 1) return authors[0];
-        if (authors.length === 2) return authors.join(" and ");
-        return authors.slice(0, -1).join(", ") + ", and " + authors[authors.length - 1];
-    }, []);
 
 
     const handleWishlistClick = useCallback(
@@ -83,7 +76,7 @@ function BookDetails() {
                 setShareBtnDisable(true);
             }, 1000);
         }
-    }, [book, joinAuthors]);
+    }, [book]);
 
 
     // const handleAddToWishlist = useCallback((book) => {
@@ -242,6 +235,7 @@ BookDetails.propTypes = {
         }).isRequired,
         saleInfo: PropTypes.object,
         accessInfo: PropTypes.object,
+        
     }),
 };
 

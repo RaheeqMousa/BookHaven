@@ -1,0 +1,26 @@
+
+.cart{
+    padding: 32px 48px;
+    width: 1200px;
+    justify-self: center;
+
+    .intro{
+        gap: 16px;
+
+        div{
+            gap:8px;
+        }
+    }
+
+    .order{
+        display: grid;
+        grid-template-columns: 3fr 1fr;
+        gap: 32px;
+
+        .checkout{
+            background-color: #F8F9FA;
+            border-radius: 8px;
+            
+        }
+    }
+}

@@ -160,6 +160,14 @@ button {
     color: var(--mainColor);
 }
 
+.display-none{
+    display: none !important;
+}
+
+.display-block{
+    display: block;
+}
+
 
 @media screen and (max-width:1200px) {
     .container {

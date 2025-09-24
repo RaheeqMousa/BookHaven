@@ -8,6 +8,7 @@
     .back {
         width: fit-content;
     }
+
     .filter-section {
         .filter {
             gap: 16px;
@@ -41,11 +42,11 @@
 
     .intro {
         gap: 16px;
-      
+
         div {
-            .share-left-side{
-            gap: 8px;
-        }
+            .share-left-side {
+                gap: 8px;
+            }
 
             &:last-of-type {
                 button {
@@ -58,14 +59,15 @@
                     height: 36px;
                 }
             }
-            p{
+
+            p {
                 color: var(--gray);
             }
         }
     }
 
-    .books{
-        gap:20px;
+    .books {
+        gap: 20px;
     }
 
     .purchase {
@@ -101,5 +103,15 @@
                 }
             }
         }
+    }
+
+    @media screen and (max-width: 1200px) {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    @media screen and (max-width: 426px) {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
     }
 }

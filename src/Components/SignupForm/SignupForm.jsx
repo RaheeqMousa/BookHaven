@@ -7,7 +7,7 @@ function SignupForm(props){
         <div className={`row flex-direction-column controls`}>
             <div className={`row justify-content-center flex-direction-column align-start width-100 field`}>
                 <label htmlFor="username">Username:</label>
-                <input id="username" type='text' name="username" placeholder='Enter your username' {...register("username", {required:'username is required', minLength:{value: 6, message:"Username must be 'AT LEAST' 3 digits"}, maxLength:{value: 20, message:"Username must be 'AT MOST' 20 digits"} })}/>
+                <input id="username" type='text' name="username" placeholder='Enter your username' {...register("username", {required:'username is required', minLength:{value: 3, message:"Username must be 'AT LEAST' 3 digits"}, maxLength:{value: 20, message:"Username must be 'AT MOST' 20 digits"} })}/>
             </div>
             <p className="error">{errors.username?errors.username.message:''}</p>
             <div className={`row justify-content-center flex-direction-column align-start width-100 field`}>

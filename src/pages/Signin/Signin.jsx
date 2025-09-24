@@ -16,30 +16,30 @@ import Back from '../../Components/Back';
 
 
 function Signin() {
-    const FACEBOOK_KEY=import.meta.env.VITE_FACEBOOK_APP_ID;
+    const FACEBOOK_KEY = import.meta.env.VITE_FACEBOOK_APP_ID;
     const [serverError, setServerError] = useState('');
+    const [remember, setRemember] = useState(false);
     const navigate = useNavigate();
 
-    const handleSignin = useCallback((formData) => {
-        setServerError('');
+    const handleSignin = useCallback((data) => {
+        setServerError("");
 
-        if (!formData.email || !formData.password) {
-            setServerError('All fields are required');
+        const users = JSON.parse(localStorage.getItem("users")) || [];
+
+        const user = users.find(u => u.email === data.email && u.password === data.password);
+
+        if (!user) {
+            setServerError("Wrong email or password");
             return;
         }
 
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-        const userExists = users.filter(user => user.email === formData.email && user.password === formData.password);
+        if(!remember)
+            sessionStorage.setItem("user", JSON.stringify(user));
+        else if(remember)
+            localStorage.setItem("user", JSON.stringify(user));
 
-        if (!userExists) {
-            setServerError('Wrong email or password');
-            return;
-        }
-
-        sessionStorage.setItem('user', JSON.stringify(formData)); //if chose remember me
-
-        navigate('/');
-    }, [setServerError, navigate]);
+        navigate("/");
+    },[navigate, remember]);
 
     const handleFacebookResponse = (response) => {
         console.log("Facebook Login Success:", response);
@@ -78,6 +78,10 @@ function Signin() {
         flow: "implicit"
     });
 
+    const handleCheckboxChange=useCallback(()=>{
+        setRemember(!remember)
+    },[remember]);
+
     return (
         <section className={Style['auth-layout']}>
             <div className={Style['auth-design-wrapper']}>
@@ -108,7 +112,7 @@ function Signin() {
             <div className={`row justify-content-center ${Style['auth-section']}`}>
                 <div className={`row flex-direction-column align-start ${Style['auth-process']}`}>
                     <Back />
-                    
+
                     <div className={`row flex-direction-column align-start ${Style.heading}`}>
                         <h2>Sign In</h2>
                         <p>Enter your credentials to access your account</p>
@@ -118,7 +122,7 @@ function Signin() {
                             <LoginForm />
                             <div className='row width-100'>
                                 <div className={`row ${Style['remember-me']}`}>
-                                    <input type='checkbox' />
+                                    <input type='checkbox' onChange={handleCheckboxChange} />
                                     <p>Remember me</p>
                                 </div>
                                 <Link to={'/auth/forgotpassword'} className={Style['forgot-password']}>Forgot password?</Link>

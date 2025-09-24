@@ -6,18 +6,94 @@ import { LuShoppingCart } from "react-icons/lu";
 import BookCard from "../../Components/BookCard/BookCard";
 import { calculateTotalPrice } from "../../Utils/calculateTotalPrice";
 import { useNavigate } from "react-router-dom";
+import { joinAuthors } from "../../Utils/JoinAuthors";
 
 function Wishlist() {
 
+    const [isGrid, setIsGrid] = useState(window.innerWidth > 768);
     const [items, setItems] = useState([]);
     const number_of_wished = items.length;
-    const navigate=useNavigate();
+    const navigate = useNavigate();
+    const [shareBtnSuccess, setShareBtnSuccess] = useState("");
+    const [disableShareBtn, setShareBtnDisable] = useState(false);
+
+
+    const loadWishlist = useCallback(() => {
+        const stored = JSON.parse(localStorage.getItem("wishlist")) || [];
+        const user = JSON.parse(localStorage.getItem("user"));
+        setItems(stored.filter(item => item.userId === user.id));
+    }, []);
+
+    const handleShare = useCallback(async () => {
+        const shareData = {
+            title: "Book Wishlist Collection",
+            text: items.map(
+                (b, i) =>
+                    `${i + 1}. ${b.volumeInfo.title} by ${joinAuthors(
+                        b.volumeInfo.authors
+                    )}`
+            )
+                .join("\n"),
+            url: `http://localhost:5173/wishlist/${JSON.parse(localStorage.getItem('user')).id}`
+        };
+
+        setShareBtnDisable(false);
+
+        if (navigator.share) {
+            try {
+                await navigator.share(shareData);
+                console.log("Shared successfully!");
+            } catch (err) {
+                console.error("Share failed:", err);
+            }
+        } else {
+            navigator.clipboard.writeText(shareData.url);
+            setShareBtnSuccess("Link copied to clipboard!");
+            setTimeout(() => {
+                setShareBtnSuccess("");
+                setShareBtnDisable(true);
+            }, 1000);
+        }
+    }, [items]);
+
+
+    const handleFilterChange = useCallback((filterBy) => {
+        const storedWishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        const user = JSON.parse(localStorage.getItem('user'));
+        const userWish = storedWishlist.filter(w => w.userId === user.id);
+
+        const sorted = [...userWish].sort((a, b) => {
+            const a_time = new Date(a.addedAt).getTime();
+            const b_time = new Date(b.addedAt).getTime();
+            return filterBy === "recently" ? b_time - a_time : a_time - b_time;
+        });
+
+        setItems(sorted);
+    }, []);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsGrid(window.innerWidth > 768);
+        };
+        console.log('use effedct')
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
 
     useEffect(() => {
         try {
-            const storedWishlist = localStorage.getItem('wishlist');
-            if (storedWishlist) {
-                setItems(JSON.parse(storedWishlist));
+            const storedWishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+            const user = JSON.parse(localStorage.getItem('user'));
+            const userWish = storedWishlist.filter(w => w.userId === user.id);
+
+            const sorted = [...userWish].sort((a, b) => {
+                const a_time = new Date(a.addedAt).getTime();
+                const b_time = new Date(b.addedAt).getTime();
+                return b_time - a_time;
+            });
+            if (userWish) {
+                setItems(sorted);
             } else {
                 setItems([]);
             }
@@ -25,7 +101,7 @@ function Wishlist() {
             console.error(e);
             setItems([]);
         }
-    }, []);
+    }, [handleFilterChange]);
 
 
     const clearWishlist = useCallback(() => {
@@ -35,7 +111,7 @@ function Wishlist() {
 
 
     const addAllToCart = () => {
-        if(!localStorage.getItem('user')){
+        if (!localStorage.getItem('user')) {
             navigate('/auth/login');
         }
 
@@ -61,6 +137,7 @@ function Wishlist() {
     };
 
 
+
     const totalPrice = calculateTotalPrice(items);
 
     return (
@@ -74,9 +151,13 @@ function Wishlist() {
                     </div>
 
                     <div className={`row justify-content-center align-center ${Style['share-wishlist']}`}>
-                        <button className={`row justify-content-center `}>
-                            <LuShare2 color="1A237E" size={16} />
-                            Share Wishlist
+                        <button disabled={disableShareBtn} onClick={handleShare} className={`row justify-content-center `} aria-label="Share wishlist button">
+                            {shareBtnSuccess ? shareBtnSuccess :
+                                <>
+                                    <LuShare2 color="1A237E" size={16} />
+                                    Share Wishlist
+                                </>
+                            }
                         </button>
                     </div>
                 </div>
@@ -85,16 +166,17 @@ function Wishlist() {
             <div className={`row width-100 ${Style['filter-section']}`}>
                 <p>Showing {number_of_wished} books</p>
                 <div className={`row ${Style.filter}`}>
-                    <select>
-                        <option>Recently Added</option>
+                    <select onChange={e => handleFilterChange(e.target.value)}>
+                        <option value={'recently'}>Recently Added</option>
+                        <option value={'oldest'} >Oldest Fisrt</option>
                     </select>
                     <button onClick={addAllToCart}>Add All to Cart</button>
                 </div>
             </div>
 
-            <div className={`row justify-content-start ${Style.books}`}>
+            <div className={`row justify-content-start width-100 ${Style.books}`}>
                 {items.map((b) =>
-                    <BookCard book={b} key={b.id} isGridDisplay={true} />
+                    <BookCard book={b} key={b.id} isGridDisplay={isGrid} wishlistChange={loadWishlist} />
                 )
                 }
             </div>

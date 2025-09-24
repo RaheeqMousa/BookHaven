@@ -12,6 +12,7 @@ import Signin from './pages/Signin/Signin'
 import Signup from './pages/Signup/Signup'
 import NotFound from './pages/NotFound/NotFound'
 import BookDetails from './pages/BookDetails/BookDetails'
+import SharedWishlist from './pages/SharedWishlist/SharedWishlist'
 const Cart = lazy(() => import('./pages/Cart/Cart'))
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
             </Route>
 
             <Route path='/bookdetails' element={<BookDetails />} />
+            <Route path='/wishlist/:id' element={<SharedWishlist />} />
 
             <Route element={<SecondaryLayout />}>
               <Route element={<AlreadyLoggedInRoute />}>
