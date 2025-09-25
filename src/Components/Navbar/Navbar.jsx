@@ -4,8 +4,20 @@ import CartImg from '../../assets/Images/cart.svg'
 import Style from './Navbar.module.scss'
 import SearchBar from '../SearchBar/SearchBar'
 import { Link } from 'react-router-dom'
+import { useCallback, useContext } from 'react'
+import { UserContext } from '../../context/UserContext'
 
 function Navbar() {
+    const { user, setUser } = useContext(UserContext);
+    console.log(user);
+
+    const logout = useCallback(() =>
+        setUser(null)
+        , [setUser]);
+
+    const logoutHandler = useCallback(() =>
+        logout()
+        , [logout]);
 
     return (
         <header className='row justify-content-center'>
@@ -22,11 +34,20 @@ function Navbar() {
                         <img src={WishlistImg} width={16} height={16} alt='Wishlist button' title='Wishlist button' />
                     </Link>
                     <Link aria-label='Cart button' className='row justify-content-center' to='/user/cart'>
-                        <img src={CartImg} width={16} height={16}alt='Cart button' title='Cart button' />
+                        <img src={CartImg} width={16} height={16} alt='Cart button' title='Cart button' />
                     </Link>
-                    <Link aria-label='profile button' className='row justify-content-center' to='/auth/login'>
-                        <img src={ProfileImg} width={16} height={16} alt='profile button' title='profile button'/>
-                    </Link>
+                    {
+                        !user ?
+                            (
+                                <Link aria-label='profile button' className='row justify-content-center' to='/auth/login'>
+                                    <img src={ProfileImg} width={16} height={16} alt='profile button' title='profile button' />
+                                </Link>) : (
+                                <div className='row'>
+                                    <button onClick={logoutHandler}>logout</button>
+                                </div>
+                            )
+                    }
+
                 </div>
             </div>
         </header>

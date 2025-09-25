@@ -7,13 +7,23 @@ import { Link } from 'react-router-dom'
 import { FaHeart } from "react-icons/fa6";
 import useWish from '../../Hooks/useWish';
 import { joinAuthors } from '../../Utils/JoinAuthors';
-
+import { useMemo } from 'react';
+import { UserContext } from '../../context/UserContext';
+import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { stopLinkPropagation } from '../../Utils/stopLinkPropagation';
 
 function BookCard(props) {
 
+    const { user } = useContext(UserContext);
     const { book, isGridDisplay, wishlistChange, showActions = true } = props;
-    const [wish, toggleWish] = useWish(book);
-    console.log(showActions);
+    const bookPrice = useMemo(() => {
+        const price =
+            book.price ?? Math.floor(Math.random() * 40) + 10;
+        return price;
+    }, [book]);
+    const [wish, toggleWish] = useWish(book, bookPrice);
+    const navigate = useNavigate();
 
 
     const handleWishlistClick = useCallback(
@@ -25,6 +35,61 @@ function BookCard(props) {
         },
         [toggleWish, wishlistChange]
     );
+
+    const addToCart = useCallback((book) => {
+        if (!user) {
+            alert("Please log in to add items to your cart.");
+            return;
+        }
+
+        let cart = localStorage.getItem("cart")
+            ? JSON.parse(localStorage.getItem("cart"))
+            : [];
+
+        const existingBookIndex = cart.findIndex(b => b.id === book.id && b.userId === user.id);
+
+        if (existingBookIndex !== -1) {
+            cart[existingBookIndex].quantity += 1;
+        } else {
+            cart.push({
+                userId: user.id,
+                id: book.id,
+                addedAt: new Date().toISOString(),
+                saleInfo: {
+                    saleability: book.saleInfo.saleability,
+                    price: book.saleInfo.listPrice?.amount || bookPrice,
+                },
+                volumeInfo: {
+                    title: book.volumeInfo.title,
+                    subtitle: book.volumeInfo.subtitle || "",
+                    authors: book.volumeInfo.authors || [],
+                    printType: book.volumeInfo.printType,
+                    categories: book.volumeInfo.categories || [],
+                    pageCount: book.volumeInfo.pageCount,
+                    description: book.volumeInfo.description,
+                    imageLinks: {
+                        smallThumbnail: book.volumeInfo.imageLinks?.smallThumbnail || "",
+                        thumbnail: book.volumeInfo.imageLinks?.thumbnail || "",
+                    },
+                },
+                accessInfo: {
+                    webReaderLink: book.accessInfo.webReaderLink
+                },
+                quantity: 1
+            });
+        }
+
+        localStorage.setItem("cart", JSON.stringify(cart));
+        navigate('/user/cart')
+    }, [user, bookPrice, navigate]);
+
+    const addToCartHandler = useCallback((book) =>
+        (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            addToCart(book);
+        }
+        , [addToCart])
 
 
     return (
@@ -39,7 +104,7 @@ function BookCard(props) {
                     alt={book.volumeInfo.title}
                     title={book.volumeInfo.title} width={168} height={180}
                 />
-                <div className={showActions? 'display-block':'display-none'}>
+                <div className={showActions ? 'display-block' : 'display-none'}>
                     {book.saleInfo.saleability === "FREE" ? <p className={Style.free}>FREE</p> : ''}
                     <button aria-label='Add to wishlist button' onClick={handleWishlistClick} className={`row justify-content-center ${Style.wishlist}`}>
                         {
@@ -49,13 +114,19 @@ function BookCard(props) {
                         }
                     </button>
                 </div>
-                <div className={showActions? 'display-block':'display-none'}>
+                <div className={showActions ? 'display-block' : 'display-none'}>
                     <p className={Style.printype}>{book.volumeInfo.printType}</p>
                     <div className={`row ${Style['quick-add-wrapper']}`}>
-                        <button className={`row justify-content-center ${Style['quick-add']}`}>
-                            <LuShoppingCart size={16} /> Quick Add
-                            <p className={`row justify-content-center ${Style['preview']}`}>Preview</p>
-                        </button>
+                        <div className={`row ${Style['buttons-wrapper']}`}>
+                            <button className={`row justify-content-center ${Style['quick-add']}`} onClick={addToCartHandler(book)}>
+                                <LuShoppingCart size={16} /> Quick Add
+
+                            </button>
+                            <a href={book.volumeInfo.previewLink} target="_blank" rel="noopener noreferrer"
+                             className={`row justify-content-center ${Style['preview']}`} onClick={stopLinkPropagation}>
+                                Preview
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { MdDescription } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
-const useWish = (book) => {
+const useWish = (book, bookPrice) => {
     const navigate= useNavigate();
     const [isWished, setIsWished] = useState(false);
 
@@ -44,7 +44,7 @@ const useWish = (book) => {
                 addedAt: new Date().toISOString(),
                 saleInfo: {
                     saleability: book.saleInfo.saleability,
-                    price: book.saleInfo.listPrice?.amount || Math.floor(Math.random() * 20) + 5,
+                    price: book.saleInfo.listPrice?.amount || bookPrice,
                 },
                 volumeInfo: {
                     title: book.volumeInfo.title,
@@ -69,7 +69,7 @@ const useWish = (book) => {
 
         localStorage.setItem("wishlist", JSON.stringify(cart));
         setIsWished(!isWished);
-    }, [book, isWished, navigate]);
+    }, [book, isWished, navigate, bookPrice]);
 
     return [isWished, toggleWish];
 };

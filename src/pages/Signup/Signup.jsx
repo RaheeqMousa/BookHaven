@@ -14,9 +14,12 @@ import * as jwt_decode from "jwt-decode";
 import { FacebookProvider, Login } from 'react-facebook';
 import Back from '../../Components/Back';
 import { v4 as uuidv4 } from "uuid";
+import { useContext } from 'react';
+import { UserContext } from '../../context/UserContext';
 
 
 function Signup() {
+    const {setUser}= useContext(UserContext);
     const FACEBOOK_KEY=import.meta.env.VITE_FACEBOOK_APP_ID;
     const [serverError, setServerError] = useState('');
     const navigate = useNavigate();
@@ -44,13 +47,14 @@ function Signup() {
             return;
         }
 
-        users.push({...formData,id: uuidv4()});
+        const newUser={...formData,id: uuidv4()};
+        users.push(newUser);
         localStorage.setItem('users', JSON.stringify(users));
 
         localStorage.setItem('user', JSON.stringify({...formData, id: uuidv4()}));
-
+        setUser(newUser)
         navigate('/');
-    }, [setServerError, navigate]);
+    }, [setServerError, navigate, setUser]);
 
 
     const handleFacebookResponse = (response) => {
@@ -64,6 +68,7 @@ function Signup() {
                 accessToken: response.accessToken
             };
             sessionStorage.setItem("user", JSON.stringify(user));
+            setUser(user);
             navigate('/');
         } else {
             setServerError("Facebook login failed");
@@ -81,7 +86,7 @@ function Signup() {
                 password: decoded.password
             };
             sessionStorage.setItem("user", JSON.stringify(user));
-
+            setUser(user);
             navigate('/');
         },
         onError: () => {

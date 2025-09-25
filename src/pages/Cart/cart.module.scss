@@ -11,7 +11,7 @@
             gap: 8px;
         }
 
-        .number-of-items{
+        .number-of-items {
             color: var(--gray);
         }
     }
@@ -22,7 +22,7 @@
         gap: 32px;
 
         .cards {
-            gap:20px;
+            gap: 20px;
 
             .cart-card {
                 padding: 25px;
@@ -44,20 +44,20 @@
                     .info {
                         gap: 4px;
 
-                        .category{
+                        .category {
                             border-radius: 6px;
                             padding: 3px 9px;
-                            border:1px solid #E0E0E0;
+                            border: 1px solid #E0E0E0;
                             font-size: 12px;
                             color: var(--gray);
                         }
 
-                        svg{
+                        svg {
                             align-self: flex-start;
                         }
                     }
 
-                    .price{
+                    .price {
                         color: var(--mainColor);
                         font-size: 18px;
                         font-weight: bold;
@@ -66,18 +66,21 @@
                     .quantity {
                         gap: 8px;
 
-                        .incr, .decr, p{
+                        .incr,
+                        .decr,
+                        p {
                             width: 32px;
                             height: 32px;
                         }
 
-                        .incr, .decr{
+                        .incr,
+                        .decr {
                             border: 1px solid #E0E0E0;
                             border-radius: 6px;
                             background-color: white;
                         }
 
-                        p{
+                        p {
                             font-weight: 500;
                         }
                     }
@@ -96,25 +99,28 @@
             padding: 20px 30px;
             gap: 30px;
             height: fit-content;
+            box-shadow: 0px 4px 12px 0px #00000014;
 
-            .summary{
-                gap:25px;
+            .summary {
+                gap: 25px;
+
+
             }
 
-            .promo-code{
+            .promo-code {
                 display: grid;
                 grid-template-columns: 3fr 1fr;
                 gap: 8px;
                 height: 36px;
-                
-                input{
+
+                input {
                     background-color: white;
                     border-radius: 6px;
                     color: var(--gray);
                     border: none;
                 }
 
-                button{
+                button {
                     border-radius: 6px;
                     color: var(--mainColor);
                     border: 1px solid var(--mainColor);
@@ -122,34 +128,50 @@
                 }
             }
 
-            .divider{
+            .divider {
                 width: 100%;
                 background-color: #E0E0E0;
                 height: 1px;
             }
-            .subjects{
+
+            .subjects {
                 gap: 12px;
                 font-size: 14px;
-                .subject{
-                    color:var(--gray)
+
+                .subject {
+                    color: var(--gray)
                 }
             }
 
-            .proceed-button{
+            .proceed-button {
                 width: 100%;
                 background-color: var(--mainColor);
-                color:white;
+                color: white;
                 font-weight: bold;
                 border-radius: 6px;
                 padding: 8px 16px;
                 margin-bottom: 15px;
             }
 
-            .feature{
+            .feature {
                 color: var(--gray);
                 font-size: 12px;
                 gap: 8px;
             }
         }
+
+        @media screen and (max-width:768px) {
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap:0px;
+        }
+
+    }
+
+    @media screen and (max-width:1200px) {
+        width: 100%;
+        padding-right: 10px;
+        padding-left: 10px;
+        box-sizing: border-box;
     }
 }

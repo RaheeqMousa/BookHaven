@@ -7,9 +7,11 @@ import BookCard from "../../Components/BookCard/BookCard";
 import { calculateTotalPrice } from "../../Utils/calculateTotalPrice";
 import { useNavigate } from "react-router-dom";
 import { joinAuthors } from "../../Utils/JoinAuthors";
+import { useContext } from "react";
+import { UserContext } from "../../context/UserContext";
 
 function Wishlist() {
-
+    const { user } = useContext(UserContext);
     const [isGrid, setIsGrid] = useState(window.innerWidth > 768);
     const [items, setItems] = useState([]);
     const number_of_wished = items.length;
@@ -20,9 +22,8 @@ function Wishlist() {
 
     const loadWishlist = useCallback(() => {
         const stored = JSON.parse(localStorage.getItem("wishlist")) || [];
-        const user = JSON.parse(localStorage.getItem("user"));
         setItems(stored.filter(item => item.userId === user.id));
-    }, []);
+    }, [user]);
 
     const handleShare = useCallback(async () => {
         const shareData = {
@@ -59,7 +60,6 @@ function Wishlist() {
 
     const handleFilterChange = useCallback((filterBy) => {
         const storedWishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-        const user = JSON.parse(localStorage.getItem('user'));
         const userWish = storedWishlist.filter(w => w.userId === user.id);
 
         const sorted = [...userWish].sort((a, b) => {
@@ -69,7 +69,7 @@ function Wishlist() {
         });
 
         setItems(sorted);
-    }, []);
+    }, [user]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -84,7 +84,6 @@ function Wishlist() {
     useEffect(() => {
         try {
             const storedWishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-            const user = JSON.parse(localStorage.getItem('user'));
             const userWish = storedWishlist.filter(w => w.userId === user.id);
 
             const sorted = [...userWish].sort((a, b) => {
@@ -101,7 +100,7 @@ function Wishlist() {
             console.error(e);
             setItems([]);
         }
-    }, [handleFilterChange]);
+    }, [handleFilterChange, user]);
 
 
     const clearWishlist = useCallback(() => {

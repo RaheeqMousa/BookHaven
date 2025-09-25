@@ -13,6 +13,8 @@ import { useGoogleLogin } from "@react-oauth/google";
 import * as jwt_decode from "jwt-decode";
 import { FacebookProvider, Login } from 'react-facebook';
 import Back from '../../Components/Back';
+import {UserContext} from '../../context/UserContext';
+import { useContext } from 'react';
 
 
 function Signin() {
@@ -20,6 +22,7 @@ function Signin() {
     const [serverError, setServerError] = useState('');
     const [remember, setRemember] = useState(false);
     const navigate = useNavigate();
+    const {setUser}= useContext(UserContext)
 
     const handleSignin = useCallback((data) => {
         setServerError("");
@@ -33,13 +36,15 @@ function Signin() {
             return;
         }
 
+        setUser(user);
+
         if(!remember)
             sessionStorage.setItem("user", JSON.stringify(user));
         else if(remember)
             localStorage.setItem("user", JSON.stringify(user));
 
         navigate("/");
-    },[navigate, remember]);
+    },[navigate, remember,setUser]);
 
     const handleFacebookResponse = (response) => {
         console.log("Facebook Login Success:", response);
@@ -51,7 +56,11 @@ function Signin() {
                 facebookId: response.id,
                 accessToken: response.accessToken
             };
-            localStorage.setItem("user", JSON.stringify(user));
+            setUser(user);
+            if(remember)
+                localStorage.setItem("user", JSON.stringify(user));
+            else
+                sessionStorage.setItem("user", JSON.stringify(user));
             navigate('/');
         } else {
             setServerError("Facebook login failed");
@@ -67,8 +76,11 @@ function Signin() {
                 email: decoded.email,
                 password: decoded.password
             };
-            localStorage.setItem("user", JSON.stringify(user));
-
+            setUser(user);
+            if(remember)
+                localStorage.setItem("user", JSON.stringify(user));
+            else
+                sessionStorage.setItem("user", JSON.stringify(user));
             navigate('/');
         },
         onError: () => {

@@ -1,7 +1,7 @@
 import Back from '../../Components/Back'
 import { LuShield } from "react-icons/lu";
 import Style from './cart.module.scss'
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FiTrash2 } from "react-icons/fi";
 import { joinAuthors } from '../../Utils/JoinAuthors';
 import ShippingImg from '../../assets/Images/shipping_cart.svg'
@@ -11,13 +11,22 @@ import { TiMinus } from "react-icons/ti";
 function Cart() {
 
     const [items, setItems] = useState([]);
+    const [totalPrice, setTotalPrice]= useState(0);
+
+    const calcSalary=useCallback(()=>
+        setTotalPrice(items.reduce((total, book)=> total+ (book.saleInfo.price * book.quantity),0 ))
+    ,[items]);
+
+    useEffect(()=>
+        calcSalary()
+    ,[items,calcSalary])
 
     useEffect(() => {
         try {
             const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
             const user = JSON.parse(localStorage.getItem('user'));
             const userCart = storedCart.filter(w => w.userId === user.id);
-
+            
             if (userCart) {
                 setItems(userCart);
                 console.log(userCart);
@@ -30,6 +39,46 @@ function Cart() {
         }
     }, []);
 
+    const handleDeleteCard = useCallback((id) => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        const updatedItems = items.filter(b => !(b.id === id && b.userId === user.id));
+        setItems(updatedItems);
+
+        localStorage.setItem('cart', JSON.stringify(updatedItems));
+
+    }, [setItems, items]);
+
+    const getDeleteHandler =useCallback((id)=>
+        ()=>
+        handleDeleteCard(id)
+    ,[handleDeleteCard]);
+
+
+    const increment= useCallback((id)=>{
+        const user = JSON.parse(localStorage.getItem('user'));
+        items.find(b => (b.id === id && b.userId === user.id)).quantity+=1;
+        setItems([...items]);
+        localStorage.setItem('cart', JSON.stringify(items));
+
+    },[setItems,items]);
+
+    const getIncrementHandler =useCallback((id)=>
+        ()=>
+        increment(id)
+    ,[increment]);
+
+    const decrement= useCallback((id)=>{
+        const user = JSON.parse(localStorage.getItem('user'));
+        items.find(b => (b.id === id && b.userId === user.id)).quantity-=1;
+        setItems([...items]);
+        localStorage.setItem('cart', JSON.stringify(items));
+
+    },[setItems,items]);
+
+    const getDecrementHandler =useCallback((id)=>
+        ()=>
+        decrement(id)
+    ,[decrement]);
 
     return (
         <section className={`row judtify-content-center flex-direction-column ${Style.cart}`}>
@@ -61,14 +110,17 @@ function Cart() {
                                                     (<p className={Style.category} key={index}>{cat}</p>))
                                             }
                                         </div>
-                                        <FiTrash2 color='#666666' size={16} />
+                                        <button onClick={getDeleteHandler(book.id)}>
+                                            <FiTrash2 color='#666666' size={16} />
+                                        </button>
+
                                     </div>
                                     <div className={`row width-100`}>
                                         <p className={Style.price}>${book.saleInfo.price * book.quantity}</p>
                                         <div className={`row ${Style['quantity']}`}>
-                                            <button className={`row justify-content-center ${Style.decr}`}><TiMinus size={16} color='#6666' /></button>
+                                            <button className={`row justify-content-center ${Style.decr}`} onClick={getDecrementHandler(book.id)}><TiMinus size={16} color='#6666' /></button>
                                             <p className='row justify-content-center'>{book.quantity}</p>
-                                            <button className={`row justify-content-center ${Style.incr}`}><GoPlus size={16} color='black' /></button>
+                                            <button className={`row justify-content-center ${Style.incr}`} onClick={getIncrementHandler(book.id)}><GoPlus size={16} color='black' /></button>
                                         </div>
                                     </div>
                                     <div className={`row justify-content-start width-100 ${Style.shipping}`}>
@@ -83,34 +135,34 @@ function Cart() {
 
                 <section className={`row flex-direction-column justify-content-center ${Style.checkout}`}>
                     <h2 className='width-100'>Order Summary</h2>
-                    <div className={`row flex-direction-column ${Style.summary}`}>
-                        <div className={`${Style['promo-code']}`}>
+                    <div className={`row flex-direction-column width-100 ${Style.summary}`}>
+                        <div className={`width-100 ${Style['promo-code']}`}>
                             <input placeholder='Enter promo code' />
                             <button>Apply</button>
                         </div>
                         <div className={Style.divider}></div>
-                        <div className={`row flex-direction-column ${Style.subjects}`}>
-                            <div className={`row ${Style.subject}`}>
+                        <div className={`row flex-direction-column width-100 ${Style.subjects}`}>
+                            <div className={`row width-100  ${Style.subject}`}>
                                 <p>Subtotal</p>
-
+                                <p>${totalPrice}</p>
                             </div>
-                            <div className={`row ${Style.subject}`}>
+                            <div className={`row width-100  ${Style.subject}`}>
                                 <p>Saving</p>
-
+                                <p>$0</p>
                             </div>
-                            <div className={`row ${Style.subject}`}>
+                            <div className={`row width-100 ${Style.subject}`}>
                                 <p>Shipping</p>
-
+                                <p>FREE</p>
                             </div>
-                            <div className={`row ${Style.subject}`}>
+                            <div className={`row width-100  ${Style.subject}`}>
                                 <p>Tax</p>
-
+                                <p>$7</p>
                             </div>
                         </div>
                         <div className={Style.divider}></div>
                         <div className='row width-100'>
                             <h3>Total</h3>
-                            <p>$150</p>
+                            <p className={Style['total-price']}>{totalPrice}</p>
                         </div>
                     </div>
                     <div className='width-100'>

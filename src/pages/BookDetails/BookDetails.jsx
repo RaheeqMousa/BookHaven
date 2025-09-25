@@ -25,8 +25,6 @@ function BookDetails() {
     const [isExpanded, setIsExpanded] = useState(false);
     const [shareBtnSuccess, setShareBtnSuccess] = useState('')
     const [disableShareBtn, setShareBtnDisable] = useState(false);
-    // const [message, setMessage] = useState("");
-    // const navigate = useNavigate();
 
     const toggleRead = useCallback(() => {
         setIsExpanded(!isExpanded);
