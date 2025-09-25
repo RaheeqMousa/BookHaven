@@ -1,26 +1,155 @@
-
-.cart{
+.cart {
     padding: 32px 48px;
     width: 1200px;
     justify-self: center;
+    gap: 32px;
 
-    .intro{
+    .intro {
         gap: 16px;
 
-        div{
-            gap:8px;
+        div {
+            gap: 8px;
+        }
+
+        .number-of-items{
+            color: var(--gray);
         }
     }
 
-    .order{
+    .order {
         display: grid;
-        grid-template-columns: 3fr 1fr;
+        grid-template-columns: 2fr 1fr;
         gap: 32px;
 
-        .checkout{
+        .cards {
+            gap:20px;
+
+            .cart-card {
+                padding: 25px;
+                border-radius: 8px;
+                border: 1px solid #E0E0E0;
+                gap: 16px;
+                box-shadow: 0px 2px 4px 0px #00000014;
+                box-sizing: border-box;
+
+                .book-cover {
+                    border-radius: 4px;
+                    align-self: flex-start;
+                }
+
+                .card-info {
+                    gap: 8px;
+                    flex: 1;
+
+                    .info {
+                        gap: 4px;
+
+                        .category{
+                            border-radius: 6px;
+                            padding: 3px 9px;
+                            border:1px solid #E0E0E0;
+                            font-size: 12px;
+                            color: var(--gray);
+                        }
+
+                        svg{
+                            align-self: flex-start;
+                        }
+                    }
+
+                    .price{
+                        color: var(--mainColor);
+                        font-size: 18px;
+                        font-weight: bold;
+                    }
+
+                    .quantity {
+                        gap: 8px;
+
+                        .incr, .decr, p{
+                            width: 32px;
+                            height: 32px;
+                        }
+
+                        .incr, .decr{
+                            border: 1px solid #E0E0E0;
+                            border-radius: 6px;
+                            background-color: white;
+                        }
+
+                        p{
+                            font-weight: 500;
+                        }
+                    }
+
+                    .shipping {
+                        gap: 4px;
+                        color: #4CAF50;
+                    }
+                }
+            }
+        }
+
+        .checkout {
             background-color: #F8F9FA;
             border-radius: 8px;
-            
+            padding: 20px 30px;
+            gap: 30px;
+            height: fit-content;
+
+            .summary{
+                gap:25px;
+            }
+
+            .promo-code{
+                display: grid;
+                grid-template-columns: 3fr 1fr;
+                gap: 8px;
+                height: 36px;
+                
+                input{
+                    background-color: white;
+                    border-radius: 6px;
+                    color: var(--gray);
+                    border: none;
+                }
+
+                button{
+                    border-radius: 6px;
+                    color: var(--mainColor);
+                    border: 1px solid var(--mainColor);
+                    background-color: white;
+                }
+            }
+
+            .divider{
+                width: 100%;
+                background-color: #E0E0E0;
+                height: 1px;
+            }
+            .subjects{
+                gap: 12px;
+                font-size: 14px;
+                .subject{
+                    color:var(--gray)
+                }
+            }
+
+            .proceed-button{
+                width: 100%;
+                background-color: var(--mainColor);
+                color:white;
+                font-weight: bold;
+                border-radius: 6px;
+                padding: 8px 16px;
+                margin-bottom: 15px;
+            }
+
+            .feature{
+                color: var(--gray);
+                font-size: 12px;
+                gap: 8px;
+            }
         }
     }
 }
