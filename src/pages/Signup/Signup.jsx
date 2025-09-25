@@ -10,7 +10,6 @@ import { useState } from 'react';
 import { RiFacebookCircleFill } from "react-icons/ri";
 import { RiGoogleFill } from "react-icons/ri";
 import { useGoogleLogin } from "@react-oauth/google";
-import * as jwt_decode from "jwt-decode";
 import { FacebookProvider, Login } from 'react-facebook';
 import Back from '../../Components/Back';
 import { v4 as uuidv4 } from "uuid";
@@ -19,8 +18,8 @@ import { UserContext } from '../../context/UserContext';
 
 
 function Signup() {
-    const {setUser}= useContext(UserContext);
-    const FACEBOOK_KEY=import.meta.env.VITE_FACEBOOK_APP_ID;
+    const { setUser } = useContext(UserContext);
+    const FACEBOOK_KEY = import.meta.env.VITE_FACEBOOK_APP_ID;
     const [serverError, setServerError] = useState('');
     const navigate = useNavigate();
 
@@ -47,26 +46,37 @@ function Signup() {
             return;
         }
 
-        const newUser={...formData,id: uuidv4()};
+        const newUser = { ...formData, id: uuidv4() };
         users.push(newUser);
         localStorage.setItem('users', JSON.stringify(users));
 
-        localStorage.setItem('user', JSON.stringify({...formData, id: uuidv4()}));
+        localStorage.setItem('user', JSON.stringify({ ...formData, id: uuidv4() }));
         setUser(newUser)
         navigate('/');
     }, [setServerError, navigate, setUser]);
 
 
     const handleFacebookResponse = (response) => {
-        console.log("Facebook Login Success:", response);
-
         if (response.accessToken) {
-            const user = {
-                name: response.name,
-                email: response.email,
-                facebookId: response.id,
-                accessToken: response.accessToken
-            };
+            if (!response.email) {
+                setServerError("Facebook account did not provide an email. Please use another sign up method.");
+                return;
+            }
+            const users = JSON.parse(localStorage.getItem("users")) || [];
+            let user = users.find(u => u.email === response.email);
+
+            if (!user) {
+                user = {
+                    id: uuidv4(),
+                    name: response.name,
+                    email: response.email,
+                    facebookId: response.id,
+                    accessToken: response.accessToken
+                };
+                users.push(user);
+                localStorage.setItem("users", JSON.stringify(users));
+            }
+
             sessionStorage.setItem("user", JSON.stringify(user));
             setUser(user);
             navigate('/');
@@ -76,24 +86,42 @@ function Signup() {
     };
 
     const signup = useGoogleLogin({
-        onSuccess: tokenResponse => {
-            const decoded = jwt_decode(tokenResponse.credential);
-            console.log("Google Login Success:", decoded);
-            const user = {
-                id: uuidv4(),
-                name: decoded.name,
-                email: decoded.email,
-                password: decoded.password
-            };
-            sessionStorage.setItem("user", JSON.stringify(user));
-            setUser(user);
-            navigate('/');
+        onSuccess: async tokenResponse => {
+            try {
+                const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                    headers: {
+                        Authorization: `Bearer ${tokenResponse.access_token}`,
+                    },
+                });
+                const profile = await res.json(); // <-- Fetch profile first
+
+                const users = JSON.parse(localStorage.getItem("users") || "[]");
+                let user = users.find((u) => u.email === profile.email);
+
+                if (user) {
+                    setServerError("User with this email already exists.");
+                    return;
+                }
+
+                user = {
+                    id: uuidv4(),
+                    name: profile.name,
+                    email: profile.email,
+                };
+
+                users.push(user);
+                localStorage.setItem("users", JSON.stringify(users));
+                sessionStorage.setItem("user", JSON.stringify(user));
+                setUser(user);
+                navigate('/');
+            } catch (e) {
+                setServerError("Google login failed", e);
+            }
         },
         onError: () => {
-            console.log("Login Failed");
             setServerError("Login Failed");
         },
-        flow: "auth-code"
+        flow: "implicit"
     });
 
 
@@ -151,10 +179,11 @@ function Signup() {
                                 <RiGoogleFill size={16} color='#333' />
                                 Continue with Google
                             </button>
-                            <FacebookProvider appId={FACEBOOK_KEY} version="v18.0">
+                            <FacebookProvider appId={FACEBOOK_KEY} >
                                 <Login
                                     autoLoad={false}
                                     fields="id,name,email,picture"
+
                                     callback={handleFacebookResponse}
                                     onError={error => {
                                         console.error("Facebook login error:", error);

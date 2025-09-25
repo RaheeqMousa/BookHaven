@@ -10,19 +10,18 @@ import { useState } from 'react';
 import { RiFacebookCircleFill } from "react-icons/ri";
 import { RiGoogleFill } from "react-icons/ri";
 import { useGoogleLogin } from "@react-oauth/google";
-import * as jwt_decode from "jwt-decode";
 import { FacebookProvider, Login } from 'react-facebook';
 import Back from '../../Components/Back';
-import {UserContext} from '../../context/UserContext';
+import { UserContext } from '../../context/UserContext';
 import { useContext } from 'react';
-
+import { v4 as uuidv4 } from "uuid";
 
 function Signin() {
     const FACEBOOK_KEY = import.meta.env.VITE_FACEBOOK_APP_ID;
     const [serverError, setServerError] = useState('');
     const [remember, setRemember] = useState(false);
     const navigate = useNavigate();
-    const {setUser}= useContext(UserContext)
+    const { setUser } = useContext(UserContext)
 
     const handleSignin = useCallback((data) => {
         setServerError("");
@@ -38,13 +37,13 @@ function Signin() {
 
         setUser(user);
 
-        if(!remember)
+        if (!remember)
             sessionStorage.setItem("user", JSON.stringify(user));
-        else if(remember)
+        else if (remember)
             localStorage.setItem("user", JSON.stringify(user));
 
         navigate("/");
-    },[navigate, remember,setUser]);
+    }, [navigate, remember, setUser]);
 
     const handleFacebookResponse = (response) => {
         console.log("Facebook Login Success:", response);
@@ -57,7 +56,7 @@ function Signin() {
                 accessToken: response.accessToken
             };
             setUser(user);
-            if(remember)
+            if (remember)
                 localStorage.setItem("user", JSON.stringify(user));
             else
                 sessionStorage.setItem("user", JSON.stringify(user));
@@ -68,31 +67,52 @@ function Signin() {
     };
 
     const signin = useGoogleLogin({
-        onSuccess: tokenResponse => {
-            const decoded = jwt_decode(tokenResponse.credential);
-            console.log("Google Login Success:", decoded);
-            const user = {
-                name: decoded.name,
-                email: decoded.email,
-                password: decoded.password
-            };
-            setUser(user);
-            if(remember)
-                localStorage.setItem("user", JSON.stringify(user));
-            else
-                sessionStorage.setItem("user", JSON.stringify(user));
-            navigate('/');
+        onSuccess: async tokenResponse => {
+            try {
+                const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                    headers: {
+                        Authorization: `Bearer ${tokenResponse.access_token}`,
+                    },
+                });
+                const profile = await res.json();
+
+                const users = JSON.parse(localStorage.getItem("users") || "[]");
+                let user = users.find((u) => u.email === profile.email);
+
+                if (!user) {
+                    // New user: create and save
+                    user = {
+                        id: uuidv4(),
+                        name: profile.name,
+                        email: profile.email,
+                        picture: profile.picture,
+                    };
+                    users.push(user);
+                    localStorage.setItem("users", JSON.stringify(users));
+                }
+
+                // Log in the user (existing or new)
+                if (remember) {
+                    localStorage.setItem("user", JSON.stringify(user));
+                } else {
+                    sessionStorage.setItem("user", JSON.stringify(user));
+                }
+
+                setUser(user);
+                navigate("/");
+            } catch (e) {
+                setServerError("Google login failed ", e);
+            }
         },
         onError: () => {
-            console.log("Login Failed");
-            setServerError("Login Failed");
+            setServerError("Google login failed");
         },
         flow: "implicit"
     });
 
-    const handleCheckboxChange=useCallback(()=>{
+    const handleCheckboxChange = useCallback(() => {
         setRemember(!remember)
-    },[remember]);
+    }, [remember]);
 
     return (
         <section className={Style['auth-layout']}>
