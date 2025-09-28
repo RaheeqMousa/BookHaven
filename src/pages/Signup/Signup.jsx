@@ -187,6 +187,7 @@ function Signup() {
                                 fields="name,email,picture"
                                 callback={handleFacebookResponse}
                                 textButton="Continue with Facebook"
+                                version="v18.0"
                             />
                             {/* <FacebookProvider appId={FACEBOOK_KEY} >
                                 <Login

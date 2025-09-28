@@ -193,6 +193,7 @@ function Signin() {
                                 fields="name,email,picture"
                                 callback={handleFacebookResponse}
                                 textButton="Continue with Facebook"
+                                version="v18.0"
                             />
                         </div>
 
