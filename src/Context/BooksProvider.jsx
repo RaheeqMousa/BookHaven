@@ -1,4 +1,4 @@
-import {useMemo, useState, useEffect, useCallback } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { UseBooksContext } from "./UseBooksContext";
 
@@ -36,9 +36,9 @@ export function BooksProvider({ children }) {
     [BASE_URL, API_KEY]
   );
 
-    useEffect(() => {
-        fetchBooks(0);
-    }, [fetchBooks]);
+  useEffect(() => {
+    fetchBooks(0);
+  }, [fetchBooks]);
 
   const handleFilterChange = useCallback(
     (category, value, field) => () => {
@@ -46,6 +46,7 @@ export function BooksProvider({ children }) {
         let newFilters;
         const current = prev[category];
 
+        let q = "search+terms";
         if (Array.isArray(current)) {
           newFilters = current.includes(value)
             ? { ...prev, [category]: current.filter((v) => v !== value) }
@@ -56,17 +57,33 @@ export function BooksProvider({ children }) {
           newFilters = { ...prev, [category]: value };
         }
 
-        let apiUrl = `${BASE_URL}/books/v1/volumes?q=search+terms&startIndex=0&maxResults=20&key=${API_KEY}`;
+        console.log(newFilters);
+        if (newFilters.Categories?.length > 0) {
+          newFilters.Categories.forEach((c) => {
+            q += `+subject:${encodeURIComponent(c)}`;
+          });
+        }
+
+        console.log(category, value, field);
+        let apiUrl = `${BASE_URL}/books/v1/volumes?q=${q}&startIndex=0&maxResults=20&key=${API_KEY}`;
         Object.entries(newFilters).forEach(([key, val]) => {
+          console.log(key, val);
           if (key === "Price Range") {
             if (val.min) apiUrl += `&minPrice=${val.min}`;
             if (val.max) apiUrl += `&maxPrice=${val.max}`;
+          } else if (key === "Categories") {
+            console.log(val);
+            val.forEach((c) => {
+              q += `+subject:${encodeURIComponent(c)}`;
+            });
+            apiUrl = `${BASE_URL}/books/v1/volumes?q=${q}&startIndex=0&maxResults=20&key=${API_KEY}`
           } else if (Array.isArray(val)) {
             val.forEach((v) => (apiUrl += `&${key}=${encodeURIComponent(v)}`));
           } else if (val) {
             apiUrl += `&${key}=${val}`;
           }
         });
+
 
         setStartIndex(0);
         fetchBooks(0, apiUrl);
@@ -101,7 +118,7 @@ export function BooksProvider({ children }) {
     [BASE_URL, API_KEY, fetchBooks]
   );
 
-  const value =useMemo(()=> ({
+  const value = useMemo(() => ({
     books,
     fetchBooks,
     startIndex,
@@ -111,11 +128,11 @@ export function BooksProvider({ children }) {
     handleFilterChange,
     handleCategoryClick,
     numberOfBooks
-  }),[books,fetchBooks,handleCategoryClick,handleFilterChange,setSelectedFilters,selectedFilters,startIndex,numberOfBooks]);
+  }), [books, fetchBooks, handleCategoryClick, handleFilterChange, setSelectedFilters, selectedFilters, startIndex, numberOfBooks]);
 
   return <UseBooksContext.Provider value={value}>
-            {children}
-        </UseBooksContext.Provider>;
+    {children}
+  </UseBooksContext.Provider>;
 }
 
 export default BooksProvider

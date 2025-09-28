@@ -1,4 +1,4 @@
-import {  useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Style from './BookDetails.module.scss'
 import { Link } from 'react-router-dom'
 import { IoArrowBack } from "react-icons/io5";
@@ -115,7 +115,7 @@ function BookDetails() {
 
                             <div className={`row flex-direction-column ${Style['book-preview']}`}>
                                 <a href={book.volumeInfo.previewLink} target="_blank" rel="noopener noreferrer" className="row justify-content-center">
-                                    <img src={PreviewImg} width={16} height={16} />
+                                    <img src={PreviewImg} width={16} height={16} alt="Preview book" title="Preview book" />
                                     Preview This Book
                                 </a>
                                 <p>Read preview pages</p>
@@ -166,7 +166,7 @@ function BookDetails() {
                             </div>
 
                             <div className={`row ${Style.options}`}>
-                                <button className="row justify-content-center" onClick={handleWishlistClick}>
+                                <button className="row justify-content-center" onClick={handleWishlistClick} aria-label="Add to wishlist button">
                                     {!isWished ? (
                                         <>
                                             <FaRegHeart size={16} color="#333333" />
@@ -176,7 +176,9 @@ function BookDetails() {
                                         <FaHeart size={16} color="red" />
                                     )}
                                 </button>
-                                <button disabled={disableShareBtn} onClick={handleShare} aria-label="Share book button">{shareBtnSuccess ? shareBtnSuccess : <LuShare2 size={16} color="#333333" />}</button>
+                                <button disabled={disableShareBtn} onClick={handleShare} aria-label="Share book button">
+                                    {shareBtnSuccess ? shareBtnSuccess : <LuShare2 size={16} color="#333333" />}
+                                </button>
                             </div>
 
                             <div className={`row flex-direction-column ${Style['download-options']}`}>
@@ -233,7 +235,7 @@ BookDetails.propTypes = {
         }).isRequired,
         saleInfo: PropTypes.object,
         accessInfo: PropTypes.object,
-        
+
     }),
 };
 

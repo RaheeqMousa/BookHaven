@@ -29,8 +29,7 @@ function FeatureBooks() {
                     selectedFilters={selectedFilters}
                     handleFilterChange={handleFilterChange}
                     setSelectedFilters= {setSelectedFilters}
-                />
-                
+                />               
                 <BookList />
             </section>
 

@@ -19,7 +19,7 @@ function SearchBar() {
 
   return (
     <div className={`row ${Style['search-field']}`}>
-      <img src={SearchImg} height={16} width={16} alt="search" />
+      <img src={SearchImg} height={16} width={16} alt="search icon" title='search icon' />
       <input
         type="text"
         placeholder="Search for books, authors, genres"

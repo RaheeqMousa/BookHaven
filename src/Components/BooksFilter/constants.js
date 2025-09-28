@@ -22,7 +22,7 @@ export const filters = [
   },
   {
     title: "Categories",
-    name: "&q=subject",
+    name: "subject",
     filterby: [
       "Fiction",
       "Mystery",

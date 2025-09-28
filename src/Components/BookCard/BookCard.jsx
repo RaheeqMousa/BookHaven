@@ -119,8 +119,8 @@ function BookCard(props) {
                     <div className={`row ${Style['quick-add-wrapper']}`}>
                         <div className={`row ${Style['buttons-wrapper']}`}>
                             <button className={`row justify-content-center ${Style['quick-add']}`} onClick={addToCartHandler(book)}>
-                                <LuShoppingCart size={16} /> Quick Add
-
+                                <LuShoppingCart size={16} /> 
+                                Quick Add
                             </button>
                             <a href={book.volumeInfo.previewLink} target="_blank" rel="noopener noreferrer"
                              className={`row justify-content-center ${Style['preview']}`} onClick={stopLinkPropagation}>

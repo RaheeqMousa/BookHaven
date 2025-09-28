@@ -19,7 +19,7 @@ function BookList() {
         fetchBooks(newIndex);
     };
     console.log(books);
-
+    
     return (
         <section className={`row flex-direction-column ${Style['books-list']}`}>
             <div className={`row ${Style['list-options']}`}>
@@ -31,12 +31,12 @@ function BookList() {
                     </select>
                     <div onClick={toggleDisplay} className={`row ${Style['toggle-display']}`}>
                         <div className={`row justify-content-center ${isGridDisplay ? Style.selected : ''}`}>
-                            <button>
+                            <button aria-label="Grid Cards view button">
                                 <MdGridOn width={16} height={16} color="white" />
                             </button>
                         </div>
                         <div className={`row justify-content-center ${isGridDisplay ? '' : Style.selected}`}>
-                            <button>
+                            <button aria-label="List Cards view button">
                                 <IoIosList width={16} height={16} color={`${isGridDisplay ? 'black' : 'white'}`} />
                             </button>
                         </div>
@@ -45,7 +45,7 @@ function BookList() {
             </div>
             <div className={`row ${Style.cards}`}>
                 {books.map((book) => (
-                    <BookCard book={book} isGridDisplay={isGridDisplay} key={book.id} />
+                    <BookCard book={book} isGridDisplay={isGridDisplay} key={`BookList-Book-${book.id}`} />
                 ))}
             </div>
             <button onClick={loadMore} className={Style['load-more']}>

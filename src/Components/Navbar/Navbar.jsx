@@ -43,7 +43,9 @@ function Navbar() {
                                     <img src={ProfileImg} width={16} height={16} alt='profile button' title='profile button' />
                                 </Link>) : (
                                 <div className={`row ${Style.logout}`}>
-                                    <button onClick={logoutHandler} className='row justify-content-center bold'>logout</button>
+                                    <button onClick={logoutHandler} className='row justify-content-center bold'>
+                                        logout
+                                    </button>
                                 </div>
                             )
                     }

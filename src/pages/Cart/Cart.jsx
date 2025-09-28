@@ -7,11 +7,15 @@ import { joinAuthors } from '../../Utils/JoinAuthors';
 import ShippingImg from '../../assets/Images/shipping_cart.svg'
 import { GoPlus } from "react-icons/go";
 import { TiMinus } from "react-icons/ti";
+import Confirmation from '../../Components/Alert/Confirmation';
+import Notify from '../../Components/Notify/Notify';
 
 function Cart() {
 
     const [items, setItems] = useState([]);
     const [totalPrice, setTotalPrice]= useState(0);
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
 
     const calcSalary=useCallback(()=>
         setTotalPrice(items.reduce((total, book)=> total+ (book.saleInfo.price * book.quantity),0 ))
@@ -80,6 +84,20 @@ function Cart() {
         decrement(id)
     ,[decrement]);
 
+    const handleCheckoutClick= useCallback(()=>{
+        setShowConfirm(true);
+    },[]);
+
+    const handleConfirmClose= useCallback((choice)=>{
+        setShowConfirm(false);
+        if (choice === true) {
+            setShowSuccess(true)
+            setTimeout(() => {
+                setShowSuccess(false);
+            }, 3000);
+        }
+    },[]);
+
     return (
         <section className={`row judtify-content-center flex-direction-column ${Style.cart}`}>
             <div className={`width-100 ${Style['intro']}`}>
@@ -118,13 +136,17 @@ function Cart() {
                                     <div className={`row width-100`}>
                                         <p className={Style.price}>${book.saleInfo.price * book.quantity}</p>
                                         <div className={`row ${Style['quantity']}`}>
-                                            <button className={`row justify-content-center ${Style.decr}`} onClick={getDecrementHandler(book.id)}><TiMinus size={16} color='#6666' /></button>
+                                            <button className={`row justify-content-center ${Style.decr}`} onClick={getDecrementHandler(book.id)} aria-label='Decrement book quantity'>
+                                                <TiMinus size={16} color='#6666' />
+                                            </button>
                                             <p className='row justify-content-center'>{book.quantity}</p>
-                                            <button className={`row justify-content-center ${Style.incr}`} onClick={getIncrementHandler(book.id)}><GoPlus size={16} color='black' /></button>
+                                            <button className={`row justify-content-center ${Style.incr}`} onClick={getIncrementHandler(book.id)} aria-label='Increment book quantity'>
+                                                <GoPlus size={16} color='black' />
+                                            </button>
                                         </div>
                                     </div>
                                     <div className={`row justify-content-start width-100 ${Style.shipping}`}>
-                                        <img src={ShippingImg} width={12} height={12} alt='' title='Shipping Image' />
+                                        <img src={ShippingImg} width={12} height={12} alt='shipping image' title='Shipping Image' />
                                         <p>Estimated delivery: 2-3 business days</p>
                                     </div>
                                 </div>
@@ -162,11 +184,11 @@ function Cart() {
                         <div className={Style.divider}></div>
                         <div className='row width-100'>
                             <h3>Total</h3>
-                            <p className={Style['total-price']}>{totalPrice}</p>
+                            <p className={Style['total-price']}>${totalPrice}</p>
                         </div>
                     </div>
                     <div className='width-100'>
-                        <button className={`${Style['proceed-button']}`}>Proceed to Checkout</button>
+                        <button className={`${Style['proceed-button']}`} onClick={handleCheckoutClick} >Proceed to Checkout</button>
                         <div className={`row justify-content-center ${Style.feature}`}>
                             <LuShield color='#666666' size={12} />
                             <span>Secure checkout guaranteed</span>
@@ -175,6 +197,14 @@ function Cart() {
                 </section>
             </div>
 
+            {showConfirm && <Confirmation
+                message="Are you sure you want to Proceed Purchase?"
+                onClose={handleConfirmClose}/>
+            }
+            {showSuccess && <Notify
+                message="Items purchased successfully!"
+                />
+            }
         </section>
     );
 }

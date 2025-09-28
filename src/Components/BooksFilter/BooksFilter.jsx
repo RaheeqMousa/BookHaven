@@ -49,7 +49,9 @@ function BooksFilter(props) {
                     )}
                     <h3>Filters</h3>
                 </div>
-                <button className={Style['clear-all']} onClick={clearAllFilters}>Clear All</button>
+                <button className={Style['clear-all']} onClick={clearAllFilters}>
+                    Clear All
+                </button>
             </div>
 
             <section className={`row flex-direction-column align-start width-100 ${Style['sort-by']}`}>

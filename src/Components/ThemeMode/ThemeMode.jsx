@@ -30,6 +30,7 @@ export default function ThemeToggle() {
     <button
       onClick={toggleTheme}
       className={Style['theme-toggle']}
+      aria-label="Toggle dark or light mode"
     >
       {darkMode ? <CiSun size={26} color="black" /> : <FaMoon size={16} color="white" />}
     </button>

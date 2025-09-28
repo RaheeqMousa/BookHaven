@@ -10,6 +10,7 @@ function getStoredHistory() {
   }
 }
 
+
 const useSearchHistory = () => {
   const [history, setHistory] = useState(getStoredHistory);
 

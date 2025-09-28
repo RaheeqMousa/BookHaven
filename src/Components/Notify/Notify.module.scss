@@ -1,13 +1,13 @@
 
 .notify {
-  padding: 10 20px;
+  padding: 10px 20px;
   background-color: greenyellow; // green for success
-  color: white;
+  color: black;
   border-radius: 6px;
   position: fixed;
   top: 20px;
   right: 0px;
-  animation: fadeInOut 2s forwards;
+  animation: fadeInOut 3s forwards;
   z-index: 999;
   opacity: 0;
 }

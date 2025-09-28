@@ -28,7 +28,7 @@ function IntroSection() {
                     <div className={`row flex-direction-column width-100`}>
                         <div className={`row ${Style['search-box']}`}>
                             <div className={Style['search-input']}>
-                                <img src={SearchImg} width={16} height={16} alt="" title='search icon' />
+                                <img src={SearchImg} width={16} height={16} alt="search icon" title='search icon' />
                                 <input
                                     type="text"
                                     placeholder="Search books..."
@@ -38,7 +38,9 @@ function IntroSection() {
                                 />
                             </div>
 
-                            <button className={Style['search-button']} onClick={handleSuggestionClick(query)}>Search</button>
+                            <button className={Style['search-button']} onClick={handleSuggestionClick(query)}>
+                                Search
+                            </button>
                         </div>
 
                         {query.trim() && suggestions.length > 0 && (
@@ -57,7 +59,7 @@ function IntroSection() {
                     </div>
                     <div className={`row ${Style['tags-container']}`}>
                         <div className='row'>
-                            <img src={UpsideImg} width={16} height={16} alt='' title='Increasing arrow' />
+                            <img src={UpsideImg} width={16} height={16} alt='increasing arrow image' title='Increasing arrow' />
                             <p>Trending:</p>
                         </div>
 
