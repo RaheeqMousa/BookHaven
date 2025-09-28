@@ -15,6 +15,7 @@ import Back from '../../Components/Back';
 import { v4 as uuidv4 } from "uuid";
 import { useContext } from 'react';
 import { UserContext } from '../../context/UserContext';
+import FacebookLogin from '@greatsumini/react-facebook-login';
 
 
 function Signup() {
@@ -57,32 +58,33 @@ function Signup() {
 
 
     const handleFacebookResponse = (response) => {
-        if (response.accessToken) {
-            if (!response.email) {
-                setServerError("Facebook account did not provide an email. Please use another sign up method.");
-                return;
-            }
-            const users = JSON.parse(localStorage.getItem("users")) || [];
-            let user = users.find(u => u.email === response.email);
+        console.log(response);
+        // if (response.accessToken) {
+        //     if (!response.email) {
+        //         setServerError("Facebook account did not provide an email. Please use another sign up method.");
+        //         return;
+        //     }
+        //     const users = JSON.parse(localStorage.getItem("users")) || [];
+        //     let user = users.find(u => u.email === response.email);
 
-            if (!user) {
-                user = {
-                    id: uuidv4(),
-                    name: response.name,
-                    email: response.email,
-                    facebookId: response.id,
-                    accessToken: response.accessToken
-                };
-                users.push(user);
-                localStorage.setItem("users", JSON.stringify(users));
-            }
+        //     if (!user) {
+        //         user = {
+        //             id: uuidv4(),
+        //             name: response.name,
+        //             email: response.email,
+        //             facebookId: response.id,
+        //             accessToken: response.accessToken
+        //         };
+        //         users.push(user);
+        //         localStorage.setItem("users", JSON.stringify(users));
+        //     }
 
-            sessionStorage.setItem("user", JSON.stringify(user));
-            setUser(user);
-            navigate('/');
-        } else {
-            setServerError("Facebook login failed");
-        }
+        //     sessionStorage.setItem("user", JSON.stringify(user));
+        //     setUser(user);
+        //     navigate('/');
+        // } else {
+        //     setServerError("Facebook login failed");
+        // }
     };
 
     const signup = useGoogleLogin({
@@ -179,7 +181,14 @@ function Signup() {
                                 <RiGoogleFill size={16} color='#333' />
                                 Continue with Google
                             </button>
-                            <FacebookProvider appId={FACEBOOK_KEY} >
+                            <FacebookLogin
+                                appId={import.meta.env.VITE_FACEBOOK_APP_ID}
+                                autoLoad={false}
+                                fields="name,email,picture"
+                                callback={handleFacebookResponse}
+                                textButton="Continue with Facebook"
+                            />
+                            {/* <FacebookProvider appId={FACEBOOK_KEY} >
                                 <Login
                                     autoLoad={false}
                                     fields="id,name,email,picture"
@@ -196,7 +205,7 @@ function Signup() {
                                         </button>
                                     )}
                                 />
-                            </FacebookProvider>
+                            </FacebookProvider> */}
                         </div>
 
                         <p className={`row ${Style['navigate-other-auth']}`}>

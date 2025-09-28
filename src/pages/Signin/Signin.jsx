@@ -10,7 +10,8 @@ import { useState } from 'react';
 import { RiFacebookCircleFill } from "react-icons/ri";
 import { RiGoogleFill } from "react-icons/ri";
 import { useGoogleLogin } from "@react-oauth/google";
-import { FacebookProvider, Login } from 'react-facebook';
+// import { FacebookProvider, Login } from 'react-facebook';
+import FacebookLogin from '@greatsumini/react-facebook-login';
 import Back from '../../Components/Back';
 import { UserContext } from '../../context/UserContext';
 import { useContext } from 'react';
@@ -80,7 +81,7 @@ function Signin() {
                 let user = users.find((u) => u.email === profile.email);
 
                 if (!user) {
-                    // New user: create and save
+
                     user = {
                         id: uuidv4(),
                         name: profile.name,
@@ -91,7 +92,6 @@ function Signin() {
                     localStorage.setItem("users", JSON.stringify(users));
                 }
 
-                // Log in the user (existing or new)
                 if (remember) {
                     localStorage.setItem("user", JSON.stringify(user));
                 } else {
@@ -170,7 +170,7 @@ function Signin() {
                                 <RiGoogleFill size={16} color='#333' />
                                 Continue with Google
                             </button>
-                            <FacebookProvider appId={FACEBOOK_KEY} version="v18.0">
+                            {/* <FacebookProvider appId={FACEBOOK_KEY} version="v18.0">
                                 <Login
                                     autoLoad={false}
                                     fields="id,name,email,picture"
@@ -186,7 +186,14 @@ function Signin() {
                                         </button>
                                     )}
                                 />
-                            </FacebookProvider>
+                            </FacebookProvider> */}
+                            <FacebookLogin
+                                appId={FACEBOOK_KEY}
+                                autoLoad={false}
+                                fields="name,email,picture"
+                                callback={handleFacebookResponse}
+                                textButton="Continue with Facebook"
+                            />
                         </div>
 
                         <p className={`row ${Style['navigate-other-auth']}`}>
