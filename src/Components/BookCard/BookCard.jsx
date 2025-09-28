@@ -8,7 +8,7 @@ import { FaHeart } from "react-icons/fa6";
 import useWish from '../../Hooks/useWish';
 import { joinAuthors } from '../../Utils/JoinAuthors';
 import { useMemo } from 'react';
-import { UserContext } from '../../context/UserContext';
+import { UserContext } from '../../Context/UserContext';
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { stopLinkPropagation } from '../../Utils/stopLinkPropagation';

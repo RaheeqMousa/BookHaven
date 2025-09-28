@@ -8,7 +8,7 @@ import { calculateTotalPrice } from "../../Utils/calculateTotalPrice";
 import { useNavigate } from "react-router-dom";
 import { joinAuthors } from "../../Utils/JoinAuthors";
 import { useContext } from "react";
-import { UserContext } from "../../context/UserContext";
+import { UserContext } from "../../Context/UserContext";
 
 function Wishlist() {
     const { user } = useContext(UserContext);

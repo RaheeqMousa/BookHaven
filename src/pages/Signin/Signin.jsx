@@ -13,7 +13,7 @@ import { useGoogleLogin } from "@react-oauth/google";
 // import { FacebookProvider, Login } from 'react-facebook';
 import FacebookLogin from '@greatsumini/react-facebook-login';
 import Back from '../../Components/Back';
-import { UserContext } from '../../context/UserContext';
+import { UserContext } from '../../Context/UserContext';
 import { useContext } from 'react';
 import { v4 as uuidv4 } from "uuid";
 

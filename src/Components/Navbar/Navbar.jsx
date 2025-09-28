@@ -5,7 +5,7 @@ import Style from './Navbar.module.scss'
 import SearchBar from '../SearchBar/SearchBar'
 import { Link } from 'react-router-dom'
 import { useCallback, useContext } from 'react'
-import { UserContext } from '../../context/UserContext'
+import { UserContext } from '../../Context/UserContext'
 
 function Navbar() {
     const { user, setUser } = useContext(UserContext);

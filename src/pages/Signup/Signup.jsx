@@ -14,7 +14,7 @@ import { FacebookProvider, Login } from 'react-facebook';
 import Back from '../../Components/Back';
 import { v4 as uuidv4 } from "uuid";
 import { useContext } from 'react';
-import { UserContext } from '../../context/UserContext';
+import { UserContext } from '../../Context/UserContext';
 import FacebookLogin from '@greatsumini/react-facebook-login';
 
 
