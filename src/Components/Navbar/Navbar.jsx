@@ -24,26 +24,26 @@ function Navbar() {
             <div className={`row container ${Style['header-container']}`}>
                 <div className='row'>
                     <img src='/logo.png' width={32} height={32} alt='Book Haven logo' title='Book Haven logo' />
-                    <h1>BookHaven</h1>
+                    <h1 className={Style['navbar-title']}>BookHaven</h1>
                 </div>
                 <div className={`row justify-content-center ${Style.search}`}>
                     <SearchBar />
                 </div>
                 <div className='row'>
-                    <Link aria-label='Wishlist button' className='row justify-content-center' to='/user/wishlist'>
+                    <Link aria-label='Wishlist button' className={`row justify-content-center ${Style['navbar-link']}`} to='/user/wishlist'>
                         <img src={WishlistImg} width={16} height={16} alt='Wishlist button' title='Wishlist button' />
                     </Link>
-                    <Link aria-label='Cart button' className='row justify-content-center' to='/user/cart'>
+                    <Link aria-label='Cart button' className={`row justify-content-center ${Style['navbar-link']}`} to='/user/cart'>
                         <img src={CartImg} width={16} height={16} alt='Cart button' title='Cart button' />
                     </Link>
                     {
                         !user ?
                             (
-                                <Link aria-label='profile button' className='row justify-content-center' to='/auth/login'>
+                                <Link aria-label='profile button' className={`row justify-content-center ${Style['navbar-link']}`} to='/auth/login'>
                                     <img src={ProfileImg} width={16} height={16} alt='profile button' title='profile button' />
                                 </Link>) : (
-                                <div className='row'>
-                                    <button onClick={logoutHandler}>logout</button>
+                                <div className={`row ${Style.logout}`}>
+                                    <button onClick={logoutHandler} className='row justify-content-center bold'>logout</button>
                                 </div>
                             )
                     }

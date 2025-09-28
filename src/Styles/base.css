@@ -3,6 +3,19 @@
     --mainColor: #1A237E;
     --gold: #FFD700;
     --gray: #666666;
+    --bgColor: white;
+    --textColor: black;
+    --cardBackground: white;
+    --shadowColor: #00000014;
+    --navbarShadow: #0000001A;
+}
+
+.dark {
+    --bgColor: #222;
+    --textColor: white;
+    --cardBackground: #333 !important;
+    --shadowColor: #FFFFFF1A;
+    --navbarShadow: #FFFFFF1A;
 }
 
 body {
@@ -10,6 +23,10 @@ body {
     display: flex;
     align-items: stretch;
     flex-direction: column;
+
+    background-color: var(--bgColor);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
 }
 
 body,
@@ -160,14 +177,26 @@ button {
     color: var(--mainColor);
 }
 
-.display-none{
+.dark .back a,
+.dark .back svg path {
+    color: var(--gold);
+}
+
+.display-none {
     display: none !important;
 }
 
-.display-block{
+.display-block {
     display: block;
 }
 
+.bold {
+    font-weight: bold;
+}
+
+.gap-2 {
+    gap: 2px;
+}
 
 @media screen and (max-width:1200px) {
     .container {

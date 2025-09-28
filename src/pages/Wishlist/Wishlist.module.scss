@@ -4,6 +4,7 @@
     padding: 32px 48px;
     gap: 32px;
     justify-self: center;
+    color: var(--textColor);
 
     .back {
         width: fit-content;
@@ -17,7 +18,6 @@
                 width: 192px;
                 padding: 9px 13px;
                 border-radius: 6px;
-                background-color: white;
                 border: none;
                 box-sizing: border-box;
                 height: 36px;
@@ -113,5 +113,34 @@
     @media screen and (max-width: 426px) {
         padding-left: 10px !important;
         padding-right: 10px !important;
+    }
+}
+
+:global(.dark) :local(.wishlist-section) {
+    .filter-section {
+        .filter {
+            select {
+                background-color: var(--gray);
+                color: var(--textColor);
+            }
+
+            button {
+                background-color: var(--gray);
+            }
+        }
+    }
+
+    .intro {
+        div {
+            &:last-of-type {
+                button {
+                    background-color: var(--gray);
+                }
+            }
+        }
+    }
+
+    .purchase {
+        background-color: var(--cardBackground);
     }
 }

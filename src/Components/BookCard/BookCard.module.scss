@@ -1,15 +1,22 @@
 .book-card {
-    width: 23%;
+    width: 210px;
     height: fit-content;
     overflow: hidden;
     border-radius: 8px;
-    box-shadow: 0px 4px 12px 0px #00000014;
+    box-shadow: 0px 4px 12px 0px var(--shadowColor);
     align-self: flex-start;
+    background-color: var(--cardBackground);
+    border-radius: 12px;
+    transition: background-color 0.3s;
 
-    .title {
-        p {
-            font-size: 14px;
+    .titles {
+        h3 {
+            color: var(--textColor) !important;
         }
+    }
+
+    .book-subtitle {
+        font-size: 14px;
     }
 
     .book-cover {
@@ -142,6 +149,12 @@
             display: flex;
         }
     }
+
+
+    // @media screen and (max-width: 1200px) {
+    //     width: 47%;
+    // }
+
 }
 
 .list-display {

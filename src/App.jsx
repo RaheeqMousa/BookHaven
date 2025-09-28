@@ -26,10 +26,11 @@ function App() {
               <Route index element={<Home />} />
             </Route>
 
-            <Route path='/bookdetails' element={<BookDetails />} />
+            
             <Route path='/wishlist/:id' element={<SharedWishlist />} />
 
             <Route element={<SecondaryLayout />}>
+              <Route path='/bookdetails' element={<BookDetails />} />
               <Route element={<AlreadyLoggedInRoute />}>
                 <Route path="auth/login" element={<Signin />} />
                 <Route path="auth/register" element={<Signup />} />
@@ -37,7 +38,6 @@ function App() {
 
               <Route element={<AuthProtectedRoute />}>
                 <Route path="user/wishlist" element={<Wishlist />} />
-                {/* <Route path="user/profile" element={<Profile />} /> */}
                 <Route path='user/cart' element={<Cart />} />
               </Route>
             </Route>

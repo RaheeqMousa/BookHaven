@@ -157,7 +157,7 @@ function BookDetails() {
                                     {isLong && (
                                         <button
                                             onClick={toggleRead}
-                                            className="text-blue-500 font-semibold mt-2"
+                                            className={Style['read-more']}
                                         >
                                             {isExpanded ? "Read Less" : "Read More"}
                                         </button>

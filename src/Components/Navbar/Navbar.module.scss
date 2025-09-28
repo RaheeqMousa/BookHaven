@@ -1,37 +1,48 @@
-
-header{
+header {
     height: 64px;
     opacity: 1;
     z-index: 500;
     position: sticky;
     top: 0px;
-    width:100%;
+    width: 100%;
     background-color: white;
-    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.2);
+    box-shadow:
+        0px 4px 6px -4px var(--navbarShadow),
+        0px 10px 15px -3px var(--navbarShadow);
+    background-color: var(--cardBackground);
 
-    .header-container{
-        gap: 159px ;
+    .header-container {
+        gap: 159px;
+
         @media screen and (max-width:1150px) {
-            gap:0px
+            gap: 0px
         }
     }
 
-    h1{
+    .title {
         color: var(--mainColor);
         font-size: 20px;
         line-height: 28px;
     }
 
-    div{
-        &:nth-of-type(2){
+    .logout {
+        button {
+            background-color: var(--cardBackground) !important;
+            color: var(--textColor) !important;
+        }
+    }
+
+    div {
+        &:nth-of-type(2) {
             padding: 0px 32px;
+
             @media screen and (max-width:600px) {
                 padding: 0;
             }
         }
     }
 
-    .search{
+    .search {
         @media screen and (max-width:600px) {
             order: 2;
             width: 100%;
@@ -39,12 +50,23 @@ header{
         }
     }
 
-            @media screen and (max-width:600px) {
-           height: fit-content;
-        }
+    @media screen and (max-width:600px) {
+        height: fit-content;
+    }
 
-    a{
+    a {
         width: 36px;
         height: 36px;
+        transition: filter 0.3s;
     }
+
+
+}
+
+:global(html.dark) :local(.navbar-link) img {
+    filter: brightness(0) invert(1);
+}
+
+:global(html.dark) :local(.navbar-title) {
+    color: var(--textColor);
 }

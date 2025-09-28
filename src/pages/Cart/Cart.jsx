@@ -110,7 +110,7 @@ function Cart() {
                                                     (<p className={Style.category} key={index}>{cat}</p>))
                                             }
                                         </div>
-                                        <button onClick={getDeleteHandler(book.id)}>
+                                        <button onClick={getDeleteHandler(book.id)} className={Style.delete} aria-label='Delete book from cart button'>
                                             <FiTrash2 color='#666666' size={16} />
                                         </button>
 

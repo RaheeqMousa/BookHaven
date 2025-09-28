@@ -1,58 +1,66 @@
-.filter{
+.filter {
     // width: 100%;
-    gap:24px;
-    background-color: #F8F9FA;
+    gap: 24px;
+    background-color: var(--cardBackground);
+    color: var(--textColor);
     border-radius: 8px;
     padding: 24px;
     height: fit-content;
 
     select {
-    width: 100%;
-    padding: 9px 13px;
-    border-radius: 6px;
-    background-color: white;
-    border: none;
-    box-sizing: border-box;
-    height: 36px;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-color: white;
-    background-image: url('../../assets/Images/down-arrow.svg');
-    background-repeat: no-repeat;
-    background-position: right 0.75rem center;
-    background-size: 22px 22px;
+        width: 180px;
+        padding: 9px 13px;
+        border-radius: 6px;
+        background-color: white;
+        border: none;
+        box-sizing: border-box;
+        height: 36px;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-color: white;
+        background-image: url('../../assets/Images/down-arrow.svg');
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 22px 22px;
     }
-    
-    button{
-        background: none;
-    &.clear-all{
-        color: var(--gray);
-    }
-}
 
-    label{
+    button {
+        background: none;
+
+        &.clear-all {
+            color: var(--gray);
+        }
+    }
+
+    label {
         gap: 8px;
     }
 
-    .sort-by{
-        gap:12px;
+    .sort-by {
+        gap: 12px;
     }
 
-    .filter-section{
+    .filter-section {
         padding: 24px 0px;
         gap: 12px;
         border-top: 1px solid #E0E0E0;
-        .options{
+
+        .options {
             gap: 8px;
         }
     }
 
-    .price{
-        gap:8px;
-        input{
+    .price {
+        gap: 8px;
+
+        input {
             border: none;
         }
     }
 
+}
+
+:global(.dark) :local(button.clear-all) {
+    color: var(--textColor);
 }

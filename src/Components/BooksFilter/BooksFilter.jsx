@@ -5,12 +5,13 @@ import { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 
 function BooksFilter(props) {
-    const { filterChange,handleFilterChange,setSelectedFilters,selectedFilters } = props;
+    const { filterChange, handleFilterChange, setSelectedFilters, selectedFilters } = props;
 
     const BASE_URL = import.meta.env.VITE_API_BASE_URL;
     const API_KEY = import.meta.env.VITE_API_KEY;
 
     const [expandedCategories, setExpandedCategories] = useState({});
+    const [expandFilters, setExpandFilters] = useState(true);
 
     const toggleCategory = (title) => {
         setExpandedCategories(cat => ({
@@ -19,25 +20,35 @@ function BooksFilter(props) {
         }));
     };
 
-    const clearAllFilters =useCallback( () => {
+    const clearAllFilters = useCallback(() => {
         const defaultFilters = {
             Categories: [],
             Language: "",
             'Price Range': { min: "", max: "" }
         };
-        
+
         setSelectedFilters(defaultFilters);
 
         let apiUrl = `${BASE_URL}/books/v1/volumes?q=search+terms&maxResults=20&key=${API_KEY}`;
-        if (filterChange) filterChange(0,apiUrl);
-    },[filterChange, API_KEY, BASE_URL,setSelectedFilters]);
+        if (filterChange) filterChange(0, apiUrl);
+    }, [filterChange, API_KEY, BASE_URL, setSelectedFilters]);
 
 
+    const toggleFilters = useCallback(() => {
+        setExpandFilters(prev => !prev);
+    }, []);
 
     return (
         <section className={`row flex-direction-column align-start ${Style.filter}`}>
             <div className={`row width-100`}>
-                <h3>Filters</h3>
+                <div className={`row justify-content-center gap-2`} onClick={toggleFilters} >
+                    {expandFilters ? (
+                        <IoIosArrowDown size={16} color="#666666" />
+                    ) : (
+                        <IoIosArrowUp size={16} color="#666666" />
+                    )}
+                    <h3>Filters</h3>
+                </div>
                 <button className={Style['clear-all']} onClick={clearAllFilters}>Clear All</button>
             </div>
 
@@ -50,7 +61,7 @@ function BooksFilter(props) {
             </section>
 
 
-            {filters.map((category, index) => (
+            {expandFilters && filters.map((category, index) => (
                 <section
                     key={`${category.title}-${index}`}
                     className={`row flex-direction-column align-start ${Style['filter-section']} width-100`}
@@ -87,7 +98,7 @@ function BooksFilter(props) {
                                                 onChange={(e) => handleFilterChange(category.name, e.target.value)()}
                                                 value={selectedFilters[category.title] || ""}
                                             >
-                                                {category.filterby.map((f,i) => (
+                                                {category.filterby.map((f, i) => (
                                                     <option key={i} value={typeof f === "object" ? f.value : f}>
                                                         {typeof f === "object" ? f.label : f}
                                                     </option>
@@ -109,13 +120,12 @@ function BooksFilter(props) {
                                                     </label>
                                                 ))
                                             ) : (
-                                                category.filterby.map((f,index) => (
+                                                category.filterby.map((f, index) => (
                                                     <label key={index} className="row">
                                                         <input
                                                             type="radio"
                                                             name={category.title}
                                                             onChange={handleFilterChange(category.name, typeof f === "object" ? f.value : f)}
-                                                        // checked={selectedFilters[category.title] === f}
                                                         />
                                                         {typeof f === "object" ? f.label : f}
                                                     </label>

@@ -52,7 +52,7 @@
                 width: 448px;
                 gap: 8px;
                 border-radius: 6px;
-
+                background-color: var(--textColor);
 
             }
 
@@ -62,20 +62,23 @@
         }
 
         .book-description {
-           
+
             gap: 24px;
             justify-content: flex-start;
 
             .titles {
                 gap: 8px;
-                
-                h2,p{
+
+                h2,
+                p {
                     color: var(--gray);
                 }
-                h2{
+
+                h2 {
                     font-size: 20px;
                     font-weight: 400;
                 }
+
                 p {
                     font-size: 18px;
                 }
@@ -99,61 +102,67 @@
 
             }
 
-            .book-availability{
+            .book-availability {
                 align-self: flex-start;
                 color: var(--gray);
             }
-            .buy-free{
+
+            .buy-free {
                 color: white;
                 background-color: greenyellow;
 
             }
 
-                .about{
-                    gap:12px;
-             
-                    line-height: 26px;
-                    p{
-                        color: var(--gray);
-                    }
-                    div{
-                        padding: 3px;
-                    }
-                    button{
-                        color: var(--mainColor);
-                        font-weight: bold;
-                        padding: 0px;
-                        gap: 8px;
-                        background: transparent;
-                    }
+            .about {
+                gap: 12px;
+
+                line-height: 26px;
+
+                p {
+                    color: var(--gray);
                 }
 
-                .options{
-                    color: #333333;
-                    width: 100%;
-                    justify-content: flex-start;
-                    gap: 16px;
-                    button{
-                        border-radius: 6px;
-                        border: 1px solid #E0E0E0;
-                        gap:6px;
-                        padding: 6px 11px;
-                    }
+                div {
+                    padding: 3px;
                 }
 
-                .download-options{
-                    width: 100%;
+                button {
+                    color: var(--mainColor);
+                    font-weight: bold;
+                    padding: 0px;
                     gap: 8px;
-                    align-items: flex-start;
-                    color: #333333;
-                    a{
-                        border-radius: 6px;
-                        border: 1px solid #E0E0E0;
-                        gap:6px;
-                        padding: 6px 11px;
-                        color: #333333;
-                    }
+                    background: transparent;
                 }
+            }
+
+            .options {
+                color: #333333;
+                width: 100%;
+                justify-content: flex-start;
+                gap: 16px;
+
+                button {
+                    border-radius: 6px;
+                    border: 1px solid #E0E0E0;
+                    gap: 6px;
+                    padding: 6px 11px;
+                }
+            }
+
+            .download-options {
+                width: 100%;
+                gap: 8px;
+                align-items: flex-start;
+                color: #333333;
+
+                a {
+                    border-radius: 6px;
+                    border: 1px solid #E0E0E0;
+                    gap: 6px;
+                    padding: 6px 11px;
+                    color: #333333;
+                }
+            }
 
             @media screen and (max-width: 768px) {
                 align-items: center;
@@ -164,26 +173,29 @@
             grid-template-columns: 1fr;
             grid-template-rows: 1fr 1fr;
         }
-        
+
     }
 
 
-    .details-preview-info{
+    .details-preview-info {
         padding-top: 25px;
         width: 100%;
         gap: 8px;
-        
 
-        .previewed{
+
+        .previewed {
 
             padding-top: 24px;
-            div p:first-of-type{
+
+            div p:first-of-type {
                 color: var(--gray);
             }
-            div p:nth-of-type(2){
+
+            div p:nth-of-type(2) {
                 color: #333333;
             }
-            .cells{
+
+            .cells {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 grid-template-rows: 1fr 1fr 1fr 1fr;
@@ -192,19 +204,21 @@
             }
         }
 
-        .display-settings{
+        .display-settings {
             border-radius: 12px;
             background-color: #F8F9FA;
             padding: 3px;
             height: 36px;
-            button{
+
+            button {
                 width: 50%;
                 padding: 0px;
                 background-color: #F8F9FA;
                 border-radius: 12px;
                 height: 36px;
             }
-            .selected{
+
+            .selected {
                 background-color: white;
             }
         }
@@ -214,4 +228,69 @@
         padding: 10px 20px;
         width: fit-content;
     }
+}
+
+:global(.dark) :local(.details-section) {
+    color: var(--textColor);
+
+    .details {
+        .book-description {
+            .titles {
+
+                h2,
+                p {
+                    color: var(--textColor);
+                }
+
+
+            }
+
+            .about {
+                button {
+                    color: var(--gold);
+                }
+            }
+
+            .download-options {
+                color: var(--textColor);
+
+                a {
+                    color: var(--textColor);
+                }
+
+                svg polygon,
+                svg path,
+                svg line {
+                    color: var(--textColor);
+                }
+            }
+        }
+    }
+
+    .details-preview-info {
+        .previewed {
+            div p:first-of-type {
+                color: var(--textColor);
+            }
+
+            div p:nth-of-type(2) {
+                color: var(--textColor);
+            }
+        }
+
+        .display-settings {
+            background-color: var(--cardBackground);
+
+            button {
+                background-color: var(--cardBackground);
+                color: var(--textColor);
+            }
+
+            .selected {
+                background-color: var(--mainColor);
+                color: var(--textColor);
+            }
+        }
+    }
+
 }

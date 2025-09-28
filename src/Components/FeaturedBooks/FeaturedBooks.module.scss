@@ -1,44 +1,73 @@
-.feature-books-wrapper{
+.feature-books-wrapper {
 
     padding: 32px 48px;
-    gap:32px;
+    gap: 32px;
     width: 1200px;
 
-    h2{
+
+    h2 {
         font-size: 32px;
+        color: var(--textColor);
     }
 
-    .featured-section{
+    .featured-section {
         display: grid;
-        grid-template-columns: 1fr 4fr ;
-        gap:32px;
+        grid-template-columns: 1fr 4fr;
+        gap: 32px;
         width: 100%;
+
+        @media screen and (max-width: 550px) {
+            display: flex;
+            flex-direction: column;
+        }
     }
-    .section-intro{
+
+    .section-intro {
+        color: var(--textColor);
         gap: 8px;
         align-items: flex-start;
         width: 100%;
-        h1, p{
+
+        h1,
+        p {
             text-align: left;
         }
     }
 
-    .by-category{
+    .by-category {
         padding-top: 32px;
         gap: 32px;
-        .category{
+
+        .category {
             gap: 16px;
-            button{
+
+            button {
                 border: 1px solid #E0E0E0;
                 text-align: center;
                 border-radius: 6px;
                 width: 150px;
                 height: 64px;
+                background-color: var(--cardBackground) !important;
+                color: var(--textColor);
             }
 
-            h2{
+            h2 {
                 text-align: center;
             }
+            @media screen and (max-width: 320px) {
+                flex-direction: column;
+                align-items: center;
+                
+            }
         }
+    }
+
+    @media screen and (max-width: 1200px) {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    @media screen and (max-width: 550px) {
+        padding: 32px 15px;
     }
 }
