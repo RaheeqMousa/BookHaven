@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { RiFacebookCircleFill } from "react-icons/ri";
 import { RiGoogleFill } from "react-icons/ri";
 import { useGoogleLogin } from "@react-oauth/google";
-import { FacebookProvider, Login } from 'react-facebook';
+// import { FacebookProvider, Login } from 'react-facebook';
 import Back from '../../Components/Back';
 import { v4 as uuidv4 } from "uuid";
 import { useContext } from 'react';
