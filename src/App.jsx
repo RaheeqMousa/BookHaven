@@ -3,20 +3,19 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home/Home'
 import AlreadyLoggedInRoute from './Components/AlreadyLoggedInRoute/AlreadyLoggedInRoute'
 import AuthProtectedRoute from './Components/AuthProtectedRoute/AuthProtectedRoute'
-import Wishlist from './pages/Wishlist/Wishlist';
-import Profile from './pages/Profile/Profile';
+import NotFound from './pages/NotFound/NotFound'
 import SecondaryLayout from './Layouts/SecondaryLayout'
 import MainLayout from './Layouts/MainLayout'
 import Loader from './Components/Loader/Loader'
-import Signin from './pages/Signin/Signin'
-import Signup from './pages/Signup/Signup'
-import NotFound from './pages/NotFound/NotFound'
-import BookDetails from './pages/BookDetails/BookDetails'
-import SharedWishlist from './pages/SharedWishlist/SharedWishlist'
+
+const Signin = lazy(()=> import('./pages/Signin/Signin'))
+const Signup = lazy(()=> import('./pages/Signup/Signup'))
+const BookDetails = lazy(()=> import('./pages/BookDetails/BookDetails'))
+const SharedWishlist = lazy(()=> import('./pages/SharedWishlist/SharedWishlist'))
+const Wishlist = lazy(()=> import('./pages/Wishlist/Wishlist'));
 const Cart = lazy(() => import('./pages/Cart/Cart'))
 
 function App() {
-
   return (
     <>
       <BrowserRouter>
