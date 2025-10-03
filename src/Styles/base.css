@@ -157,6 +157,14 @@ button {
     height: 36px;
 }
 
+.dark .field label{
+    color: var(--textColor);
+}
+
+.remember-me {
+    color: var(--textColor);
+}
+
 .suggestions {
     width: 100%;
     background-color: white;

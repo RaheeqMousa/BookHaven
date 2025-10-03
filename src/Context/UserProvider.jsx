@@ -14,13 +14,10 @@ export function UserProvider({ children }) {
     }, []);
 
     useEffect(() => {
-        if (user) {
-            localStorage.setItem("user", JSON.stringify(user)) || sessionStorage.setItem("user", JSON.stringify(user));
-        } else {
+        if (!user) {
             localStorage.removeItem("user") || sessionStorage.removeItem("user");
         }
     }, [user]);
-
 
 
     return (

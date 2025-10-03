@@ -1,40 +1,39 @@
 let fbPromise = null;
 
-export const loadFbSdk = (FACEBOOK_APP_ID) => {
-    if (fbPromise) return fbPromise;
+export const loadFbSdk = (APP_ID) => {
+  if (fbPromise) return fbPromise;
 
-    fbPromise = new Promise((resolve, reject) => {
-        if (window.FB) {
-            resolve(window.FB);
-            return;
-        }
+  fbPromise = new Promise((resolve, reject) => {
+    if (window.FB && window.FB.init) {
+      resolve(window.FB);
+      return;
+    }
 
-        window.fbAsyncInit = function () {
-            try {
-                window.FB.init({
-                    appId: FACEBOOK_APP_ID,
-                    cookie: true,
-                    xfbml: true,
-                    version: "v18.0",
-                });
+    window.fbAsyncInit = () => {
+      try {
+        window.FB.init({
+          appId: APP_ID,
+          cookie: true,
+          xfbml: true,
+          version: "v17.0",
+        });
+        window.FB.AppEvents.logPageView();
+        setTimeout(() => resolve(window.FB), 50);
+      } catch (err) {
+        reject(err);
+      }
+    };
 
-                window.FB.AppEvents.logPageView();
-                resolve(window.FB);
-            } catch (err) {
-                reject(err);
-            }
-        };
+    if (!document.getElementById("facebook-jssdk")) {
+      const script = document.createElement("script");
+      script.src = "https://connect.facebook.net/en_US/sdk.js";
+      script.id = "facebook-jssdk";
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  });
 
-        if (!document.getElementById("facebook-jssdk")) {
-            const script = document.createElement("script");
-            script.src = "https://connect.facebook.net/en_US/sdk.js";
-            script.id = "facebook-jssdk";
-            script.async = true;
-            document.body.appendChild(script);
-        }
-    });
-
-    return fbPromise;
+  return fbPromise;
 };
 
 export const resetFbSdk = () => {

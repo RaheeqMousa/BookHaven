@@ -105,21 +105,21 @@
 
                 .remember-me {
                     input[type='checkbox'] {
-                        padding-right: 8px;
+                        margin-right: 8px;
                     }
 
                     color: var(--gray);
                 }
 
-                .auth-divider{
+                .auth-divider {
                     position: relative;
                     width: 100%;
                     text-align: center;
                     color: var(--gray);
                 }
 
-                .auth-divider:after{
-                    content:" ";
+                .auth-divider:after {
+                    content: " ";
                     height: 1px;
                     width: 47%;
                     display: block;
@@ -129,8 +129,8 @@
                     background: #E0E0E0;
                 }
 
-                .auth-divider:before{
-                    content:" ";
+                .auth-divider:before {
+                    content: " ";
                     height: 1px;
                     width: 47%;
                     display: block;
@@ -176,5 +176,47 @@
         .auth-design {
             display: none;
         }
+    }
+}
+
+:global(html.dark) :local(.auth-layout) {
+    h2 {
+        color: var(--textColor);
+    }
+
+    .remember-me {
+        p {
+            color: var(white);
+        }
+    }
+
+    .heading {
+        color: var(--textColor) !important;
+
+        p {
+            color: white !important;
+        }
+    }
+
+    .forgot-password {
+        color: var(--gold) !important;
+    }
+
+    .navigate-other-auth {
+        color: white !important;
+
+        a {
+            color: var(--gold) !important;
+        }
+    }
+
+    .processes {
+        button {
+            background-color: var(--gold) !important;
+        }
+    }
+
+    .remember-me {
+        color: white !important;
     }
 }

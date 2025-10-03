@@ -16,6 +16,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useContext } from 'react';
 import { UserContext } from '../../Context/UserContext';
 import FacebookLogin from '@greatsumini/react-facebook-login';
+import { loadFbSdk, resetFbSdk } from '../../Utils/facebooksdk';
 
 
 function Signup() {
@@ -50,64 +51,69 @@ function Signup() {
 
         const newUser = { ...formData, id: uuidv4() };
         users.push(newUser);
-        localStorage.setItem('users', JSON.stringify(users));
-
-        localStorage.setItem('user', JSON.stringify({ ...formData, id: uuidv4() }));
+        localStorage.setItem("users", JSON.stringify(users));
+        if (remember)
+            localStorage.setItem("user", JSON.stringify(newUser));
+        else if (!remember)
+            sessionStorage.setItem("user", JSON.stringify(newUser));
         setUser(newUser)
         navigate('/');
-    }, [setServerError, navigate, setUser]);
+    }, [setServerError, navigate, setUser, remember]);
 
-
-    const loadFbSdk = () => {
-        return new Promise((resolve) => {
-            if (window.FB) {
-                resolve(window.FB);
-                return;
-            }
-
-            window.fbAsyncInit = function () {
-                window.FB.init({
-                    appId: FACEBOOK_KEY,
-                    cookie: true,
-                    xfbml: false,
-                    version: "v17.0",
-                });
-                window.FB.AppEvents.logPageView();
-                resolve(window.FB);
-            };
-
-            const script = document.createElement("script");
-            script.src = "https://connect.facebook.net/en_US/sdk.js";
-            script.id = "facebook-jssdk";
-            script.async = true;
-            document.body.appendChild(script);
-        });
-    };
 
     const handleFacebookLogin = async () => {
-        const FB = await loadFbSdk();
-
-        FB.login((response) => {
-            console.log("Facebook callback triggered", response);
-
-            if (response.authResponse) {
-                FB.api("/me", { fields: "name,email,picture" }, (profile) => {
-                    const user = {
-                        name: profile.name,
-                        email: profile.email,
-                        facebookId: profile.id,
-                        accessToken: response.authResponse.accessToken,
-                        picture: profile.picture?.data?.url,
-                    };
-                    setUser(user);
-                    if (remember) localStorage.setItem("user", JSON.stringify(user));
-                    else sessionStorage.setItem("user", JSON.stringify(user));
-                    navigate("/");
-                });
-            } else {
-                setServerError("Facebook login cancelled or failed.");
+        try {
+            resetFbSdk();
+            const FB = await loadFbSdk(FACEBOOK_KEY);
+            if (!FB || !FB.login) {
+                throw new Error('FB SDK not fully initialized');
             }
-        }, { scope: "email" });
+            FB.login(
+                (response) => {
+                    if (response.authResponse) {
+                        FB.api(
+                            "/me",
+                            { fields: "name,email,picture" },
+                            (profile) => {
+                                console.log(profile);
+                                const users = JSON.parse(localStorage.getItem("users") || "[]");
+                                let user = users.find((u) => u.id === profile.id);
+
+                                if (user) {
+                                    setServerError("User with this facebook account already exists.");
+                                    return;
+                                }
+
+                                user = {
+                                    id: profile.id,
+                                    name: profile.name,
+                                    email: profile.email,
+                                };
+
+                                users.push(user);
+                                localStorage.setItem("users", JSON.stringify(users));
+                                if (remember)
+                                    localStorage.setItem("user", JSON.stringify(user));
+                                else if (!remember)
+                                    sessionStorage.setItem("user", JSON.stringify(user));
+                                setUser(user);
+                                navigate('/');
+
+                                console.log("Logged in user:", user);
+                            }
+                        );
+
+
+                    } else {
+                        console.warn("Facebook login cancelled or failed");
+                    }
+                },
+                { scope: "email,public_profile" }
+            );
+
+        } catch (err) {
+            console.error("Facebook SDK failed to load:", err);
+        }
     };
 
     const signup = useGoogleLogin({
@@ -136,7 +142,10 @@ function Signup() {
 
                 users.push(user);
                 localStorage.setItem("users", JSON.stringify(users));
-                sessionStorage.setItem("user", JSON.stringify(user));
+                if (remember)
+                    localStorage.setItem("user", JSON.stringify(user));
+                else if (!remember)
+                    sessionStorage.setItem("user", JSON.stringify(user));
                 setUser(user);
                 navigate('/');
             } catch (e) {

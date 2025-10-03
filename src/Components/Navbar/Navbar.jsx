@@ -17,7 +17,6 @@ function Navbar() {
 
         if (window.FB) {
             window.FB.logout(() => console.log("Logged out from Facebook"));
-            delete window.FB;
         }
 
         const fbScript = document.getElementById("facebook-jssdk");
