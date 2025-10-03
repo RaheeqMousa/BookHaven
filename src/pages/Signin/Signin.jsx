@@ -12,7 +12,7 @@ import { useGoogleLogin } from "@react-oauth/google";
 import Back from '../../Components/Back';
 import { UserContext } from '../../Context/UserContext';
 import { useContext } from 'react';
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
 import { loadFbSdk, resetFbSdk } from '../../Utils/facebooksdk';
 
 function Signin() {
@@ -107,15 +107,14 @@ function Signin() {
                 const profile = await res.json();
 
                 const users = JSON.parse(localStorage.getItem("users") || "[]");
-                let user = users.find((u) => u.email === profile.email);
+                let user = users.find((u) => u.id === profile.sub);
 
                 if (!user) {
 
                     user = {
-                        id: uuidv4(),
+                        id: profile.sub,
                         name: profile.name,
                         email: profile.email,
-                        picture: profile.picture,
                     };
                     users.push(user);
                     localStorage.setItem("users", JSON.stringify(users));

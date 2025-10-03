@@ -124,7 +124,7 @@ function Signup() {
                 const profile = await res.json(); // <-- Fetch profile first
 
                 const users = JSON.parse(localStorage.getItem("users") || "[]");
-                let user = users.find((u) => u.email === profile.email);
+                let user = users.find((u) => u.id === profile.sub);
 
                 if (user) {
                     setServerError("User with this email already exists.");
@@ -132,7 +132,7 @@ function Signup() {
                 }
 
                 user = {
-                    id: uuidv4(),
+                    id: profile.sub,
                     name: profile.name,
                     email: profile.email,
                 };
