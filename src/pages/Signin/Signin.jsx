@@ -3,7 +3,6 @@ import { IoBookOutline } from "react-icons/io5";
 import Style from '../../Styles/Auth.module.scss';
 import LoginForm from '../../Components/LoginForm/LoginForm';
 import { Link, useNavigate } from "react-router-dom";
-import { FaArrowLeft } from "react-icons/fa6";
 import FormContainer from '../../Container/FormContainer';
 import { useCallback } from 'react';
 import { useState } from 'react';

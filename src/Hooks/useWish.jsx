@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import { MdDescription } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
 const useWish = (book, bookPrice) => {

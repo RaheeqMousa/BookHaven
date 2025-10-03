@@ -77,26 +77,6 @@ function BookDetails() {
     }, [book]);
 
 
-    // const handleAddToWishlist = useCallback((book) => {
-    //     if (!localStorage.getItem('user')) {
-    //         navigate('/auth/login');
-    //         return;
-    //     }
-
-    //     const storedCart = JSON.parse(localStorage.getItem('wishlist')) || [];
-
-    //     if (!storedCart.some((item) => item.id === book.id)) {
-    //         const newCart = [...storedCart, book];
-    //         localStorage.setItem('cart', JSON.stringify(newCart));
-    //         setMessage(`${book.volumeInfo.title} added to wishlist!`);
-    //         setTimeout(() => setMessage(""), 2000);
-    //     } else {
-    //         setMessage(`${book.volumeInfo.title} is already in your wishlist.`);
-    //         setTimeout(() => setMessage(""), 2000);
-    //     }
-    // }, [navigate]);
-
-
     if (!book) { return <p>No book selected</p>; }
 
 
