@@ -13,7 +13,6 @@ import Back from '../../Components/Back';
 import { v4 as uuidv4 } from "uuid";
 import { useContext } from 'react';
 import { UserContext } from '../../Context/UserContext';
-import FacebookLogin from '@greatsumini/react-facebook-login';
 import { loadFbSdk, resetFbSdk } from '../../Utils/facebooksdk';
 
 
@@ -59,7 +58,7 @@ function Signup() {
     }, [setServerError, navigate, setUser, remember]);
 
 
-    const handleFacebookLogin = async () => {
+    const handleFacebookLogin = useCallback( async () => {
         try {
             resetFbSdk();
             const FB = await loadFbSdk(FACEBOOK_KEY);
@@ -112,7 +111,7 @@ function Signup() {
         } catch (err) {
             console.error("Facebook SDK failed to load:", err);
         }
-    };
+    },[FACEBOOK_KEY, navigate, setUser, remember]);
 
     const signup = useGoogleLogin({
         onSuccess: async tokenResponse => {

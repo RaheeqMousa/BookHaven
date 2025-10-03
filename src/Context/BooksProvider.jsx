@@ -9,8 +9,9 @@ export function BooksProvider({ children }) {
   const [selectedFilters, setSelectedFilters] = useState({
     Categories: [],
     Language: "",
-    "Price Range": { min: "", max: "" },
   });
+  const [priceRange, setPriceRange] = useState({ Min: "", Max: "" });
+
 
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const API_KEY = import.meta.env.VITE_API_KEY;
@@ -40,6 +41,29 @@ export function BooksProvider({ children }) {
     fetchBooks(0);
   }, [fetchBooks]);
 
+
+  const handleInputChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setPriceRange((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  }, []);
+
+  const applyPriceFilter = useCallback(() => {
+    const min = parseFloat(priceRange.Min) || 0;
+    const max = parseFloat(priceRange.Max) || Infinity;
+
+    const filtered = books.filter((book) => {
+      const price = book.saleInfo?.retailPrice?.amount;
+      if (price === undefined) return false;
+      return price >= min && price <= max;
+    });
+
+    setBooks(filtered);
+  }, [books, priceRange]);
+
+
   const handleFilterChange = useCallback(
     (category, value, field) => () => {
       setSelectedFilters((prev) => {
@@ -64,6 +88,7 @@ export function BooksProvider({ children }) {
           fr: "livre",
         };
 
+        console.log(newFilters.langRestrict)
         let q = defaultQueries[newFilters.Language] || "book";
 
         if (newFilters.Categories?.length > 0) {
@@ -129,8 +154,13 @@ export function BooksProvider({ children }) {
     setSelectedFilters,
     handleFilterChange,
     handleCategoryClick,
-    numberOfBooks
-  }), [books, fetchBooks, handleCategoryClick, handleFilterChange, setSelectedFilters, selectedFilters, startIndex, numberOfBooks]);
+    numberOfBooks,
+    handleInputChange,
+    priceRange,
+    applyPriceFilter,
+    setPriceRange
+  }), [books, fetchBooks, handleCategoryClick, handleFilterChange, setSelectedFilters,
+    selectedFilters, startIndex, numberOfBooks, handleInputChange, priceRange, applyPriceFilter,setPriceRange]);
 
   return <UseBooksContext.Provider value={value}>
     {children}

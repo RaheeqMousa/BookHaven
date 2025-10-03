@@ -43,8 +43,10 @@ export const resetFbSdk = () => {
             delete window.FB;
         }
         const script = document.getElementById("facebook-jssdk");
-        if (script) script.remove();
+        
+        if (script) 
+            script.remove();
     } catch (e) {
-        console.warn(e);
+        console.log(e);
     }
 };

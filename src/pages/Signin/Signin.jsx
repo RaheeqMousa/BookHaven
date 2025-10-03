@@ -45,7 +45,8 @@ function Signin() {
     }, [navigate, remember, setUser]);
 
 
-    const handleFacebookLogin = async () => {
+    const handleFacebookLogin = useCallback(
+        async () => {
         try {
             resetFbSdk();
             const FB = await loadFbSdk(FACEBOOK_KEY);
@@ -92,7 +93,7 @@ function Signin() {
         } catch (err) {
             console.error("Facebook SDK failed to load:", err);
         }
-    };
+    },[FACEBOOK_KEY, navigate, setUser, remember]);
 
 
     const signin = useGoogleLogin({

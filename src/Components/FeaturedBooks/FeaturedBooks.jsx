@@ -14,6 +14,10 @@ function FeatureBooks() {
         handleFilterChange,
         handleCategoryClick,
         setSelectedFilters,
+        handleInputChange,
+        priceRange,
+        applyPriceFilter,
+        setPriceRange
     } = useContext(UseBooksContext);
     console.log(books);
 
@@ -31,6 +35,10 @@ function FeatureBooks() {
                     handleFilterChange={handleFilterChange}
                     setSelectedFilters= {setSelectedFilters}
                     handleCategoryClick={handleCategoryClick}
+                    priceRange={priceRange}
+                    handleInputChange={handleInputChange}
+                    applyPriceFilter={applyPriceFilter}
+                    setPriceRange={setPriceRange}
                 />               
                 <BookList />
             </section>

@@ -43,5 +43,12 @@ export const filters = [
       { label: "English", value: "en" },
     ]
   },
-
+  {
+    title: "Price Range",
+    name: "price",
+    filterby: [
+      { label: "Min", value: "" },
+      { label: "Max", value: "" },
+    ]
+  }
 ];

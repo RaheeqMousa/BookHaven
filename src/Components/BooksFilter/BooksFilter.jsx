@@ -4,8 +4,10 @@ import { filters } from './constants';
 import { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 
+
 function BooksFilter(props) {
-    const { filterChange, handleFilterChange,handleCategoryClick, setSelectedFilters, selectedFilters } = props;
+    const { filterChange, handleFilterChange, handleCategoryClick, priceRange,
+        setSelectedFilters, selectedFilters, handleInputChange, applyPriceFilter, setPriceRange } = props;
 
     const BASE_URL = import.meta.env.VITE_API_BASE_URL;
     const API_KEY = import.meta.env.VITE_API_KEY;
@@ -13,30 +15,51 @@ function BooksFilter(props) {
     const [expandedCategories, setExpandedCategories] = useState({});
     const [expandFilters, setExpandFilters] = useState(true);
 
-    const toggleCategory = (title) => {
-        setExpandedCategories(cat => ({
-            ...cat,
-            [title]: !cat[title]
-        }));
-    };
+    const toggleCategory = useCallback((title) =>
+        () => {
+            setExpandedCategories(cat => ({
+                ...cat,
+                [title]: !cat[title]
+            }));
+        }, []);
 
     const clearAllFilters = useCallback(() => {
         const defaultFilters = {
             Categories: [],
             Language: "",
-            'Price Range': { min: "", max: "" }
+            Availability: "",
+            ContentType: "",
+            orderBy: "relevance",
         };
 
+        const defaultPriceRange = { Min: "", Max: "" };
         setSelectedFilters(defaultFilters);
+        setPriceRange(defaultPriceRange);
 
         let apiUrl = `${BASE_URL}/books/v1/volumes?q=search+terms&maxResults=20&key=${API_KEY}`;
         if (filterChange) filterChange(0, apiUrl);
-    }, [filterChange, API_KEY, BASE_URL, setSelectedFilters]);
+    }, [filterChange, API_KEY, BASE_URL, setSelectedFilters, setPriceRange]);
 
 
     const toggleFilters = useCallback(() => {
         setExpandFilters(prev => !prev);
     }, []);
+
+
+    const categoryClickHandler = useCallback((categoryValue) =>
+        () =>
+            handleCategoryClick(categoryValue)
+        , [handleCategoryClick]);
+
+    const languageChangeHandler = useCallback(
+        (e) => {
+            handleFilterChange("Language", e.target.value)();
+        }, [handleFilterChange]);
+
+    const handleFilterChangeClick = useCallback((title, value) =>
+        () => handleFilterChange(title, value)()
+        , [handleFilterChange])
+
 
     return (
         <section className={`row flex-direction-column align-start ${Style.filter}`}>
@@ -56,7 +79,7 @@ function BooksFilter(props) {
 
             <section className={`row flex-direction-column align-start width-100 ${Style['sort-by']}`}>
                 <h4>Sort By</h4>
-                <select onChange={e => handleFilterChange('orderBy', e.target.value)()}>
+                <select onChange={e => handleFilterChange('orderBy', e.target.value)()} value={selectedFilters.orderBy || 'relevance'}>
                     <option value={'relevance'}>Most Relevant</option>
                     <option value={'newest'} >Newest</option>
                 </select>
@@ -68,7 +91,7 @@ function BooksFilter(props) {
                     key={`${category.title}-${index}`}
                     className={`row flex-direction-column align-start ${Style['filter-section']} width-100`}
                 >
-                    <div className="row width-100" onClick={() => toggleCategory(category.title)}>
+                    <div className="row width-100" onClick={toggleCategory(category.title)}>
                         <h4>{category.title}</h4>
                         {expandedCategories[category.title] ? (
                             <IoIosArrowDown size={16} color="#666666" />
@@ -86,18 +109,31 @@ function BooksFilter(props) {
                                     <>
                                         {category.filterby.map((f) => (
                                             <div className={`row ${Style.price}`} key={`${category.title}-${f}`}>
-                                                <label htmlFor={f}>{f}</label>
-                                                <input min={0} type='number' name={f} value={selectedFilters["Price Range"][f] || ""} onChange={(e) => handleFilterChange(category.name, e.target.value, `${f}`)()} />
+                                                <label htmlFor={f}>{f.label}</label>
+                                                <input
+                                                    min={0}
+                                                    type='number'
+                                                    className={Style['price-input']}
+                                                    name={f.label}
+                                                    placeholder={f.label}
+                                                    value={priceRange[f.label] || ""}
+                                                    onChange={handleInputChange}
+                                                />
                                             </div>
                                         ))}
+
+                                        <button onClick={applyPriceFilter} className={Style['price-btn']}>
+                                            Apply Price Filter
+                                        </button>
                                     </>
+
                                 ) :
 
                                     (category.title === "Language") ? (
                                         <div className={`row align-start flex-direction-column ${Style.options}`}>
                                             <select
                                                 name={category.title}
-                                                onChange={(e) => handleFilterChange(category.name, e.target.value)()}
+                                                onChange={languageChangeHandler}
                                                 value={selectedFilters[category.title] || ""}
                                             >
                                                 {category.filterby.map((f, i) => (
@@ -115,8 +151,8 @@ function BooksFilter(props) {
                                                         <input
                                                             type="checkbox"
                                                             name={category.title}
-                                                            onChange={() => handleCategoryClick(typeof f === "object" ? f.value : f)}
-                checked={selectedFilters[category.title]?.includes(typeof f === "object" ? f.value : f) || false}
+                                                            onChange={categoryClickHandler(f)}
+                                                            checked={selectedFilters[category.title]?.includes(f) || false}
                                                         />
                                                         {typeof f === "object" ? f.label : f}
                                                     </label>
@@ -127,7 +163,9 @@ function BooksFilter(props) {
                                                         <input
                                                             type="radio"
                                                             name={category.title}
-                                                            onChange={handleFilterChange(category.name, typeof f === "object" ? f.value : f)}
+                                                            value={f.value}
+                                                            checked={selectedFilters[category.title] === f.value}
+                                                            onChange={handleFilterChangeClick(category.title, f.value)}
                                                         />
                                                         {typeof f === "object" ? f.label : f}
                                                     </label>
@@ -186,7 +224,12 @@ BooksFilter.propTypes = {
     filterChange: PropTypes.func.isRequired,
     handleFilterChange: PropTypes.func.isRequired,
     setSelectedFilters: PropTypes.func.isRequired,
-    selectedFilters: PropTypes.object.isRequired
-}
+    selectedFilters: PropTypes.object.isRequired,
+    handleCategoryClick: PropTypes.func.isRequired,
+    priceRange: PropTypes.object.isRequired,
+    handleInputChange: PropTypes.func.isRequired,
+    applyPriceFilter: PropTypes.func.isRequired,
+    setPriceRange: PropTypes.func.isRequired,
+};
 
 export default BooksFilter;

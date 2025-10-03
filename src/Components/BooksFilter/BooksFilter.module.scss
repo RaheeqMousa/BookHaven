@@ -1,7 +1,7 @@
 .filter {
     // width: 100%;
     gap: 24px;
-    background-color: var(--cardBackground);
+    background-color: #F8F9FA;
     color: var(--textColor);
     border-radius: 8px;
     padding: 24px;
@@ -59,8 +59,23 @@
         }
     }
 
+    .price-input {
+        border-radius: 3px;
+    }
+
+    .price-btn {
+        color: black;
+        font-weight: bold;
+        background-color: white;
+        border-radius: 3px;
+        padding: 5px 10px;
+    }
 }
 
-:global(.dark) :local(button.clear-all) {
-    color: var(--textColor);
+:global(.dark) :local(.filter) {
+    background-color: #333;
+
+    button.clear-all {
+        color: var(--textColor);
+    }
 }
