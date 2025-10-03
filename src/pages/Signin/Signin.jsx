@@ -93,25 +93,25 @@ function Signin() {
             if (!FB || !FB.login) {
                 throw new Error('FB SDK not fully initialized');
             }
-            FB.login((response) => {
-                console.log(response)
-                // if (response.authResponse) {
-                //     FB.api("/me", { fields: "name,email,picture" }, (profile) => {
-                //         const user = {
-                //             name: profile.name,
-                //             email: profile.email,
-                //             facebookId: profile.id,
-                //             accessToken: response.authResponse.accessToken,
-                //             picture: profile.picture?.data?.url,
-                //         };
-                //         setUser(user);
-                //         localStorage.setItem("user", JSON.stringify(user));
-                //         navigate("/");
-                //     });
-                // } else {
-                //     console.warn("Facebook login cancelled or failed");
-                // }
-            }, { scope: "email" });
+            // FB.login((response) => {
+            //     console.log(response)
+            //     // if (response.authResponse) {
+            //     //     FB.api("/me", { fields: "name,email,picture" }, (profile) => {
+            //     //         const user = {
+            //     //             name: profile.name,
+            //     //             email: profile.email,
+            //     //             facebookId: profile.id,
+            //     //             accessToken: response.authResponse.accessToken,
+            //     //             picture: profile.picture?.data?.url,
+            //     //         };
+            //     //         setUser(user);
+            //     //         localStorage.setItem("user", JSON.stringify(user));
+            //     //         navigate("/");
+            //     //     });
+            //     // } else {
+            //     //     console.warn("Facebook login cancelled or failed");
+            //     // }
+            // }, { scope: "email" });
 
         } catch (err) {
             console.error("Facebook SDK failed to load:", err);

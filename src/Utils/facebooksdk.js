@@ -15,7 +15,7 @@ export const loadFbSdk = (FACEBOOK_APP_ID) => {
                     appId: FACEBOOK_APP_ID,
                     cookie: true,
                     xfbml: true,
-                    version: "v17.0",
+                    version: "v18.0",
                 });
 
                 window.FB.AppEvents.logPageView();
