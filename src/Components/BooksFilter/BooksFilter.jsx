@@ -5,7 +5,7 @@ import { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 
 function BooksFilter(props) {
-    const { filterChange, handleFilterChange, setSelectedFilters, selectedFilters } = props;
+    const { filterChange, handleFilterChange,handleCategoryClick, setSelectedFilters, selectedFilters } = props;
 
     const BASE_URL = import.meta.env.VITE_API_BASE_URL;
     const API_KEY = import.meta.env.VITE_API_KEY;
@@ -115,8 +115,8 @@ function BooksFilter(props) {
                                                         <input
                                                             type="checkbox"
                                                             name={category.title}
-                                                            onChange={handleFilterChange(category.name, typeof f === "object" ? f.value : f)}
-                                                            checked={selectedFilters[category.title]?.includes(typeof f === "object" ? f.value : f) || false}
+                                                            onChange={() => handleCategoryClick(typeof f === "object" ? f.value : f)}
+                checked={selectedFilters[category.title]?.includes(typeof f === "object" ? f.value : f) || false}
                                                         />
                                                         {typeof f === "object" ? f.label : f}
                                                     </label>

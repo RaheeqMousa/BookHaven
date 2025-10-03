@@ -10,12 +10,11 @@ import { useState } from 'react';
 import { RiFacebookCircleFill } from "react-icons/ri";
 import { RiGoogleFill } from "react-icons/ri";
 import { useGoogleLogin } from "@react-oauth/google";
-// import { FacebookProvider, Login } from 'react-facebook';
-import FacebookLogin from '@greatsumini/react-facebook-login';
 import Back from '../../Components/Back';
 import { UserContext } from '../../Context/UserContext';
 import { useContext } from 'react';
 import { v4 as uuidv4 } from "uuid";
+import { loadFbSdk } from '../../Utils/facebooksdk';
 
 function Signin() {
     const FACEBOOK_KEY = import.meta.env.VITE_FACEBOOK_APP_ID;
@@ -46,26 +45,80 @@ function Signin() {
         navigate("/");
     }, [navigate, remember, setUser]);
 
-    const handleFacebookResponse = (response) => {
-        console.log("Facebook Login Success:", response);
 
-        if (response.accessToken) {
-            const user = {
-                name: response.name,
-                email: response.email,
-                facebookId: response.id,
-                accessToken: response.accessToken
-            };
-            setUser(user);
-            if (remember)
-                localStorage.setItem("user", JSON.stringify(user));
-            else
-                sessionStorage.setItem("user", JSON.stringify(user));
-            navigate('/');
-        } else {
-            setServerError("Facebook login failed");
+    // let fbPromise = null;
+    // const loadFbSdk = () => {
+    //     if (fbPromise) return fbPromise;
+    //     fbPromise = new Promise((resolve, reject) => {
+    //         // If FB is already loaded, resolve immediately
+    //         if (window.FB) {
+    //             resolve(window.FB);
+    //             return;
+    //         }
+
+    //         // Set up the FB async init
+    //         window.fbAsyncInit = function () {
+    //             try {
+    //                 window.FB.init({
+    //                     appId: FACEBOOK_KEY,
+    //                     cookie: true,
+    //                     xfbml: false,
+    //                     version: "v17.0",
+    //                 });
+    //                 window.FB.AppEvents.logPageView();
+    //                 resolve(window.FB);
+    //             } catch (err) {
+    //                 reject(err);
+    //             }
+    //         };
+
+    //         // Avoid loading script twice
+    //         if (!document.getElementById("facebook-jssdk")) {
+    //             const script = document.createElement("script");
+    //             script.src = "https://connect.facebook.net/en_US/sdk.js";
+    //             script.id = "facebook-jssdk";
+    //             script.async = true;
+    //             script.onerror = () => reject(new Error("Failed to load Facebook SDK"));
+    //             document.body.appendChild(script);
+    //         }
+    //     });
+
+    //     return fbPromise;
+    // };
+
+    const handleFacebookLogin = async () => {
+        try {
+            const FB = await loadFbSdk('817641304279324');
+            console.log(FB);
+            if (!FB || !FB.login) {
+                throw new Error('FB SDK not fully initialized');
+            }
+            FB.login((response) => {
+                console.log(response)
+                // if (response.authResponse) {
+                //     FB.api("/me", { fields: "name,email,picture" }, (profile) => {
+                //         const user = {
+                //             name: profile.name,
+                //             email: profile.email,
+                //             facebookId: profile.id,
+                //             accessToken: response.authResponse.accessToken,
+                //             picture: profile.picture?.data?.url,
+                //         };
+                //         setUser(user);
+                //         localStorage.setItem("user", JSON.stringify(user));
+                //         navigate("/");
+                //     });
+                // } else {
+                //     console.warn("Facebook login cancelled or failed");
+                // }
+            }, { scope: "email" });
+
+        } catch (err) {
+            console.error("Facebook SDK failed to load:", err);
         }
     };
+
+
 
     const signin = useGoogleLogin({
         onSuccess: async tokenResponse => {
@@ -170,31 +223,12 @@ function Signin() {
                                 <RiGoogleFill size={16} color='#333' />
                                 Continue with Google
                             </button>
-                            {/* <FacebookProvider appId={FACEBOOK_KEY} version="v18.0">
-                                <Login
-                                    autoLoad={false}
-                                    fields="id,name,email,picture"
-                                    callback={handleFacebookResponse}
-                                    onError={error => {
-                                        console.error("Facebook login error:", error);
-                                        setServerError("Facebook login failed");
-                                    }}
-                                    render={({ onClick }) => (
-                                        <button onClick={onClick} className={`row justify-content-center`}>
-                                            <RiFacebookCircleFill size={16} color='#333' />
-                                            Sign up with Facebook
-                                        </button>
-                                    )}
-                                />
-                            </FacebookProvider> */}
-                            <FacebookLogin
-                                appId={FACEBOOK_KEY}
-                                autoLoad={false}
-                                fields="name,email,picture"
-                                callback={handleFacebookResponse}
-                                textButton="Continue with Facebook"
-                                version="v18.0"
-                            />
+
+                            <button className={`row justify-content-center`} onClick={handleFacebookLogin}>
+                                <RiFacebookCircleFill size={16} color='#333' />
+                                Continue with Facebook
+                            </button>
+
                         </div>
 
                         <p className={`row ${Style['navigate-other-auth']}`}>

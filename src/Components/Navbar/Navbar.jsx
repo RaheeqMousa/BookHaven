@@ -6,14 +6,25 @@ import SearchBar from '../SearchBar/SearchBar'
 import { Link } from 'react-router-dom'
 import { useCallback, useContext } from 'react'
 import { UserContext } from '../../Context/UserContext'
+import { resetFbSdk } from '../../Utils/facebooksdk'
 
 function Navbar() {
     const { user, setUser } = useContext(UserContext);
     console.log(user);
 
-    const logout = useCallback(() =>
-        setUser(null)
-        , [setUser]);
+    const logout = useCallback(() => {
+        setUser(null);
+
+        if (window.FB) {
+            window.FB.logout(() => console.log("Logged out from Facebook"));
+            delete window.FB;
+        }
+
+        const fbScript = document.getElementById("facebook-jssdk");
+        if (fbScript) fbScript.remove();
+
+        resetFbSdk();
+    }, [setUser]);
 
     const logoutHandler = useCallback(() =>
         logout()

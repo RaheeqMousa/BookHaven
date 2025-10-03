@@ -46,7 +46,6 @@ export function BooksProvider({ children }) {
         let newFilters;
         const current = prev[category];
 
-        let q = "search+terms";
         if (Array.isArray(current)) {
           newFilters = current.includes(value)
             ? { ...prev, [category]: current.filter((v) => v !== value) }
@@ -57,26 +56,28 @@ export function BooksProvider({ children }) {
           newFilters = { ...prev, [category]: value };
         }
 
-        console.log(newFilters);
+        console.log("newFilters", newFilters);
+
+        const defaultQueries = {
+          ar: "كتاب",
+          en: "book",
+          fr: "livre",
+        };
+
+        let q = defaultQueries[newFilters.Language] || "book";
+
         if (newFilters.Categories?.length > 0) {
           newFilters.Categories.forEach((c) => {
             q += `+subject:${encodeURIComponent(c)}`;
           });
         }
 
-        console.log(category, value, field);
         let apiUrl = `${BASE_URL}/books/v1/volumes?q=${q}&startIndex=0&maxResults=20&key=${API_KEY}`;
+
         Object.entries(newFilters).forEach(([key, val]) => {
-          console.log(key, val);
           if (key === "Price Range") {
             if (val.min) apiUrl += `&minPrice=${val.min}`;
             if (val.max) apiUrl += `&maxPrice=${val.max}`;
-          } else if (key === "Categories") {
-            console.log(val);
-            val.forEach((c) => {
-              q += `+subject:${encodeURIComponent(c)}`;
-            });
-            apiUrl = `${BASE_URL}/books/v1/volumes?q=${q}&startIndex=0&maxResults=20&key=${API_KEY}`
           } else if (Array.isArray(val)) {
             val.forEach((v) => (apiUrl += `&${key}=${encodeURIComponent(v)}`));
           } else if (val) {
@@ -84,6 +85,7 @@ export function BooksProvider({ children }) {
           }
         });
 
+        console.log("Final API URL:", apiUrl);
 
         setStartIndex(0);
         fetchBooks(0, apiUrl);

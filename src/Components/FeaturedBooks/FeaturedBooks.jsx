@@ -13,7 +13,7 @@ function FeatureBooks() {
         selectedFilters,
         handleFilterChange,
         handleCategoryClick,
-        setSelectedFilters
+        setSelectedFilters,
     } = useContext(UseBooksContext);
     console.log(books);
 
@@ -30,6 +30,7 @@ function FeatureBooks() {
                     selectedFilters={selectedFilters}
                     handleFilterChange={handleFilterChange}
                     setSelectedFilters= {setSelectedFilters}
+                    handleCategoryClick={handleCategoryClick}
                 />               
                 <BookList />
             </section>

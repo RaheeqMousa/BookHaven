@@ -22,6 +22,7 @@ function Signup() {
     const { setUser } = useContext(UserContext);
     const FACEBOOK_KEY = import.meta.env.VITE_FACEBOOK_APP_ID;
     const [serverError, setServerError] = useState('');
+    const [remember, setRemember] = useState(false);
     const navigate = useNavigate();
 
     const handleSignup = useCallback((formData) => {
@@ -57,34 +58,56 @@ function Signup() {
     }, [setServerError, navigate, setUser]);
 
 
-    const handleFacebookResponse = (response) => {
-        console.log(response);
-        // if (response.accessToken) {
-        //     if (!response.email) {
-        //         setServerError("Facebook account did not provide an email. Please use another sign up method.");
-        //         return;
-        //     }
-        //     const users = JSON.parse(localStorage.getItem("users")) || [];
-        //     let user = users.find(u => u.email === response.email);
+    const loadFbSdk = () => {
+        return new Promise((resolve) => {
+            if (window.FB) {
+                resolve(window.FB);
+                return;
+            }
 
-        //     if (!user) {
-        //         user = {
-        //             id: uuidv4(),
-        //             name: response.name,
-        //             email: response.email,
-        //             facebookId: response.id,
-        //             accessToken: response.accessToken
-        //         };
-        //         users.push(user);
-        //         localStorage.setItem("users", JSON.stringify(users));
-        //     }
+            window.fbAsyncInit = function () {
+                window.FB.init({
+                    appId: FACEBOOK_KEY,
+                    cookie: true,
+                    xfbml: false,
+                    version: "v17.0",
+                });
+                window.FB.AppEvents.logPageView();
+                resolve(window.FB);
+            };
 
-        //     sessionStorage.setItem("user", JSON.stringify(user));
-        //     setUser(user);
-        //     navigate('/');
-        // } else {
-        //     setServerError("Facebook login failed");
-        // }
+            const script = document.createElement("script");
+            script.src = "https://connect.facebook.net/en_US/sdk.js";
+            script.id = "facebook-jssdk";
+            script.async = true;
+            document.body.appendChild(script);
+        });
+    };
+
+    const handleFacebookLogin = async () => {
+        const FB = await loadFbSdk();
+
+        FB.login((response) => {
+            console.log("Facebook callback triggered", response);
+
+            if (response.authResponse) {
+                FB.api("/me", { fields: "name,email,picture" }, (profile) => {
+                    const user = {
+                        name: profile.name,
+                        email: profile.email,
+                        facebookId: profile.id,
+                        accessToken: response.authResponse.accessToken,
+                        picture: profile.picture?.data?.url,
+                    };
+                    setUser(user);
+                    if (remember) localStorage.setItem("user", JSON.stringify(user));
+                    else sessionStorage.setItem("user", JSON.stringify(user));
+                    navigate("/");
+                });
+            } else {
+                setServerError("Facebook login cancelled or failed.");
+            }
+        }, { scope: "email" });
     };
 
     const signup = useGoogleLogin({
@@ -126,6 +149,9 @@ function Signup() {
         flow: "implicit"
     });
 
+    const handleCheckboxChange = useCallback(() => {
+        setRemember(!remember)
+    }, [remember]);
 
 
     return (
@@ -165,12 +191,12 @@ function Signup() {
                     <div className={`row flex-direction-column ${Style.processes}`}>
                         <FormContainer onSubmit={handleSignup} serverError={serverError} initialData={null} type="Sign Up">
                             <SignupForm />
-                            {/* <div className='row width-100'>
+                            <div className='row width-100'>
                                 <div className={`row ${Style['remember-me']}`}>
-                                    <input type='checkbox' />
+                                    <input type='checkbox' onChange={handleCheckboxChange} />
                                     <p>Remember me</p>
                                 </div>
-                            </div> */}
+                            </div>
                         </FormContainer>
 
                         <p className={Style['auth-divider']}>or</p>
@@ -181,32 +207,10 @@ function Signup() {
                                 <RiGoogleFill size={16} color='#333' />
                                 Continue with Google
                             </button>
-                            <FacebookLogin
-                                appId={import.meta.env.VITE_FACEBOOK_APP_ID}
-                                autoLoad={false}
-                                fields="name,email,picture"
-                                callback={handleFacebookResponse}
-                                textButton="Continue with Facebook"
-                                version="v18.0"
-                            />
-                            {/* <FacebookProvider appId={FACEBOOK_KEY} >
-                                <Login
-                                    autoLoad={false}
-                                    fields="id,name,email,picture"
-
-                                    callback={handleFacebookResponse}
-                                    onError={error => {
-                                        console.error("Facebook login error:", error);
-                                        setServerError("Facebook login failed");
-                                    }}
-                                    render={({ onClick }) => (
-                                        <button onClick={onClick} className={`row justify-content-center`}>
-                                            <RiFacebookCircleFill size={16} color='#333' />
-                                            Sign up with Facebook
-                                        </button>
-                                    )}
-                                />
-                            </FacebookProvider> */}
+                            <button className={`row justify-content-center`} onClick={handleFacebookLogin}>
+                                <RiFacebookCircleFill size={16} color='#333' />
+                                Continue with Facebook
+                            </button>
                         </div>
 
                         <p className={`row ${Style['navigate-other-auth']}`}>
