@@ -55,23 +55,5 @@ function BookList() {
     );
 }
 
-BookList.propTypes = {
-    books: PropTypes.arrayOf(
-        PropTypes.shape({
-            imageLink: PropTypes.string.isRequired,
-            title: PropTypes.string.isRequired,
-            printType: PropTypes.string.isRequired,
-            info: PropTypes.string.isRequired,
-            category: PropTypes.string.isRequired,
-            saleability: PropTypes.string.isRequired,
-            pageCount: PropTypes.number.isRequired,
-        })
-    ),
-    handleFilterChange: PropTypes.func.isRequired,
-    numberOfBooks: PropTypes.number.isRequired,
-    startIndex: PropTypes.number.isRequired,
-    setStartIndex: PropTypes.func.isRequired,
-    fetchBooks: PropTypes.func.isRequired
-};
 
 export default BookList;
