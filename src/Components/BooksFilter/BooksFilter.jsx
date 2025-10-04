@@ -164,8 +164,8 @@ function BooksFilter(props) {
                                                             type="radio"
                                                             name={category.title}
                                                             value={f.value}
-                                                            checked={selectedFilters[category.title] === f.value}
-                                                            onChange={handleFilterChangeClick(category.title, f.value)}
+                                                            checked={selectedFilters[category.name] === f.value}
+                                                            onChange={handleFilterChangeClick(category.name, f.value)}
                                                         />
                                                         {typeof f === "object" ? f.label : f}
                                                     </label>

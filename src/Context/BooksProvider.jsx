@@ -100,12 +100,11 @@ export function BooksProvider({ children }) {
         let apiUrl = `${BASE_URL}/books/v1/volumes?q=${q}&startIndex=0&maxResults=20&key=${API_KEY}`;
 
         Object.entries(newFilters).forEach(([key, val]) => {
-          if (key === "Price Range") {
-            if (val.min) apiUrl += `&minPrice=${val.min}`;
-            if (val.max) apiUrl += `&maxPrice=${val.max}`;
-          } else if (Array.isArray(val)) {
+          if (key === "Language" && val) {
+            apiUrl += `&langRestrict=${val}`;
+          } else if (Array.isArray(val) && key!="Categories") {
             val.forEach((v) => (apiUrl += `&${key}=${encodeURIComponent(v)}`));
-          } else if (val) {
+          } else if (val && key!="Categories") {
             apiUrl += `&${key}=${val}`;
           }
         });
@@ -129,13 +128,22 @@ export function BooksProvider({ children }) {
           ? prevCategories.filter((c) => c !== category)
           : [...prevCategories, category];
 
-        let q = "search+terms";
+        const defaultQueries = {
+          ar: "كتاب",
+          en: "book",
+          fr: "livre",
+        };
+        let q = defaultQueries[prev.Language] || "book";
+
         categories.forEach((c) => {
           q += `+subject:${encodeURIComponent(c)}`;
         });
 
-        const url = `${BASE_URL}/books/v1/volumes?q=${q}&startIndex=0&maxResults=20&key=${API_KEY}`;
+        let url = `${BASE_URL}/books/v1/volumes?q=${q}&startIndex=0&maxResults=20&key=${API_KEY}`;
 
+        if (prev.Language) {
+          url += `&langRestrict=${prev.Language}`;
+        }
         setStartIndex(0);
         fetchBooks(0, url);
 
@@ -160,7 +168,7 @@ export function BooksProvider({ children }) {
     applyPriceFilter,
     setPriceRange
   }), [books, fetchBooks, handleCategoryClick, handleFilterChange, setSelectedFilters,
-    selectedFilters, startIndex, numberOfBooks, handleInputChange, priceRange, applyPriceFilter,setPriceRange]);
+    selectedFilters, startIndex, numberOfBooks, handleInputChange, priceRange, applyPriceFilter, setPriceRange]);
 
   return <UseBooksContext.Provider value={value}>
     {children}
