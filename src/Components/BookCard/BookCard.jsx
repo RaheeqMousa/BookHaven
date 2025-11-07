@@ -94,7 +94,7 @@ function BookCard(props) {
 
     return (
         <Link
-            to="/bookdetails"
+            to={`/bookdetails/${book.id}`}
             state={book}
             className={`${isGridDisplay ? '' : Style['list-display']} ${Style['book-card']}`}
         >
@@ -103,6 +103,7 @@ function BookCard(props) {
                     src={book.volumeInfo.imageLinks?.smallThumbnail || book.volumeInfo.imageLinks?.thumbnail}
                     alt={book.volumeInfo.title}
                     title={book.volumeInfo.title} width={168} height={180}
+                    loading="lazy"
                 />
                 <div className={showActions ? 'display-block' : 'display-none'}>
                     {book.saleInfo.saleability === "FREE" ? <p className={Style.free}>FREE</p> : ''}

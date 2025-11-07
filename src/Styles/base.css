@@ -181,11 +181,12 @@ button {
     width: fit-content;
 }
 
-.back a {
+.back button {
     color: var(--mainColor);
+    background: none;
 }
 
-.dark .back a,
+.dark .back button,
 .dark .back svg path {
     color: var(--gold);
 }

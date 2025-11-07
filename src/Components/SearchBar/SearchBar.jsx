@@ -1,12 +1,12 @@
 import SearchImg from '../../assets/Images/search.svg';
 import Style from './SearchBar.module.scss';
 import { useContext} from "react";
-import { UseBooksContext } from '../../Context/UseBooksContext.jsx';
 import useBookSearch from '../../Hooks/useSearchBook.jsx';
+import { UseBooksContextData } from '../../Context/UseBooksContextData.jsx';
 
 function SearchBar() {
 
-  const { fetchBooks } = useContext(UseBooksContext);
+  const { fetchBooks } = useContext(UseBooksContextData);
   const {
     query,
     suggestions,

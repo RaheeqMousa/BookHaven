@@ -1,13 +1,15 @@
-import PropTypes from "prop-types";
 import BookCard from "../../Components/BookCard/BookCard";
 import Style from './BooksList.module.scss';
 import { IoIosList } from "react-icons/io";
 import { MdGridOn } from "react-icons/md";
 import { useCallback, useContext, useState } from "react";
-import { UseBooksContext } from '../../Context/UseBooksContext.jsx';
+import { UseBooksContextData } from "../../Context/UseBooksContextData.jsx";
+import { UseBooksContext } from "../../Context/UseBooksContext.jsx";
 
 function BookList() {
-    const { books = [], handleFilterChange, numberOfBooks, startIndex, setStartIndex,fetchBooks } = useContext(UseBooksContext);
+    const { books = [], numberOfBooks=20, startIndex, setStartIndex,fetchBooks } = useContext(UseBooksContextData);
+    const {handleFilterChange}= useContext(UseBooksContext);
+
     const [isGridDisplay, setGridDisplay] = useState(true);
     const toggleDisplay = useCallback(
         () => setGridDisplay(prev => !prev), []

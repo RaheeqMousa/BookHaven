@@ -35,7 +35,7 @@ function Wishlist() {
                     )}`
             )
                 .join("\n"),
-            url: `http://localhost:5173/wishlist/${JSON.parse(localStorage.getItem('user')).id}`
+            url: `${import.meta.env.VITE_APP_BASE_URL}/wishlist/${user.id}`
         };
 
         setShareBtnDisable(false);
@@ -55,7 +55,7 @@ function Wishlist() {
                 setShareBtnDisable(true);
             }, 1000);
         }
-    }, [items]);
+    }, [items,user]);
 
 
     const handleFilterChange = useCallback((filterBy) => {
@@ -110,7 +110,7 @@ function Wishlist() {
 
 
     const addAllToCart = () => {
-        if (!localStorage.getItem('user')) {
+        if (!user) {
             navigate('/auth/login');
         }
 

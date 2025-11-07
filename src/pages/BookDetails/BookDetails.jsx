@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Style from './BookDetails.module.scss'
 import { Link } from 'react-router-dom'
 import { IoArrowBack } from "react-icons/io5";
@@ -16,10 +16,21 @@ import PropTypes from "prop-types";
 import useWish from '../../Hooks/useWish';
 import { FaHeart } from "react-icons/fa6";
 import { joinAuthors } from "../../Utils/JoinAuthors";
+import { useContext } from "react";
+import Loader from "../../Components/Loader/Loader.jsx";
+import { UseBooksContextData } from "../../Context/UseBooksContextData.jsx";
 
 function BookDetails() {
-    const location = useLocation();
-    const book = location.state;
+    // const location = useLocation();
+    // const book = location.state;
+    const {id}= useParams();
+    const context = useContext(UseBooksContextData);
+    
+    const { books, loading } = context;
+
+    const book = useMemo(() => books.find((b) => b.id === id), [books, id]);
+  
+
     const [isWished, toggleWish] = useWish(book);
     const [detailsShow, setDetailsShow] = useState(true);
     const [isExpanded, setIsExpanded] = useState(false);
@@ -78,7 +89,9 @@ function BookDetails() {
 
 
     if (!book) { return <p>No book selected</p>; }
-
+    if (!context || loading) {
+        return <Loader />;
+    }
 
     return (
         <section className={`row flex-direction-column ${Style['details-section']}`}>
@@ -91,6 +104,7 @@ function BookDetails() {
                                 src={book.volumeInfo.imageLinks?.thumbnail || book.volumeInfo.imageLinks?.smallThumbnail}
                                 alt={book.volumeInfo.title}
                                 title={book.volumeInfo.title} width={448} height={600}
+                                loading="lazy"
                             />
 
                             <div className={`row flex-direction-column ${Style['book-preview']}`}>
@@ -199,8 +213,8 @@ function BookDetails() {
             </div>
         </section>
     );
-}
 
+}
 
 BookDetails.propTypes = {
     book: PropTypes.shape({

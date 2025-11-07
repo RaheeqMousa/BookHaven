@@ -4,12 +4,11 @@ import BookList from '../BooksList/BooksList.jsx';
 import { filters } from '../BooksFilter/constants.js';
 import { UseBooksContext } from '../../Context/UseBooksContext.jsx';
 import { useContext } from 'react';
-import FacebookLogin from '@greatsumini/react-facebook-login';
+import { UseBooksContextData } from '../../Context/UseBooksContextData.jsx';
 
 function FeatureBooks() {
     const {
-        books,
-        fetchBooks,
+       
         selectedFilters,
         handleFilterChange,
         handleCategoryClick,
@@ -19,6 +18,10 @@ function FeatureBooks() {
         applyPriceFilter,
         setPriceRange
     } = useContext(UseBooksContext);
+    const {
+        books,
+        fetchBooks
+    } = useContext(UseBooksContextData);
     console.log(books);
 
     return (

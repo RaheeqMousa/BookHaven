@@ -2,11 +2,11 @@ import Style from './IntroSection.module.scss'
 import UpsideImg from '../../assets/Images/upside.svg'
 import SearchImg from '../../assets/Images/search.svg'
 import { useContext } from 'react';
-import { UseBooksContext } from '../../Context/UseBooksContext.jsx';
 import useBookSearch from '../../Hooks/useSearchBook.jsx';
+import { UseBooksContextData } from '../../Context/UseBooksContextData.jsx';
 
 function IntroSection() {
-    const { fetchBooks } = useContext(UseBooksContext);
+    const { fetchBooks } = useContext(UseBooksContextData);
 
     const {
         query,

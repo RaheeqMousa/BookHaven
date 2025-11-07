@@ -7,6 +7,8 @@ import NotFound from './pages/NotFound/NotFound'
 import SecondaryLayout from './Layouts/SecondaryLayout'
 import MainLayout from './Layouts/MainLayout'
 import Loader from './Components/Loader/Loader'
+import { BooksProvider } from "./Context/BooksProvider";
+import { BooksProviderData } from './Context/BooksProviderData'
 
 const Signin = lazy(()=> import('./pages/Signin/Signin'))
 const Signup = lazy(()=> import('./pages/Signup/Signup'))
@@ -19,31 +21,35 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <Suspense fallback={<Loader />}>
-          <Routes>
-            <Route path="/" element={<MainLayout />}>
-              <Route index element={<Home />} />
-            </Route>
+       <BooksProviderData>
+          <BooksProvider>
+            <Suspense fallback={<Loader />}>
+              <Routes>
+                <Route path="/" element={<MainLayout />}>
+                  <Route index element={<Home />} />
+                </Route>
 
-            
-            <Route path='/wishlist/:id' element={<SharedWishlist />} />
+                
+                <Route path='/wishlist/:id' element={<SharedWishlist />} />
 
-            <Route element={<SecondaryLayout />}>
-              <Route path='/bookdetails' element={<BookDetails />} />
-              <Route element={<AlreadyLoggedInRoute />}>
-                <Route path="auth/login" element={<Signin />} />
-                <Route path="auth/register" element={<Signup />} />
-              </Route>
+                <Route element={<SecondaryLayout />}>
+                  <Route path='/bookdetails/:id' element={<BookDetails />} />
+                  <Route element={<AlreadyLoggedInRoute />}>
+                    <Route path="auth/login" element={<Signin />} />
+                    <Route path="auth/register" element={<Signup />} />
+                  </Route>
 
-              <Route element={<AuthProtectedRoute />}>
-                <Route path="user/wishlist" element={<Wishlist />} />
-                <Route path='user/cart' element={<Cart />} />
-              </Route>
-            </Route>
+                  <Route element={<AuthProtectedRoute />}>
+                    <Route path="user/wishlist" element={<Wishlist />} />
+                    <Route path='user/cart' element={<Cart />} />
+                  </Route>
+                </Route>
 
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
+          </BooksProvider>
+        </BooksProviderData>
       </BrowserRouter>
     </>
   )

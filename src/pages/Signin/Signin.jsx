@@ -12,7 +12,6 @@ import { useGoogleLogin } from "@react-oauth/google";
 import Back from '../../Components/Back';
 import { UserContext } from '../../Context/UserContext';
 import { useContext } from 'react';
-// import { v4 as uuidv4 } from "uuid";
 import { loadFbSdk, resetFbSdk } from '../../Utils/facebooksdk';
 
 function Signin() {

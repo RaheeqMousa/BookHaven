@@ -1,8 +1,9 @@
 import Navbar from '../Components/Navbar/Navbar'
 import { Outlet } from 'react-router-dom';
-import { BooksProvider } from "../Context/BooksProvider";
 import ThemeMode from '../Components/ThemeMode/ThemeMode';
-function MainLayout() {
+
+
+function SecondaryLayout() {
     return (
         <>
             <Outlet />
@@ -10,4 +11,4 @@ function MainLayout() {
         </>
     );
 }
-export default MainLayout;
+export default SecondaryLayout;
