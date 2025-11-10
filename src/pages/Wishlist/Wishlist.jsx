@@ -9,10 +9,11 @@ import { useNavigate } from "react-router-dom";
 import { joinAuthors } from "../../Utils/JoinAuthors";
 import { useContext } from "react";
 import { UserContext } from "../../Context/UserContext";
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 function Wishlist() {
     const { user } = useContext(UserContext);
-    const [isGrid, setIsGrid] = useState(window.innerWidth > 768);
+    const isGrid= useMediaQuery('(min-width: 768px)');
     const [items, setItems] = useState([]);
     const number_of_wished = items.length;
     const navigate = useNavigate();
@@ -58,7 +59,9 @@ function Wishlist() {
     }, [items,user]);
 
 
-    const handleFilterChange = useCallback((filterBy) => {
+
+    const handleFilterChange = useCallback((filterBy) => 
+        {
         const storedWishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
         const userWish = storedWishlist.filter(w => w.userId === user.id);
 
@@ -71,14 +74,12 @@ function Wishlist() {
         setItems(sorted);
     }, [user]);
 
-    useEffect(() => {
-        const handleResize = () => {
-            setIsGrid(window.innerWidth > 768);
-        };
-        console.log('use effedct')
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
+
+    const onFilterChange = useCallback((e) => {
+        handleFilterChange(e.target.value);
+    }, [handleFilterChange]);
+
+
 
 
     useEffect(() => {
@@ -165,9 +166,9 @@ function Wishlist() {
             <div className={`row width-100 ${Style['filter-section']}`}>
                 <p>Showing {number_of_wished} books</p>
                 <div className={`row ${Style.filter}`}>
-                    <select onChange={e => handleFilterChange(e.target.value)}>
+                    <select onChange={onFilterChange}>
                         <option value={'recently'}>Recently Added</option>
-                        <option value={'oldest'} >Oldest Fisrt</option>
+                        <option value={'oldest'} >Oldest First</option>
                     </select>
                     <button onClick={addAllToCart}>Add All to Cart</button>
                 </div>

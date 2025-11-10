@@ -5,7 +5,7 @@ import { UserContext } from "../Context/UserContext";
 const useWish = (book, bookPrice) => {
     const navigate= useNavigate();
     const [isWished, setIsWished] = useState(false);
-    const user= useContext(UserContext);
+    const {user}= useContext(UserContext);
 
 
     useEffect(() => {

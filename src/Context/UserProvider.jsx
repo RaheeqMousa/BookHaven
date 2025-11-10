@@ -10,6 +10,7 @@ export function UserProvider({ children }) {
             JSON.parse(localStorage.getItem("user")) ||
             JSON.parse(sessionStorage.getItem("user")) ||
             null;
+            
         setUser(storedUser);
     }, []);
 

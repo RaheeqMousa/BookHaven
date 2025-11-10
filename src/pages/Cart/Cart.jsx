@@ -18,7 +18,9 @@ function Cart() {
     const [totalPrice, setTotalPrice]= useState(0);
     const [showConfirm, setShowConfirm] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
-    const user = useContext(UserContext);
+    const {user} = useContext(UserContext);
+    
+
 
     const calcSalary=useCallback(()=>
         setTotalPrice(items.reduce((total, book)=> total+ (book.saleInfo.price * book.quantity),0 ))

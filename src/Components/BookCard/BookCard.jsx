@@ -159,16 +159,44 @@ function BookCard(props) {
     );
 }
 
+
+const volumeInfoShape = PropTypes.shape({
+  title: PropTypes.string,
+  subtitle: PropTypes.string,
+  authors: PropTypes.arrayOf(PropTypes.string),
+  printType: PropTypes.string,
+  categories: PropTypes.arrayOf(PropTypes.string),
+  pageCount: PropTypes.number,
+  description: PropTypes.string,
+  previewLink: PropTypes.string,
+  imageLinks: PropTypes.shape({
+    smallThumbnail: PropTypes.string,
+    thumbnail: PropTypes.string,
+  }),
+});
+
+const saleInfoShape = PropTypes.shape({
+  saleability: PropTypes.string,
+  listPrice: PropTypes.shape({
+    amount: PropTypes.number,
+    currencyCode: PropTypes.string,
+  }),
+});
+
+const accessInfoShape = PropTypes.shape({
+  webReaderLink: PropTypes.string,
+});
+
 BookCard.propTypes = {
-    book: PropTypes.shape({
-        imageLink: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
-        printType: PropTypes.string.isRequired,
-        info: PropTypes.string.isRequired,
-        category: PropTypes.string.isRequired,
-        saleability: PropTypes.string.isRequired,
-        pageCount: PropTypes.number.isRequired,
-    }),
-    isGridDisplay: PropTypes.bool.isRequired
+  book: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    volumeInfo: volumeInfoShape,
+    saleInfo: saleInfoShape,
+    accessInfo: accessInfoShape,
+    price: PropTypes.number,
+  }).isRequired,
+  isGridDisplay: PropTypes.bool,
+  wishlistChange: PropTypes.func,
+  showActions: PropTypes.bool,
 };
 export default BookCard;
