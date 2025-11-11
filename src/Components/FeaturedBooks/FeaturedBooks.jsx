@@ -8,7 +8,6 @@ import { UseBooksContextData } from '../../Context/UseBooksContextData.jsx';
 
 function FeatureBooks() {
     const {
-       
         selectedFilters,
         handleFilterChange,
         handleCategoryClick,

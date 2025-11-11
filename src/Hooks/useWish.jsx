@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../Context/UserContext";
 
 const useWish = (book, bookPrice) => {
-    const navigate= useNavigate();
+    const navigate = useNavigate();
     const [isWished, setIsWished] = useState(false);
-    const {user}= useContext(UserContext);
+    const { user } = useContext(UserContext);
 
 
     useEffect(() => {
@@ -14,7 +14,7 @@ const useWish = (book, bookPrice) => {
             const wishlist = cartData
                 ? JSON.parse(cartData)
                 : [];
-            const user = JSON.parse(localStorage.getItem("user"))||JSON.parse(sessionStorage.getItem("user"));
+            const user = JSON.parse(localStorage.getItem("user")) || JSON.parse(sessionStorage.getItem("user"));
 
             const wishlistArray = Array.isArray(wishlist) ? wishlist : [wishlist];
 
@@ -30,7 +30,7 @@ const useWish = (book, bookPrice) => {
     }, [book]);
 
     const toggleWish = useCallback(() => {
-        if(!user){
+        if (!user) {
             navigate('/auth/login');
         }
 
@@ -70,7 +70,7 @@ const useWish = (book, bookPrice) => {
 
         localStorage.setItem("wishlist", JSON.stringify(cart));
         setIsWished(!isWished);
-    }, [book, isWished, navigate, bookPrice,user]);
+    }, [book, isWished, navigate, bookPrice, user]);
 
     return [isWished, toggleWish];
 };

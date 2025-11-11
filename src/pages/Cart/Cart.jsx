@@ -1,103 +1,43 @@
 import Back from '../../Components/Back'
 import { LuShield } from "react-icons/lu";
 import Style from './cart.module.scss'
-import { useCallback, useContext, useEffect, useState } from 'react';
-import { FiTrash2 } from "react-icons/fi";
-import { joinAuthors } from '../../Utils/JoinAuthors';
-import ShippingImg from '../../assets/Images/shipping_cart.svg'
-import { GoPlus } from "react-icons/go";
-import { TiMinus } from "react-icons/ti";
+import { useCallback, useEffect, useState } from 'react';
 import Confirmation from '../../Components/Alert/Confirmation';
 import Notify from '../../Components/Notify/Notify';
-import { UserContext } from '../../Context/UserContext';
+import useCart from '../../Hooks/useCart';
+import CartCard from '../../Components/CartCard/CartCard';
 
 
 function Cart() {
-
-    const [items, setItems] = useState([]);
-    const [totalPrice, setTotalPrice]= useState(0);
+    const { cart, clearCart, increment, decrement , removeFromCart} = useCart();
+    const [totalPrice, setTotalPrice] = useState(0);
     const [showConfirm, setShowConfirm] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
-    const {user} = useContext(UserContext);
-    
 
 
-    const calcSalary=useCallback(()=>
-        setTotalPrice(items.reduce((total, book)=> total+ (book.saleInfo.price * book.quantity),0 ))
-    ,[items]);
+    const calcSalary = useCallback(() =>
+        setTotalPrice(cart.reduce((total, book) => total + (book.saleInfo.price * book.quantity), 0))
+        , [cart]);
 
-    useEffect(()=>
+    useEffect(() =>
         calcSalary()
-    ,[items,calcSalary])
-
-    useEffect(() => {
-        try {
-            const storedCart = JSON.parse(localStorage.getItem('cart')) || [];        
-            const userCart = storedCart.filter(w => w.userId === user.id);
-            
-            if (userCart) {
-                setItems(userCart);
-                console.log(userCart);
-            } else {
-                setItems([]);
-            }
-        } catch (e) {
-            console.error(e);
-            setItems([]);
-        }
-    }, [user]);
-
-    const handleDeleteCard = useCallback((id) => {
-        const updatedItems = items.filter(b => !(b.id === id && b.userId === user.id));
-        setItems(updatedItems);
-
-        localStorage.setItem('cart', JSON.stringify(updatedItems));
-
-    }, [setItems, items,user]);
-
-    const getDeleteHandler =useCallback((id)=>
-        ()=>
-        handleDeleteCard(id)
-    ,[handleDeleteCard]);
+        , [cart, calcSalary])
 
 
-    const increment= useCallback((id)=>{
-        items.find(b => (b.id === id && b.userId === user.id)).quantity+=1;
-        setItems([...items]);
-        localStorage.setItem('cart', JSON.stringify(items));
-
-    },[setItems,items,user]);
-
-    const getIncrementHandler =useCallback((id)=>
-        ()=>
-        increment(id)
-    ,[increment]);
-
-    const decrement= useCallback((id)=>{
-        items.find(b => (b.id === id && b.userId === user.id)).quantity-=1;
-        setItems([...items]);
-        localStorage.setItem('cart', JSON.stringify(items));
-
-    },[setItems,items,user]);
-
-    const getDecrementHandler =useCallback((id)=>
-        ()=>
-        decrement(id)
-    ,[decrement]);
-
-    const handleCheckoutClick= useCallback(()=>{
+    const handleCheckoutClick = useCallback(() => {
         setShowConfirm(true);
-    },[]);
+    }, []);
 
-    const handleConfirmClose= useCallback((choice)=>{
+    const handleConfirmClose = useCallback((choice) => {
         setShowConfirm(false);
         if (choice === true) {
             setShowSuccess(true)
+            clearCart()
             setTimeout(() => {
                 setShowSuccess(false);
             }, 3000);
         }
-    },[]);
+    }, [clearCart]);
 
     return (
         <section className={`row judtify-content-center flex-direction-column ${Style.cart}`}>
@@ -105,54 +45,16 @@ function Cart() {
                 <Back />
                 <div className='row align-start flex-direction-column'>
                     <h1>Shopping Cart</h1>
-                    <p className={Style['number-of-items']}>{items.length} Items in your cart</p>
+                    <p className={Style['number-of-items']}>{cart.length} Items in your cart</p>
                 </div>
             </div>
 
             <div className={`width-100 ${Style.order}`}>
                 <section className={`row flex-direction-column align-start justify-content-start width-100 ${Style.cards}`}>
                     {
-                        items.map((book) =>
-                            <div className={`row width-100 ${Style['cart-card']}`} id={book.id}>
-                                <img src={book.volumeInfo.imageLinks?.smallThumbnail || book.volumeInfo.imageLinks?.thumbnail}
-                                    alt={book.volumeInfo.title} title={book.volumeInfo.title}
-                                    width={80} height={112}
-                                    loading="lazy"
-                                    className={Style['book-cover']}
-                                />
-                                <div className={`row flex-direction-column ${Style['card-info']}`}>
-                                    <div className='row width-100'>
-                                        <div className={`row flex-direction-column align-start ${Style.info}`}>
-                                            <h3>{book.volumeInfo.title}</h3>
-                                            <p>{book.volumeInfo.authors ? `by  ${joinAuthors(book.volumeInfo.authors)}` : ''}</p>
-                                            {book.volumeInfo.categories &&
-                                                book.volumeInfo.categories.map((cat, index) =>
-                                                    (<p className={Style.category} key={index}>{cat}</p>))
-                                            }
-                                        </div>
-                                        <button onClick={getDeleteHandler(book.id)} className={Style.delete} aria-label='Delete book from cart button'>
-                                            <FiTrash2 color='#666666' size={16} />
-                                        </button>
-
-                                    </div>
-                                    <div className={`row width-100`}>
-                                        <p className={Style.price}>${book.saleInfo.price * book.quantity}</p>
-                                        <div className={`row ${Style['quantity']}`}>
-                                            <button className={`row justify-content-center ${Style.decr}`} onClick={getDecrementHandler(book.id)} aria-label='Decrement book quantity'>
-                                                <TiMinus size={16} color='#6666' />
-                                            </button>
-                                            <p className='row justify-content-center'>{book.quantity}</p>
-                                            <button className={`row justify-content-center ${Style.incr}`} onClick={getIncrementHandler(book.id)} aria-label='Increment book quantity'>
-                                                <GoPlus size={16} color='black' />
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div className={`row justify-content-start width-100 ${Style.shipping}`}>
-                                        <img src={ShippingImg} width={12} height={12} alt='shipping image' title='Shipping Image' />
-                                        <p>Estimated delivery: 2-3 business days</p>
-                                    </div>
-                                </div>
-                            </div>
+                        cart.map((book) =>
+                            <CartCard book={book} removeFromCart={removeFromCart}
+                                increment={increment} decrement={decrement} key={`CartCard ${book.id}`} />
                         )
                     }
                 </section>
@@ -190,7 +92,7 @@ function Cart() {
                         </div>
                     </div>
                     <div className='width-100'>
-                        <button className={`${Style['proceed-button']}`} onClick={handleCheckoutClick} >Proceed to Checkout</button>
+                        <button className={`${Style['proceed-button']}`} onClick={handleCheckoutClick}>Proceed to Checkout</button>
                         <div className={`row justify-content-center ${Style.feature}`}>
                             <LuShield color='#666666' size={12} />
                             <span>Secure checkout guaranteed</span>
@@ -201,11 +103,11 @@ function Cart() {
 
             {showConfirm && <Confirmation
                 message="Are you sure you want to Proceed Purchase?"
-                onClose={handleConfirmClose}/>
+                onClose={handleConfirmClose} />
             }
             {showSuccess && <Notify
                 message="Items purchased successfully!"
-                />
+            />
             }
         </section>
     );
