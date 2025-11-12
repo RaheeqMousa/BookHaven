@@ -28,7 +28,6 @@ function CartCard({book, removeFromCart, increment, decrement}) {
                 alt={book.volumeInfo.title} title={book.volumeInfo.title}
                 width={80} height={112}
                 loading="lazy"
-
                 className={Style['book-cover']}
             />
             <div className={`row flex-direction-column ${Style['card-info']}`}>

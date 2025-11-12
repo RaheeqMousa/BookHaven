@@ -63,7 +63,6 @@ function BookCard(props) {
                     title={book.volumeInfo.title}
                     width={168}
                     height={180}
-                    loading="lazy"
                 />
 
                 {showActions && (
