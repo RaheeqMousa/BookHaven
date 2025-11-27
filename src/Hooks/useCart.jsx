@@ -73,23 +73,28 @@ function useCart() {
     );
 
     const increment = useCallback((id) => {
-        cart.find(b => (b.id === id && b.userId === user.id)).quantity += 1;
-        setCart([...cart]);
-        localStorage.setItem('cart', JSON.stringify(cart));
+         if (!cart || !user) return;
 
-    }, [setCart, cart, user]);
+        const newCart = cart.map(item =>
+            item.id === id && item.userId === user.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
 
+        updateCart(newCart);
+    }, [updateCart, cart, user]);
 
     const decrement = useCallback((id) => {
-        const book = cart.find(b => b.id === id && b.userId === user.id);
-        if (!book) return;
+        if (!cart || !user) return;
 
-        if (book.quantity > 1) {
-            book.quantity -= 1;
-            setCart([...cart]);
-            localStorage.setItem('cart', JSON.stringify(cart));
-        }
-    }, [setCart, cart, user]);
+        const newCart = cart.map(item =>
+            item.id === id && item.userId === user.id
+            ? { ...item, quantity: Math.max(1, item.quantity - 1) }
+            : item
+        );
+
+        updateCart(newCart);
+    },[cart, user, updateCart]);
 
     const clearCart = useCallback(() => {
         updateCart([]);
