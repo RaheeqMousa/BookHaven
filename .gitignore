@@ -39,3 +39,13 @@ backend/.pytest_cache/
 # Node / frontend (just in case)
 # ======================
 node_modules/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment
+.env
+.env.*
