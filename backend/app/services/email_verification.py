@@ -67,7 +67,7 @@ async def send_verification_code(email: str) -> dict:
     return await send_email(
         email,
         code,
-        subject="Please verify your email - PassPocket",
+        subject="Please verify your email - BookHaven",
     )
 
 
