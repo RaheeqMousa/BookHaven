@@ -49,3 +49,23 @@ class SendCodeRequest(BaseModel):
 
 class EmailStrRequest(BaseModel):
     email: EmailStr
+
+class FavoriteRequest(BaseModel):
+    item_id: str
+
+# class UserRequest(BaseModel):
+#     user_id: int
+
+class CartRequest(BaseModel):
+    item_id: str
+
+class FavoriteItemResponse(BaseModel):
+    user_id: str
+    item_id: str
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+class CartItemResponse(BaseModel):
+    user_id: str
+    item_id: str
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    quantity: int

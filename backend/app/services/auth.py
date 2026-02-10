@@ -4,6 +4,7 @@ from backend.app.database import users
 import backend.app.services.email_verification as email_verification_services
 import bcrypt
 from datetime import datetime
+from backend.app.auth.jwt import create_access_token
 
 load_dotenv()
 
@@ -62,9 +63,12 @@ async def signin(email: str, password: str):
     if not user.get("is_email_verified", False):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Email not verified")
     
+    access_token = create_access_token({"user_id": str(user["_id"])})
+
     return {
         "message": "User logged in successfully",
-        "user_id": str(user["_id"]),
+        "access_token": access_token,
+        "token_type": "bearer",
         "username": user["username"],
         "email": user["email"]
     }
