@@ -37,7 +37,6 @@ async def send_password_reset_email(email:str):
         upsert=True
     )
 
-    reset_link = f"https://${frontend_url}/reset-password?token={token}&email={email}"
     await email_service.send_email(
         email,
         code=token,  # you can pass token as "code"
