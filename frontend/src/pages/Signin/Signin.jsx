@@ -13,35 +13,43 @@ import Back from '../../Components/Back';
 import { UserContext } from '../../Context/UserContext';
 import { useContext } from 'react';
 import { loadFbSdk, resetFbSdk } from '../../Utils/facebooksdk';
+import api from "../../Utils/axios";
 
 function Signin() {
     const FACEBOOK_KEY = import.meta.env.VITE_FACEBOOK_APP_ID;
+    const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BURL;
     const [serverError, setServerError] = useState('');
     const [remember, setRemember] = useState(false);
     const navigate = useNavigate();
     const { setUser } = useContext(UserContext)
 
-    const handleSignin = useCallback((data) => {
-        setServerError("");
+    const handleSignin = useCallback(async (data) => {
+        try {
+            setServerError("");
 
-        const users = JSON.parse(localStorage.getItem("users")) || [];
+            const res = await api.post("/auth/signin", data);
 
-        const user = users.find(u => u.email === data.email && u.password === data.password);
+            const token= res.data.access_token;
+            const user = {
+                username: res.data.username,
+                email: res.data.email
+            };
 
-        if (!user) {
-            setServerError("Wrong email or password");
-            return;
+            setUser(user);
+            console.log(res)
+
+            if (remember)
+                localStorage.setItem("token", token);
+            else
+                sessionStorage.setItem("token", token);
+
+            navigate("/");
+        } catch (err) {
+            setServerError(
+                err.response?.data?.message || "Wrong email or password"
+            );
         }
-
-        setUser(user);
-
-        if (!remember)
-            sessionStorage.setItem("user", JSON.stringify(user));
-        else if (remember)
-            localStorage.setItem("user", JSON.stringify(user));
-
-        navigate("/");
-    }, [navigate, remember, setUser]);
+    },[navigate, remember, setUser]);
 
 
     const handleFacebookLogin = useCallback(

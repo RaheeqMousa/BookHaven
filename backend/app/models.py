@@ -69,3 +69,7 @@ class CartItemResponse(BaseModel):
     item_id: str
     updated_at: datetime = Field(default_factory=datetime.utcnow)
     quantity: int
+
+class VerifyResetTokenRequest(BaseModel):
+    email: str
+    token: str

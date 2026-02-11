@@ -10,11 +10,10 @@ import { RiFacebookCircleFill } from "react-icons/ri";
 import { RiGoogleFill } from "react-icons/ri";
 import { useGoogleLogin } from "@react-oauth/google";
 import Back from '../../Components/Back';
-import { v4 as uuidv4 } from "uuid";
 import { useContext } from 'react';
 import { UserContext } from '../../Context/UserContext';
 import { loadFbSdk, resetFbSdk } from '../../Utils/facebooksdk';
-
+import api from "../../Utils/axios";
 
 function Signup() {
     const { setUser } = useContext(UserContext);
@@ -23,39 +22,47 @@ function Signup() {
     const [remember, setRemember] = useState(false);
     const navigate = useNavigate();
 
-    const handleSignup = useCallback((formData) => {
-        setServerError('');
+    const handleSignup = useCallback(async (formData) => {
+        try {
+            setServerError('');
 
-        if (!formData.username || !formData.email || !formData.password) {
-            setServerError('All fields are required');
-            return;
-        }
+            if (!formData.username || !formData.email || !formData.password) {
+                setServerError('All fields are required');
+                return;
+            }
 
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-        const userExists = users.some(user => user.email === formData.email);
+            const res=await api.post("/auth/signup", {
+            username: formData.username,
+            password: formData.password,
+            email: formData.email, 
+            });
+            console.log(res)
+            navigate("/auth/verify", {
+                state: { email: formData.email },
+                remember: remember
+            });
 
-        if (userExists) {
-            setServerError('User with this email already exists');
-            return;
-        }
 
-        const usernameExists = users.some(user => user.username === formData.username);
 
-        if (usernameExists) {
-            setServerError('Username already taken');
-            return;
-        }
+        } catch (err) {
+            console.log("Axios error:", err);
 
-        const newUser = { ...formData, id: uuidv4() };
-        users.push(newUser);
-        localStorage.setItem("users", JSON.stringify(users));
-        if (remember)
-            localStorage.setItem("user", JSON.stringify(newUser));
-        else if (!remember)
-            sessionStorage.setItem("user", JSON.stringify(newUser));
-        setUser(newUser)
-        navigate('/');
-    }, [setServerError, navigate, setUser, remember]);
+            const data = err.response?.data;
+            let message = "Signup failed";
+
+            if (data) {
+                if (Array.isArray(data.detail)) {
+                    // If backend returns an array of errors
+                    message = data.detail.map(e => e.msg).join(", ");
+                } else if (typeof data.detail === "string") {
+                    // If backend returns a simple string message
+                    message = data.detail;
+                }
+            }
+
+            setServerError(message);
+        }}, [navigate, remember]);
+
 
 
     const handleFacebookLogin = useCallback( async () => {
@@ -196,13 +203,15 @@ function Signup() {
                     </div>
                     <div className={`row flex-direction-column ${Style.processes}`}>
                         <FormContainer onSubmit={handleSignup} serverError={serverError} initialData={null} type="Sign Up">
-                            <SignupForm />
+                            <SignupForm/>
+                            <>
                             <div className='row width-100'>
                                 <div className={`row ${Style['remember-me']}`}>
                                     <input type='checkbox' onChange={handleCheckboxChange} />
                                     <p>Remember me</p>
                                 </div>
                             </div>
+                            </>
                         </FormContainer>
 
                         <p className={Style['auth-divider']}>or</p>

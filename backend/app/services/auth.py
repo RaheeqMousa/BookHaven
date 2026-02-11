@@ -24,12 +24,12 @@ async def create_user(username: str, password: str, email: str):
     # Check if email is already registered
     existing_email_user = await users.find_one({"email": email})
     if existing_email_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
+        raise HTTPException(status_code=409, detail="Email already registered")
     
     # Check if username is already taken
     existing_username_user = await users.find_one({"username": username})
     if existing_username_user:
-        raise HTTPException(status_code=400, detail="Username already taken")
+        raise HTTPException(status_code=409, detail="Username already taken")
 
     # Hash the password safely
     password_hash = hash_password(password)

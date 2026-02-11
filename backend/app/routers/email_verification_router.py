@@ -12,3 +12,7 @@ async def verify_email(request:VerifyCodeRequest):
 @email_verification_router.post("/send_code")
 async def send_code(request: SendCodeRequest):
     return await email_verification_services.send_verification_code(request.email)
+
+@email_verification_router.post("/resend_verification_code")
+async def resend_verification_code(request: SendCodeRequest):
+    return await email_verification_services.send_verification_code(request.email)

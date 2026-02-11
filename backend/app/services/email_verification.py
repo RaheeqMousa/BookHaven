@@ -27,14 +27,18 @@ def _send_email_sync(message: EmailMessage):
         smtp.send_message(message)
 
 
-async def send_email(email: str, code: str, subject: str = "Verify your email") -> dict:
+async def send_email(email: str, code: str, subject: str = "Verify your email", body: str = "") -> dict:
     message = EmailMessage()
-    message.set_content(
-        f"Your verification code is: {code}\nIt expires in 10 minutes."
-    )
+
+    if body=="":  
+        message.set_content(
+            f"Your verification code is: {code}\nIt expires in 10 minutes."
+        )
+    message.set_content(body)
     message["Subject"] = subject
     message["To"] = email
     message["From"] = GMAIL_ADDRESS
+    
 
     try:
         await run_in_threadpool(_send_email_sync, message)

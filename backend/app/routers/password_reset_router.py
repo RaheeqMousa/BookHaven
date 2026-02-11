@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 import backend.app.services.password_reset as password_reset_service
-from backend.app.models import ResetPass, EmailStrRequest
+from backend.app.models import ResetPass, EmailStrRequest, VerifyResetTokenRequest
 
 
 

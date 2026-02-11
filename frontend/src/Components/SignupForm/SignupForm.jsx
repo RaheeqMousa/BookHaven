@@ -17,7 +17,7 @@ function SignupForm(props){
             <p className="error">{errors.email?errors.email.message:''}</p>
             <div className={`row justify-content-center flex-direction-column align-start width-100 field`}>
                 <label htmlFor="password">Password</label>
-                <input id="password" type="password" name="password" placeholder='Enter your password' {...register("password", {required:'Password is required', minLength:{value: 6, message:"Password must be 'AT LEAST' 6 digits"}, maxLength:{value: 10, message:"Password must be 'AT MOST' 10 digits"} })} />
+                <input id="password" type="password" name="password" placeholder='Enter your password' {...register("password", {required:'Password is required', minLength:{value: 8, message:"Password must be 'AT LEAST' 8 digits"}, maxLength:{value: 20, message:"Password must be 'AT MOST' 20 digits"} })} />
             </div>
             <p className="error">{errors.password?errors.password.message:''}</p>
         </div>

@@ -16,6 +16,10 @@ const BookDetails = lazy(()=> import('./pages/BookDetails/BookDetails'))
 const SharedWishlist = lazy(()=> import('./pages/SharedWishlist/SharedWishlist'))
 const Wishlist = lazy(()=> import('./pages/Wishlist/Wishlist'));
 const Cart = lazy(() => import('./pages/Cart/Cart'))
+const VerifyEmail = lazy(() => import('./pages/VerifyEmail/VerifyEmail'))
+const SendResetCode = lazy(() => import('./pages/SendResetCode/SendResetCode'))
+const ResetPassword = lazy(() => import('./pages/ResetPassword/ResetPassword'))
+
 
 function App() {
   return (
@@ -37,6 +41,9 @@ function App() {
                   <Route element={<AlreadyLoggedInRoute />}>
                     <Route path="auth/login" element={<Signin />} />
                     <Route path="auth/register" element={<Signup />} />
+                    <Route path="auth/verify" element={<VerifyEmail />} />
+                    <Route path="/auth/forgotpassword" element={<SendResetCode />} />
+                    <Route path="/auth/reset-password" element={<ResetPassword />} />
                   </Route>
 
                   <Route element={<AuthProtectedRoute />}>
