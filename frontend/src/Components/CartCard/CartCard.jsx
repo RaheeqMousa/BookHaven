@@ -8,24 +8,24 @@ import { useCallback } from 'react';
 
 
 function CartCard({book, removeFromCart, increment, decrement}) {
-
+    console.log(book)
 
     const decrementHandler = useCallback(() =>
-            decrement(book.id)
-    ,[decrement,book.id]);
+            decrement(book.item_id)
+    ,[decrement,book.item_id]);
 
     const incrementHandler = useCallback(() =>
-            increment(book.id)
-    ,[increment,book.id]);
+            increment(book.item_id)
+    ,[increment,book.item_id]);
 
     const getDeleteHandler = useCallback(() =>
-            removeFromCart(book.id)
-    ,[removeFromCart,book.id]);
+            removeFromCart(book.item_id)
+    ,[removeFromCart,book.item_id]);
 
     return (
         <div className={`row width-100 ${Style['cart-card']}`} >
-            <img src={book.volumeInfo.imageLinks?.smallThumbnail || book.volumeInfo.imageLinks?.thumbnail}
-                alt={book.volumeInfo.title} title={book.volumeInfo.title}
+            <img src={book.book.volumeInfo.imageLinks?.smallThumbnail || book.book.volumeInfo.imageLinks?.thumbnail}
+                alt={book.book.volumeInfo.title} title={book.book.volumeInfo.title}
                 width={80} height={112}
                 loading="lazy"
                 className={Style['book-cover']}
@@ -33,10 +33,10 @@ function CartCard({book, removeFromCart, increment, decrement}) {
             <div className={`row flex-direction-column ${Style['card-info']}`}>
                 <div className='row width-100'>
                     <div className={`row flex-direction-column align-start ${Style.info}`}>
-                        <h3>{book.volumeInfo.title}</h3>
-                        <p>{book.volumeInfo.authors ? `by  ${joinAuthors(book.volumeInfo.authors)}` : ''}</p>
-                        {book.volumeInfo.categories &&
-                            book.volumeInfo.categories.map((cat, index) =>
+                        <h3>{book.book.volumeInfo.title}</h3>
+                        <p>{book.book.volumeInfo.authors ? `by  ${joinAuthors(book.book.volumeInfo.authors)}` : ''}</p>
+                        {book.book.volumeInfo.categories &&
+                            book.book.volumeInfo.categories.map((cat, index) =>
                                 (<p className={Style.category} key={index}>{cat}</p>))
                         }
                     </div>
@@ -46,7 +46,7 @@ function CartCard({book, removeFromCart, increment, decrement}) {
 
                 </div>
                 <div className={`row width-100`}>
-                    <p className={Style.price}>${book.saleInfo.price * book.quantity}</p>
+                    <p className={Style.price}>${book.book.saleInfo.price * book.quantity}</p>
                     <div className={`row ${Style['quantity']}`}>
                         <button className={`row justify-content-center ${Style.decr}`} disabled={book.quantity <= 1} onClick={decrementHandler} aria-label='Decrement book quantity'>
                             <TiMinus size={16} color='#6666' />

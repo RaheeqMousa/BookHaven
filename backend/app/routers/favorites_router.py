@@ -8,7 +8,8 @@ favorites_router= APIRouter()
 
 @favorites_router.post("/add_favorite")
 async def add_favorite(req:FavoriteRequest, user_id: str = Depends(get_current_user)):
-    return await favorites_services.add_favorite(user_id, req.item_id)
+    # print(req.book)
+    return await favorites_services.add_favorite(user_id, req.book)
 
 @favorites_router.delete("/delete_favorite")
 async def delete_favorite(item_id:str, user_id: str = Depends(get_current_user)):

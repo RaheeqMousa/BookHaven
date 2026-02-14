@@ -32,7 +32,8 @@ function Signin() {
             const token= res.data.access_token;
             const user = {
                 username: res.data.username,
-                email: res.data.email
+                email: res.data.email,
+                token: token
             };
 
             setUser(user);

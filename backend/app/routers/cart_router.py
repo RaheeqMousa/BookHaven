@@ -9,7 +9,15 @@ cart_router= APIRouter()
 
 @cart_router.post("/add_cart_item")
 async def add_cart_item(req:CartRequest, user_id: str = Depends(get_current_user)):
-    return await cart_services.add_cart_item(user_id, req.item_id)
+    return await cart_services.add_cart_item(user_id, req.book)
+
+@cart_router.patch("/increment_quantity")
+async def increment(item_id:str, user_id: str = Depends(get_current_user)):
+    return await cart_services.increment(user_id, item_id)
+
+@cart_router.patch("/decrement_quantity")
+async def decrement(item_id:str, user_id: str = Depends(get_current_user)):
+    return await cart_services.decrement(user_id, item_id)
 
 @cart_router.delete("/delete_cart_item")
 async def delete_cart_item(item_id:str, user_id: str = Depends(get_current_user)):

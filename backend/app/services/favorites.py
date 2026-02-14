@@ -1,6 +1,6 @@
 from fastapi import HTTPException
 from backend.app.database import favorites, users, cart
-from backend.app.models import Favorite
+from backend.app.models import Favorite, Book
 from datetime import datetime
 from bson import ObjectId
 from backend.app.models import FavoriteItemResponse
@@ -23,20 +23,24 @@ async def get_favorites(user_id:str):
     "favorites":result
     }
 
-async def add_favorite(user_id:str, item_id:str):
+async def add_favorite(user_id:str, book:Book):
     user_object_id= ObjectId(user_id)
+    # print(user_object_id)
     user = await users.find_one({"_id": user_object_id})
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     
-    exist_fav= await favorites.find_one({"user_id":user_object_id,"item_id":item_id})
+    exist_fav= await favorites.find_one({"user_id":user_object_id,"item_id":book.id})
     if exist_fav:
         return HTTPException(status_code=409, detail="Item already in favorites")
     
+    book_dict = book.model_dump(mode="json")
+
     fav_document= {
         "user_id":user_object_id,
         "created_at":datetime.utcnow(),
-        "item_id":item_id #book id
+        "item_id":book.id, #book id
+        "book":book_dict #full json book
     }
     result= await favorites.insert_one(fav_document)
 

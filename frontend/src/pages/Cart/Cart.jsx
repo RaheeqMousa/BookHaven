@@ -13,10 +13,11 @@ function Cart() {
     const [totalPrice, setTotalPrice] = useState(0);
     const [showConfirm, setShowConfirm] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
+    console.log(cart);
 
 
     const calcSalary = useCallback(() =>
-        setTotalPrice(cart.reduce((total, book) => total + (book.saleInfo.price * book.quantity), 0))
+        setTotalPrice(cart.reduce((total, book) => total + (book.book.saleInfo.price * book.quantity), 0))
         , [cart]);
 
     useEffect(() =>
@@ -40,7 +41,7 @@ function Cart() {
     }, [clearCart]);
 
     return (
-        <section className={`row judtify-content-center flex-direction-column ${Style.cart}`}>
+        <section className={`row justify-content-center flex-direction-column ${Style.cart}`}>
             <div className={`width-100 ${Style['intro']}`}>
                 <Back />
                 <div className='row align-start flex-direction-column'>
@@ -82,7 +83,7 @@ function Cart() {
                             </div>
                             <div className={`row width-100  ${Style.subject}`}>
                                 <p>Tax</p>
-                                <p>$7</p>
+                                <p>$0</p>
                             </div>
                         </div>
                         <div className={Style.divider}></div>

@@ -21,7 +21,6 @@ function BookCard(props) {
     const [wish, toggleWish] = useWish(book, bookPrice);
     const { addToCart } = useCart();
 
-
     const handleWishlistClick = useCallback(
         (e) => {
             e.stopPropagation();

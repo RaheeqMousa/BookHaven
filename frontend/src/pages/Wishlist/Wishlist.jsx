@@ -9,6 +9,7 @@ import { joinAuthors } from "../../Utils/JoinAuthors";
 import { UserContext } from "../../Context/UserContext";
 import useMediaQuery from '@mui/material/useMediaQuery';
 import useWishlist from "../../Hooks/useWishlist";
+import api from "../../Utils/axios";
 
 function Wishlist() {
     const { user } = useContext(UserContext);
@@ -57,20 +58,21 @@ function Wishlist() {
 
     const onFilterChange = useCallback((e) => handleFilterChange(e.target.value), [handleFilterChange]);
 
-    const addAllToCart = useCallback(() => {
+    const addAllToCart = useCallback(async () => {
         if (!user) return navigate('/auth/login');
-        if (wishlist.length === 0) return;
-
-        const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-        wishlist.forEach(item => {
-            const existing = cart.find(c => c.id === item.id);
-            if (existing) existing.quantity = (existing.quantity || 1) + 1;
-            else cart.push({ ...item, quantity: 1 });
-        });
-
-        localStorage.setItem("cart", JSON.stringify(cart));
-        clearWishlist();
-    }, [wishlist, user, navigate, clearWishlist]);
+        try{
+            await api.post('favorites/move_all_to_cart',
+                {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`
+                    }
+                }
+            ) 
+        }catch(e){
+            console.log(e)
+        }       
+    }, [user, navigate]);
+    
 
     const totalPrice = calculateTotalPrice(wishlist);
 
@@ -105,7 +107,7 @@ function Wishlist() {
 
             <div className={`row justify-content-start width-100 ${Style.books}`}>
                 {wishlist.map((b) =>
-                    <BookCard book={b} key={b.id} isGridDisplay={isGrid} wishlistChange={loadWishlist} />
+                    <BookCard book={b.book} key={b.id} isGridDisplay={isGrid} wishlistChange={loadWishlist} />
                 )}
             </div>
 
