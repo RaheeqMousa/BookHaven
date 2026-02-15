@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {UserContext} from "../Context/UserContext";
 
 export function UserProvider({ children }) {
@@ -14,15 +14,12 @@ export function UserProvider({ children }) {
         setUser(storedUser);
     }, []);
 
-    useEffect(() => {
-        if (!user) {
-            localStorage.removeItem("user") || sessionStorage.removeItem("user");
-        }
-    }, [user]);
+
+    const value= useMemo(() => ({ user, setUser }), [user, setUser]);
 
 
     return (
-        <UserContext.Provider value={{ user, setUser }}>
+        <UserContext.Provider value={value}>
             {children}
         </UserContext.Provider>
     );

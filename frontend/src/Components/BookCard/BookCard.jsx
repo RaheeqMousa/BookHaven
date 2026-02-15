@@ -6,20 +6,22 @@ import { LuShoppingCart } from "react-icons/lu";
 import { Link, useNavigate } from 'react-router-dom';
 import { FaHeart } from "react-icons/fa6";
 import useWish from '../../Hooks/useWish';
-import useCart from '../../Hooks/useCart';
 import { joinAuthors } from '../../Utils/JoinAuthors';
 import { UserContext } from '../../Context/UserContext';
 import { stopLinkPropagation } from '../../Utils/stopLinkPropagation';
+import {CartContext} from '../../Context/CartContext';
 
 function BookCard(props) {
     const { book, isGridDisplay, wishlistChange, showActions = true } = props;
     const { user } = useContext(UserContext);
     const navigate = useNavigate();
     const bookPrice = useMemo(() => {
+        if (book.saleInfo.saleability === "FREE") 
+            return 0;
         return book.price ?? Math.floor(Math.random() * 40) + 10;
     }, [book]);
     const [wish, toggleWish] = useWish(book, bookPrice);
-    const { addToCart } = useCart();
+    const { addToCart } = useContext(CartContext);
 
     const handleWishlistClick = useCallback(
         (e) => {

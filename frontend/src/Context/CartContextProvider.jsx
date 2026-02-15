@@ -1,8 +1,10 @@
-import { useState, useEffect, useCallback, useContext } from "react";
-import { UserContext } from "../Context/UserContext";
+import React,{useContext,useEffect,useState,useCallback} from "react";
+import { UserContext } from "./UserContext";
 import api from '../Utils/axios'
+import {CartContext} from "../Context/CartContext";
 
-function useCart() {
+function CartContextProvider({children}){
+
     const { user } = useContext(UserContext);
     const [cart, setCart] = useState([]);
 
@@ -25,10 +27,6 @@ function useCart() {
     }, [user]);
 
 
-    const updateCart = useCallback((cart) => {
-        setCart(cart);
-    }, []);
-
     const addToCart = useCallback(
         async (book, price = null) => {
             if (!user) return alert("Please log in to add items to your cart.");
@@ -39,7 +37,7 @@ function useCart() {
                     quantity: 1,
                     saleInfo: {
                         saleability: book.saleInfo?.saleability,
-                        price: book.saleInfo?.listPrice?.amount || price || 10,
+                        price: book.saleInfo?.listPrice?.amount || price ,
                     },
                     volumeInfo: {
                         title: book.volumeInfo.title,
@@ -57,45 +55,14 @@ function useCart() {
                     }
                 )
                 console.log(res)
-                updateCart(res.data.data)
+                setCart(res.data.data)
                 
             }catch(err){
                 console.log(err)
             }
-            // const existing = cart.find((b) => b.id === book.id);
-            // let updated;
-
-            // if (existing) {
-            //     updated = cart.map((b) =>
-            //         b.id === book.id ? { ...b, quantity: (b.quantity || 1) + 1 } : b
-            //     );
-            // } else {
-            //     updated = [
-            //         ...cart,
-            //         {
-            //             userId: user.id,
-            //             id: book.id,
-            //             addedAt: new Date().toISOString(),
-            //             quantity: 1,
-            //             saleInfo: {
-            //                 saleability: book.saleInfo?.saleability,
-            //                 price: book.saleInfo?.listPrice?.amount || price || 10,
-            //             },
-            //             volumeInfo: {
-            //                 title: book.volumeInfo.title,
-            //                 authors: book.volumeInfo.authors || [],
-            //                 imageLinks: book.volumeInfo.imageLinks || {},
-            //             },
-            //             accessInfo: book.accessInfo || {},
-            //         },
-            //     ];
-            // }
-
-            // updateCart(updated);
         },
-        [user,updateCart]
+        [user]
     );
-
 
     const removeFromCart = useCallback(
         async (bookId) => {
@@ -111,13 +78,13 @@ function useCart() {
                     }
                 })
                 console.log(res)
-                updateCart(res.data.data)
+                setCart(res.data.data)
                 
             }catch(err){
                 console.log(err)
             }
         },
-        [user,updateCart]
+        [user]
     );
 
     const increment = useCallback(async (id) => {
@@ -135,11 +102,11 @@ function useCart() {
                 }
             );
             console.log(res)
-            updateCart(res.data.data);
+            setCart(res.data.data);
         }catch(e){
             console.log(e)
         }
-    }, [updateCart, cart, user]);
+    }, [cart, user]);
 
     const decrement = useCallback(async (id) => {
         try{
@@ -155,11 +122,11 @@ function useCart() {
                 }
             );
             console.log(res)
-            updateCart(res.data.data);
+            setCart(res.data.data);
         }catch(e){
             console.log(e)
         }
-    },[cart, user, updateCart]);
+    },[cart, user, setCart]);
 
     const clearCart = useCallback(() => {
         try{
@@ -170,17 +137,23 @@ function useCart() {
                     }
                 }
             );
-            updateCart([])
+            setCart([])
         }catch(e){
             console.log(e)
         }
-    }, [updateCart,user]);
+    }, [user]);
 
     useEffect(() => {
         loadCart();
     }, [loadCart]);
 
-    return { cart, addToCart, removeFromCart, clearCart, loadCart, setCart, decrement, increment };
-}
+    const value= { cart, addToCart, removeFromCart, clearCart, loadCart, setCart, decrement, increment };
 
-export default useCart;
+    return(
+        <CartContext.Provider value={value}>
+            {children}
+        </CartContext.Provider>
+    )
+    
+}
+export default CartContextProvider;

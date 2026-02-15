@@ -8,8 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { joinAuthors } from "../../Utils/JoinAuthors";
 import { UserContext } from "../../Context/UserContext";
 import useMediaQuery from '@mui/material/useMediaQuery';
-import useWishlist from "../../Hooks/useWishlist";
 import api from "../../Utils/axios";
+import { WishlistContext } from "../../Context/WishlistContext";
 
 function Wishlist() {
     const { user } = useContext(UserContext);
@@ -18,7 +18,8 @@ function Wishlist() {
     const [shareBtnSuccess, setShareBtnSuccess] = useState("");
     const [disableShareBtn, setShareBtnDisable] = useState(false);
 
-    const { wishlist, updateWishlist, clearWishlist, loadWishlist } = useWishlist();
+
+    const { wishlist, updateWishlist, clearWishlist, loadWishlist } = useContext(WishlistContext);
     const number_of_wished = wishlist.length;
 
     const handleShare = useCallback(async () => {

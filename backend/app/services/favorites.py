@@ -44,9 +44,16 @@ async def add_favorite(user_id:str, book:Book):
     }
     result= await favorites.insert_one(fav_document)
 
+    favs= await favorites.find({"user_id":user_object_id}).to_list()
+    result = []
+    for f in favs:
+        f["_id"] = str(f["_id"])
+        f["user_id"] = str(f["user_id"])
+        result.append(FavoriteItemResponse(**f))
+
     return {
         "message":"Favorite added successfully",
-        "favorite_id":str(result.inserted_id)
+        "favorites":result
     }
 
 async def delete_favorite(user_id:str, item_id:str):
@@ -59,8 +66,17 @@ async def delete_favorite(user_id:str, item_id:str):
     if not fav:
         raise HTTPException(status_code=404, detail="item not found")
     await favorites.delete_one({"user_id":user_object_id, "item_id":item_id})
+
+    favs= await favorites.find({"user_id":user_object_id}).to_list()
+    result = []
+    for f in favs:
+        f["_id"] = str(f["_id"])
+        f["user_id"] = str(f["user_id"])
+        result.append(FavoriteItemResponse(**f))
+
     return {
-        "message":"Favorite deleted successfully"
+        "message":"Favorite deleted successfully",
+        "favorites":result
     }
     
 

@@ -13,8 +13,11 @@ function Navbar() {
     console.log(user);
 
     const logout = useCallback(() => {
+        
+        localStorage.removeItem("user");
+        sessionStorage.removeItem("user");
         setUser(null);
-
+        
         if (window.FB) {
             window.FB.logout(() => console.log("Logged out from Facebook"));
         }

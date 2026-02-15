@@ -1,15 +1,14 @@
 import Back from '../../Components/Back'
 import { LuShield } from "react-icons/lu";
 import Style from './cart.module.scss'
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import Confirmation from '../../Components/Alert/Confirmation';
 import Notify from '../../Components/Notify/Notify';
-import useCart from '../../Hooks/useCart';
+import {CartContext} from '../../Context/CartContext';
 import CartCard from '../../Components/CartCard/CartCard';
 
-
 function Cart() {
-    const { cart, clearCart, increment, decrement , removeFromCart} = useCart();
+    const { cart, clearCart, increment, decrement , removeFromCart} = useContext(CartContext);
     const [totalPrice, setTotalPrice] = useState(0);
     const [showConfirm, setShowConfirm] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);

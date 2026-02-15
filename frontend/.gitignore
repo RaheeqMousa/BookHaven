@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 
 .env.local
+
+/src/Hooks/useCart
+/src/Hooks/useWish
+/src/Hooks/useWishlist

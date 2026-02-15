@@ -39,11 +39,13 @@ function Signin() {
             setUser(user);
             console.log(res)
 
-            if (remember)
+            if (remember){
                 localStorage.setItem("token", token);
-            else
+                localStorage.setItem("user", JSON.stringify(user));
+            }else{
                 sessionStorage.setItem("token", token);
-
+                sessionStorage.setItem("user", JSON.stringify(user));
+            }
             navigate("/");
         } catch (err) {
             setServerError(

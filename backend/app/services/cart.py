@@ -92,14 +92,13 @@ async def increment(user_id:str, item_id:str):
 
 async def decrement(user_id:str, item_id:str):
     user_object_id= ObjectId(user_id)
-    item_object_id = ObjectId(item_id)
 
     user= await users.find_one({"_id":user_object_id})
     if not user:
         raise HTTPException(status_code=404, detail="user not found")
 
     res=await cart.update_one(
-        {"user_id":user_object_id,"item_id":item_object_id},
+        {"user_id":user_object_id,"item_id":item_id},
         {
             "$inc":{"quantity":-1},
             "$set":{"updated_at":datetime.utcnow()}
