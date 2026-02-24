@@ -1,15 +1,14 @@
-from fastapi import HTTPException
-from backend.app.database import favorites, users, cart
+from fastapi import HTTPException, Depends
+from backend.app.database import favorites, users, cart, store_books
 from backend.app.models import Favorite, Book
 from datetime import datetime
 from bson import ObjectId
 from backend.app.models import FavoriteItemResponse
+from backend.app.utils import check_user_existence_by_id
+
 
 async def get_favorites(user_id:str):
-    user_object_id= ObjectId(user_id)
-    user= await users.find_one({"_id":user_object_id})
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+    user_object_id=await check_user_existence_by_id(user_id)
     
     user_favorites= await favorites.find({"user_id":user_object_id}).to_list(length=None)
     result=[]
@@ -24,18 +23,18 @@ async def get_favorites(user_id:str):
     }
 
 async def add_favorite(user_id:str, book:Book):
-    user_object_id= ObjectId(user_id)
-    # print(user_object_id)
-    user = await users.find_one({"_id": user_object_id})
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
     
-    exist_fav= await favorites.find_one({"user_id":user_object_id,"item_id":book.id})
-    if exist_fav:
-        return HTTPException(status_code=409, detail="Item already in favorites")
-    
-    book_dict = book.model_dump(mode="json")
+    user_object_id=await check_user_existence_by_id(user_id)
+    print(user_object_id)
 
+
+    store_book = await store_books.find_one({"id": book.id})
+    if not store_book:
+        store_books.insert_one(book.dict())
+    else:
+        book.saleInfo.price=store_book["saleInfo"]["price"]
+
+    book_dict = book.model_dump(mode="json")
     fav_document= {
         "user_id":user_object_id,
         "created_at":datetime.utcnow(),
@@ -57,10 +56,7 @@ async def add_favorite(user_id:str, book:Book):
     }
 
 async def delete_favorite(user_id:str, item_id:str):
-    user_object_id= ObjectId(user_id)
-    user= await users.find_one({"_id":user_object_id})
-    if not user:
-        raise HTTPException(status_code=404,detail="User not found")
+    user_object_id=await check_user_existence_by_id(user_id)
     
     fav= await favorites.find_one({"user_id":user_object_id, "item_id":item_id})
     if not fav:
@@ -81,10 +77,8 @@ async def delete_favorite(user_id:str, item_id:str):
     
 
 async def get_favorite(user_id:str, item_id:str):
-    user_object_id= ObjectId(user_id)
-    user= await users.find_one({"_id":user_object_id})
-    if not user:
-        raise HTTPException(status_code=404,detail="User not found")
+    user_object_id=await check_user_existence_by_id(user_id)
+
     fav= await favorites.find_one({"user_id":user_object_id, "item_id":item_id})
     if not fav:
         raise HTTPException(status_code=404, detail="item not found")
@@ -99,9 +93,8 @@ async def get_favorite(user_id:str, item_id:str):
     }
 
 async def get_favorite_count(user_id:str):
-    user= await users.find_one({"_id":ObjectId(user_id)})
-    if not user:
-        raise HTTPException(status_code=404,detail="User not found")
+    await check_user_existence_by_id(user_id)
+
     favs= await favorites.count_documents({})
     return {
         "message":"Favorite items retrieved successfully",
@@ -109,20 +102,15 @@ async def get_favorite_count(user_id:str):
     }
 
 async def clear_favorites(user_id:str):
-    user_object_id= ObjectId(user_id)
-    user= users.find_one({"user_id":user_object_id})
-    if not user:
-        raise HTTPException(status_code=404,detail="User not found")
+    user_object_id=await check_user_existence_by_id(user_id)
+
     result= await favorites.delete_many({"user_id":user_object_id})
     return {
         "message":f"{result.deleted_count} Favorite items has been cleared successfully",
     }
 
 async def move_to_cart(user_id:str):
-    user_object_id= ObjectId(user_id)
-    user= await users.find_one({"_id":user_object_id})
-    if not user:
-        raise HTTPException(status_code=404,detail="User not found")
+    user_object_id=await check_user_existence_by_id(user_id)
     
     print(user_object_id)
     user_favorites= await favorites.find({"user_id":user_object_id}).to_list(length=None)
@@ -141,11 +129,13 @@ async def move_to_cart(user_id:str):
         item_id=fav.item_id
         existing_item= await cart.find_one({"user_id":user_object_id, "item_id":item_id})   
         if not existing_item: 
+            book_dict=fav.book.dict()
             await cart.insert_one({
                 "user_id":user_object_id,
                 "item_id":fav.item_id,
                 "updated_at":datetime.utcnow(),
-                "quantity":1
+                "quantity":1,
+                "book":book_dict
             })
         else:
             await cart.update_one(

@@ -2,11 +2,14 @@ import {WishlistContext} from './WishlistContext'
 import React,{useEffect,useState,useContext, useCallback} from 'react'
 import { UserContext } from '../Context/UserContext';
 import api from '../Utils/axios';
+import { CartContext } from './CartContext';
 
 function WishlistContextProvider({children}){
 
     const [wishlist, setWishlist] = useState([]);
   const { user } = useContext(UserContext);
+  const {loadCart} = useContext(CartContext);
+
 
   const token = user?.token;
 
@@ -39,7 +42,7 @@ function WishlistContextProvider({children}){
   const addToWishlist = useCallback(async (payload) => {
     console.log(payload)
     if (!token) return;
-
+    console.log(token)
     try {
       const res=await api.post(
         "favorites/add_favorite",
@@ -92,6 +95,19 @@ function WishlistContextProvider({children}){
     }
   }, [token]);
 
+    const addAllToCart = useCallback(async () => {
+        console.log(user.token)
+        try{
+           await api.delete("favorites/move_all_to_cart", {
+                headers: { Authorization: `Bearer ${user.token}` },
+                data: {}
+            });
+            setWishlist([]);
+            await loadCart();
+        }catch(e){
+            console.log(e)
+        }       
+    }, [user,loadCart]);
 
   const value={
         wishlist,
@@ -99,6 +115,7 @@ function WishlistContextProvider({children}){
         addToWishlist,
         removeFromWishlist,
         clearWishlist,
+        addAllToCart,
     };
 
   return(

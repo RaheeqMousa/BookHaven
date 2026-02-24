@@ -14,11 +14,11 @@ createRoot(document.getElementById('root')).render(
     <GoogleOAuthProvider clientId={import.meta.env.VITE_CLIENT_ID}>
       <FacebookProvider appId={import.meta.env.VITE_FACEBOOK_APP_ID} version="v18.0">
         <UserProvider>
-          <WishlistContextProvider>
-            <CartContextProvider>
+          <CartContextProvider>
+            <WishlistContextProvider>
               <App />
-            </CartContextProvider>
-          </WishlistContextProvider>
+            </WishlistContextProvider>
+          </CartContextProvider>
         </UserProvider> 
       </FacebookProvider>
     </GoogleOAuthProvider>

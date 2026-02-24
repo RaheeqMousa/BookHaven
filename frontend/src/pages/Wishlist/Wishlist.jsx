@@ -4,22 +4,19 @@ import Style from './Wishlist.module.scss';
 import { LuShare2, LuShoppingCart } from "react-icons/lu";
 import BookCard from "../../Components/BookCard/BookCard";
 import { calculateTotalPrice } from "../../Utils/calculateTotalPrice";
-import { useNavigate } from "react-router-dom";
 import { joinAuthors } from "../../Utils/JoinAuthors";
 import { UserContext } from "../../Context/UserContext";
 import useMediaQuery from '@mui/material/useMediaQuery';
-import api from "../../Utils/axios";
 import { WishlistContext } from "../../Context/WishlistContext";
 
 function Wishlist() {
     const { user } = useContext(UserContext);
     const isGrid = useMediaQuery('(min-width: 768px)');
-    const navigate = useNavigate();
     const [shareBtnSuccess, setShareBtnSuccess] = useState("");
     const [disableShareBtn, setShareBtnDisable] = useState(false);
 
 
-    const { wishlist, updateWishlist, clearWishlist, loadWishlist } = useContext(WishlistContext);
+    const { wishlist, updateWishlist, clearWishlist, loadWishlist,addAllToCart } = useContext(WishlistContext);
     const number_of_wished = wishlist.length;
 
     const handleShare = useCallback(async () => {
@@ -59,20 +56,7 @@ function Wishlist() {
 
     const onFilterChange = useCallback((e) => handleFilterChange(e.target.value), [handleFilterChange]);
 
-    const addAllToCart = useCallback(async () => {
-        if (!user) return navigate('/auth/login');
-        try{
-            await api.post('favorites/move_all_to_cart',
-                {
-                    headers: {
-                        Authorization: `Bearer ${user.token}`
-                    }
-                }
-            ) 
-        }catch(e){
-            console.log(e)
-        }       
-    }, [user, navigate]);
+
     
 
     const totalPrice = calculateTotalPrice(wishlist);

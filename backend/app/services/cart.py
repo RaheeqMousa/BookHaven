@@ -1,15 +1,13 @@
 from fastapi import HTTPException
-from backend.app.database import users, cart
+from backend.app.database import users, cart, store_books
 from backend.app.models import Book
 from datetime import datetime
 from bson import ObjectId
 from backend.app.models import CartItemResponse
+from backend.app.utils import check_user_existence_by_id
 
 async def get_cart_items(user_id:str):
-    user_object_id= ObjectId(user_id)
-    user= await users.find_one({"_id":user_object_id})
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+    user_object_id=await check_user_existence_by_id(user_id)
     
     user_cart_items= await cart.find({"user_id":user_object_id}).to_list()
     # if not user_cart_items:
@@ -27,10 +25,7 @@ async def get_cart_items(user_id:str):
 
 
 async def add_cart_item(user_id:str, book:Book):
-    user_object_id= ObjectId(user_id)
-    user= await users.find_one({"_id":user_object_id})
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+    user_object_id=await check_user_existence_by_id(user_id)
     
     cart_item_document={}
     exist_item= await cart.find_one({"user_id":user_object_id, "item_id":book.id})
@@ -42,6 +37,12 @@ async def add_cart_item(user_id:str, book:Book):
                 "$set":{"updated_at":datetime.utcnow()}
             })
     else:
+        store_book = await store_books.find_one({"id": book.id})
+        if not store_book:
+            store_books.insert_one(book.dict())
+        else:
+            book.saleInfo.price=store_book["saleInfo"]["price"]
+
         cart_item_document= {
             "user_id":user_object_id,
             "created_at":datetime.utcnow(),
@@ -50,6 +51,7 @@ async def add_cart_item(user_id:str, book:Book):
             "book":book.dict()
         }
         await cart.insert_one(cart_item_document)
+        
 
     cart_items= await cart.find({"user_id":user_object_id}).to_list()
     for item in cart_items:
@@ -61,11 +63,7 @@ async def add_cart_item(user_id:str, book:Book):
     }
 
 async def increment(user_id:str, item_id:str):
-    user_object_id= ObjectId(user_id)
-
-    user= await users.find_one({"_id":user_object_id})
-    if not user:
-        raise HTTPException(status_code=404, detail="user not found")
+    user_object_id=await check_user_existence_by_id(user_id)
 
     res=await cart.update_one(
         {"user_id":user_object_id,"item_id":item_id},
@@ -91,11 +89,7 @@ async def increment(user_id:str, item_id:str):
     }
 
 async def decrement(user_id:str, item_id:str):
-    user_object_id= ObjectId(user_id)
-
-    user= await users.find_one({"_id":user_object_id})
-    if not user:
-        raise HTTPException(status_code=404, detail="user not found")
+    user_object_id=await check_user_existence_by_id(user_id)
 
     res=await cart.update_one(
         {"user_id":user_object_id,"item_id":item_id},
@@ -121,10 +115,7 @@ async def decrement(user_id:str, item_id:str):
     }
 
 async def delete_cart_item(user_id:str, item_id:str):
-    user_object_id= ObjectId(user_id)
-    user= await users.find_one({"_id":user_object_id})
-    if not user:
-        raise HTTPException(status_code=404,detail="User not found")
+    user_object_id=await check_user_existence_by_id(user_id)
     
     cart_item= await cart.find_one({"user_id":user_object_id, "item_id":item_id})
     if not cart_item:
@@ -146,11 +137,7 @@ async def delete_cart_item(user_id:str, item_id:str):
 
 
 async def get_cart_item(user_id:str, item_id:str):
-    user_object_id= ObjectId(user_id)
-    print(user_object_id)
-    user= await users.find_one({"_id":user_object_id})
-    if not user:
-        raise HTTPException(status_code=404,detail="User not found")
+    user_object_id=await check_user_existence_by_id(user_id)
     
     cart_item= await cart.find_one({"user_id":user_object_id, "item_id":item_id})
     if not cart_item:
@@ -166,10 +153,8 @@ async def get_cart_item(user_id:str, item_id:str):
 
 
 async def get_cart_count(user_id:str):
-    user_object_id= ObjectId(user_id)
-    user= await users.find_one({"_id":user_object_id})
-    if not user:
-        raise HTTPException(status_code=404,detail="User not found")
+    await check_user_existence_by_id(user_id)
+
     cart_items= await cart.count_documents({})
     return {
         "message":"cart items retrieved successfully",
@@ -178,10 +163,8 @@ async def get_cart_count(user_id:str):
 
 
 async def clear_cart_items(user_id:str):
-    user_object_id= ObjectId(user_id)
-    user= users.find_one({"_id":user_object_id})
-    if not user:
-        raise HTTPException(status_code=404,detail="User not found")
+    user_object_id=await check_user_existence_by_id(user_id)
+    
     result= await cart.delete_many({"user_id":user_object_id})
     return {
         "message":f"{result.deleted_count} cart items has been cleared successfully",

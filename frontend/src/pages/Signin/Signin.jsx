@@ -69,29 +69,21 @@ function Signin() {
                         FB.api(
                             "/me",
                             { fields: "name,email,picture" },
-                            (profile) => {
-                                const users = JSON.parse(localStorage.getItem("users") || "[]");
-                                let user = users.find((u) => u.id === profile.id);
+                            async (profile) => {
+                                
+                                const r= await api.post("/auth/facebook", {
+                                    id: profile.id,
+                                    name: profile.name,
+                                    email: profile.email,
+                                })
 
-                                if (!user) {
-                                    user = {
-                                        id: profile.id,
-                                        name: profile.name,
-                                        email: profile.email,
-                                    };
-                                    users.push(user);
-
-                                    localStorage.setItem("users", JSON.stringify(users));
+                                if (remember) {
+                                    localStorage.setItem("user", JSON.stringify(r.data.access_token));
+                                } else {
+                                    sessionStorage.setItem("user", JSON.stringify(r.data.access_token));
                                 }
 
-                                setUser(user);
-                                if (remember)
-                                    localStorage.setItem("user", JSON.stringify(user));
-                                else if (!remember)
-                                    sessionStorage.setItem("user", JSON.stringify(user));
-
                                 navigate("/");
-                                console.log("Logged in user:", user);
                             }
                         );
                     } else {
@@ -103,7 +95,7 @@ function Signin() {
         } catch (err) {
             console.error("Facebook SDK failed to load:", err);
         }
-    },[FACEBOOK_KEY, navigate, setUser, remember]);
+    },[FACEBOOK_KEY, navigate, remember]);
 
 
     const signin = useGoogleLogin({
@@ -116,27 +108,17 @@ function Signin() {
                 });
                 const profile = await res.json();
 
-                const users = JSON.parse(localStorage.getItem("users") || "[]");
-                let user = users.find((u) => u.id === profile.sub);
-
-                if (!user) {
-
-                    user = {
-                        id: profile.sub,
-                        name: profile.name,
-                        email: profile.email,
-                    };
-                    users.push(user);
-                    localStorage.setItem("users", JSON.stringify(users));
-                }
+                const r= await api.post("/auth/google", {
+                    sub: profile.sub,
+                    name: profile.name,
+                    email: profile.email,
+                })
 
                 if (remember) {
-                    localStorage.setItem("user", JSON.stringify(user));
+                    localStorage.setItem("user", JSON.stringify(r.data.access_token));
                 } else {
-                    sessionStorage.setItem("user", JSON.stringify(user));
+                    sessionStorage.setItem("user", JSON.stringify(r.data.access_token));
                 }
-
-                setUser(user);
                 navigate("/");
             } catch (e) {
                 setServerError("Google login failed ", e);

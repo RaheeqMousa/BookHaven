@@ -31,6 +31,6 @@ async def get_favorite(item_id:str, user_id: str = Depends(get_current_user)):
 async def get_favorite_count(user_id: str = Depends(get_current_user)):
     return await favorites_services.get_favorite_count(user_id)
 
-@favorites_router.post("/move_all_to_cart")
+@favorites_router.delete("/move_all_to_cart")
 async def move_to_cart(user_id: str = Depends(get_current_user)):
     return await favorites_services.move_to_cart(user_id)

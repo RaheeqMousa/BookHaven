@@ -72,3 +72,51 @@ async def signin(email: str, password: str):
         "username": user["username"],
         "email": user["email"]
     }
+
+async def signin_register_google(profile:dict):
+    user= await users.find({"email":profile["email"]})
+    if user: # the email already exist, connect the google acc to it
+        await users.update_one({"_id":user["_id"]},
+                               {
+                                   "$set":{"google_id":profile["sub"]}
+                               })
+    else:
+        user_doc={
+            "username": profile["name"],
+            "password_hash": None,
+            "email": profile["email"],
+            "google_id": profile["sub"],
+            "created_at": datetime.utcnow(),
+            "is_email_verified": True
+        }
+
+    return create_access_token({"user_id": str(user["_id"])})
+
+
+async def signin_register_facebook(profile:dict):
+    user = await users.find_one({"facebook_id": profile["id"]})
+
+    if user:
+        # User exists, login
+        return create_access_token({"user_id": str(user["_id"])})
+    if user:
+        # Link Facebook ID to existing account
+        await users.update_one(
+            {"_id": user["_id"]},
+            {"$set": {"facebook_id": profile["id"]}}
+        )
+        return create_access_token({"user_id": str(user["_id"])})
+
+    user_doc = {
+        "username": profile.get("name", "FacebookUser"),
+        "password_hash": None,  # no password for social login
+        "email": profile["email"],  # may be None
+        "facebook_id": profile["id"],
+        "created_at": datetime.utcnow(),
+        "is_email_verified": True
+    }
+
+    result = await users.insert_one(user_doc)
+    new_user_id = str(result.inserted_id)
+
+    return create_access_token({"user_id": new_user_id})
