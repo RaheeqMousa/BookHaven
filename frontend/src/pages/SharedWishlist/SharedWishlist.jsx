@@ -3,12 +3,29 @@ import BookCard from "../../Components/BookCard/BookCard";
 import { useParams } from "react-router-dom";
 import Style from './SharedWishlist.module.scss';
 import Back from "../../Components/Back";
-import useWishlist from "../../Hooks/useWishlist";
+import { useEffect,useState, useCallback} from "react";
+import api from "../../Utils/axios";
 
 function SharedWishlist() {
+    const [list,setList]= useState([]);
 
-    const { id } = useParams();
-    const {wishlist}= useWishlist(id)
+    const { token } = useParams();
+    const fetchWishlist= useCallback(async () => {
+        try {
+            const res= await api.get("/favorites/get_favorites",{
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            setList(res.data.favorites)
+        } catch (err) {
+            console.log(err)
+        }
+    },[token])
+    
+    useEffect(()=>{
+        fetchWishlist();
+    },[fetchWishlist])
 
     return (
         <section className={`row justify-content-center flex-direction-column `}>
@@ -18,7 +35,7 @@ function SharedWishlist() {
                     <h1>Items shared by your friend</h1>
                 </div>
                 <div className={`row justify-content-center flex-direction-column ${Style.books}`}>
-                    {wishlist.map((book) =>
+                    {list.map((book) =>
                         <BookCard book={book} key={book.id} isGridDisplay={false} showActions={false} />
                     )
                     }

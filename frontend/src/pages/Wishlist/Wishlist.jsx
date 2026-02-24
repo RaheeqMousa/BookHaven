@@ -25,7 +25,7 @@ function Wishlist() {
             text: wishlist.map((b, i) =>
                 `${i + 1}. ${b.volumeInfo.title} by ${joinAuthors(b.volumeInfo.authors)}`
             ).join("\n"),
-            url: `${import.meta.env.VITE_APP_BASE_APP_URL}/wishlist/${user.id}`
+            url: `${import.meta.env.VITE_APP_BASE_APP_URL}/wishlist/${user.token}`
         };
 
         setShareBtnDisable(false);
