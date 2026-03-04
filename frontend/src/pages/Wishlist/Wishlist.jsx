@@ -8,9 +8,10 @@ import { joinAuthors } from "../../Utils/JoinAuthors";
 import { UserContext } from "../../Context/UserContext";
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { WishlistContext } from "../../Context/WishlistContext";
+import api from "../../Utils/axios";
 
 function Wishlist() {
-    const { user } = useContext(UserContext);
+    // const { user } = useContext(UserContext);
     const isGrid = useMediaQuery('(min-width: 768px)');
     const [shareBtnSuccess, setShareBtnSuccess] = useState("");
     const [disableShareBtn, setShareBtnDisable] = useState(false);
@@ -20,29 +21,35 @@ function Wishlist() {
     const number_of_wished = wishlist.length;
 
     const handleShare = useCallback(async () => {
-        const shareData = {
-            title: "Book Wishlist Collection",
-            text: wishlist.map((b, i) =>
-                `${i + 1}. ${b.volumeInfo.title} by ${joinAuthors(b.volumeInfo.authors)}`
-            ).join("\n"),
-            url: `${import.meta.env.VITE_APP_BASE_APP_URL}/wishlist/${user.token}`
-        };
+        try{
 
-        setShareBtnDisable(false);
-
-        if (navigator.share) {
-            try {
-                await navigator.share(shareData);
-            } catch (err) {
-                console.error("Share failed:", err);
+            const res= api.get('/favorites/create_share');
+            const shareData = {
+                title: "Book Wishlist Collection",
+                text: wishlist.map((b, i) =>
+                    `${i + 1}. ${b.volumeInfo.title} by ${joinAuthors(b.volumeInfo.authors)}`
+                ).join("\n"),
+                url: `${import.meta.env.VITE_APP_BASE_APP_URL}/wishlist/${res.data.token}`
+            };
+            setShareBtnDisable(false);
+            if (navigator.share) {
+                try {
+                    await navigator.share(shareData);
+                } catch (err) {
+                    console.error("Share failed:", err);
+                }
+            } else {
+                navigator.clipboard.writeText(shareData.url);
+                setShareBtnSuccess("Link copied to clipboard!");
+                setTimeout(() => setShareBtnSuccess(""), 1000);
+                setShareBtnDisable(true);
             }
-        } else {
-            navigator.clipboard.writeText(shareData.url);
-            setShareBtnSuccess("Link copied to clipboard!");
-            setTimeout(() => setShareBtnSuccess(""), 1000);
-            setShareBtnDisable(true);
+            console.log(res)
+        }catch(err){
+            console.log(err)
         }
-    }, [wishlist, user]);
+    
+    }, [wishlist]);
 
     const handleFilterChange = useCallback((filterBy) => {
         const userWish = [...wishlist];

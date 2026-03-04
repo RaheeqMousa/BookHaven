@@ -1,10 +1,11 @@
 from fastapi import HTTPException, Depends
-from backend.app.database import favorites, users, cart, store_books
+from backend.app.database import favorites, users, cart, store_books, wishlist_shares
 from backend.app.models import Favorite, Book
 from datetime import datetime
 from bson import ObjectId
 from backend.app.models import FavoriteItemResponse
-from backend.app.utils import check_user_existence_by_id
+from backend.app.utils import check_user_existence_by_id, generate_share_token, share_expiry
+import random
 
 
 async def get_favorites(user_id:str):
@@ -30,9 +31,16 @@ async def add_favorite(user_id:str, book:Book):
 
     store_book = await store_books.find_one({"id": book.id})
     if not store_book:
-        store_books.insert_one(book.dict())
+        if book.saleInfo.saleability == "FOR_SALE":
+            book.saleInfo.price = round(random.uniform(5, 50), 2)
+        else:
+            book.saleInfo.price = 0
+
+        await store_books.insert_one(book.model_dump(mode="json"))
     else:
-        book.saleInfo.price=store_book["saleInfo"]["price"]
+        stored_price = store_book.get("saleInfo", {}).get("price")
+        if stored_price is not None:
+            book.saleInfo.price = stored_price
 
     book_dict = book.model_dump(mode="json")
     fav_document= {
@@ -151,3 +159,43 @@ async def move_to_cart(user_id:str):
         "result":moved_count
     }
 
+async def create_favorites_share(user_id: str):
+    user_object_id = await check_user_existence_by_id(user_id)
+
+    token = generate_share_token()
+
+    await wishlist_shares.insert_one({
+        "user_id": user_object_id,
+        "token": token,
+        "created_at": datetime.utcnow(),
+        "expires_at": share_expiry()
+    })
+
+    return {
+        "message": "Share link created",
+        "share_url": f"/shared-wishlist/{token}"
+    }
+
+async def get_shared_favorites(token: str):
+    share = await wishlist_shares.find_one({"token": token})
+
+    if not share:
+        raise HTTPException(status_code=404, detail="Invalid share link")
+
+    if share["expires_at"] < datetime.utcnow():
+        raise HTTPException(status_code=403, detail="Link expired")
+
+    user_object_id = share["user_id"]
+
+    user_favorites = await favorites.find({"user_id": user_object_id}).to_list(length=None)
+
+    result = []
+    for fav in user_favorites:
+        fav["_id"] = str(fav["_id"])
+        fav["user_id"] = str(fav["user_id"])
+        result.append(FavoriteItemResponse(**fav))
+
+    return {
+        "message": "Shared favorites retrieved",
+        "favorites": result
+    }

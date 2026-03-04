@@ -43,10 +43,30 @@ function WishlistContextProvider({children}){
     console.log(payload)
     if (!token) return;
     console.log(token)
+    const payloadFormatted = {
+      id: payload.id,
+      addedAt: new Date().toISOString(),
+      saleInfo: {
+        saleability: payload.saleInfo?.saleability || "NOT_FOR_SALE",
+      },
+      volumeInfo: {
+        title: payload.volumeInfo?.title || "",
+        subtitle: payload.volumeInfo?.subtitle || "",
+        authors: payload.volumeInfo?.authors || [],
+        printType: payload.volumeInfo?.printType || "",
+        categories: payload.volumeInfo?.categories || [],
+        pageCount: payload.volumeInfo?.pageCount || 0,
+        description: payload.volumeInfo?.description || "",
+        imageLinks: payload.volumeInfo?.imageLinks || {}
+      },
+      accessInfo: {
+        webReaderLink: payload.accessInfo?.webReaderLink || ""
+      }
+    };
     try {
       const res=await api.post(
         "favorites/add_favorite",
-        {"book":payload},   // request body
+        {"book":payloadFormatted},   // request body
         {
             headers: {
                 Authorization: `Bearer ${token}`

@@ -13,12 +13,13 @@ import { useState } from "react";
 import { useMemo } from "react";
 import { getBookDetails } from "./constants";
 import PropTypes from "prop-types";
-import useWish from '../../Hooks/useWish';
+// import useWish from '../../Hooks/useWish';
 import { FaHeart } from "react-icons/fa6";
 import { joinAuthors } from "../../Utils/JoinAuthors";
 import { useContext } from "react";
 import Loader from "../../Components/Loader/Loader.jsx";
 import { UseBooksContextData } from "../../Context/UseBooksContextData.jsx";
+import { WishlistContext } from "../../Context/WishlistContext.jsx";
 
 function BookDetails() {
     // const location = useLocation();
@@ -31,7 +32,11 @@ function BookDetails() {
     const book = useMemo(() => books.find((b) => b.id === id), [books, id]);
   
 
-    const [isWished, toggleWish] = useWish(book);
+    const { wishlist, addToWishlist, removeFromWishlist } = useContext(WishlistContext);
+    const isWished = useMemo(() => {
+        return wishlist?.some(item => item.book?.id === book.id);
+    }, [wishlist, book.id]);
+
     const [detailsShow, setDetailsShow] = useState(true);
     const [isExpanded, setIsExpanded] = useState(false);
     const [shareBtnSuccess, setShareBtnSuccess] = useState('')
@@ -48,13 +53,18 @@ function BookDetails() {
 
 
     const handleWishlistClick = useCallback(
-        (e) => {
+        async (e) => {
             e.stopPropagation();//to prevent <Link> navigation
             e.preventDefault();
-            toggleWish();
-        },
-        [toggleWish]
-    );
+            if(!book) return
+            if (isWished) {
+                const wishlistItem= wishlist.find(item=>item.id===book.id)
+                console.log(wishlistItem)
+                await removeFromWishlist(book.id);
+            }else{
+                await addToWishlist(book);
+            }
+        },[isWished, book, wishlist, addToWishlist, removeFromWishlist]);
 
     const preview = book.volumeInfo.description
         ? book.volumeInfo.description.slice(0, 200) : "";

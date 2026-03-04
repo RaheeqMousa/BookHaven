@@ -1,6 +1,8 @@
 from fastapi import Depends, HTTPException
 from backend.app.database import users
 from bson import ObjectId
+import secrets
+from datetime import datetime, timedelta
 
 def check_user_existence_by_email(email):
     user= users.find_one({"email":email})
@@ -16,3 +18,9 @@ async def check_user_existence_by_id(user_id):
         raise HTTPException(status_code=404, detail="user not found")
     
     return user_object_id
+
+def generate_share_token():
+    return secrets.token_urlsafe(32)
+
+def share_expiry(days: int = 7):
+    return datetime.utcnow() + timedelta(days=days)

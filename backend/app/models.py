@@ -62,7 +62,7 @@ class VerifyResetTokenRequest(BaseModel):
 
 class SaleInfo(BaseModel):
     saleability: str
-    price: Optional[float]  # price might be missing
+    price: Optional[float]=0
 
 class ImageLinks(BaseModel):
     smallThumbnail: Optional[str]=""

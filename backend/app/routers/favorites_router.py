@@ -34,3 +34,11 @@ async def get_favorite_count(user_id: str = Depends(get_current_user)):
 @favorites_router.delete("/move_all_to_cart")
 async def move_to_cart(user_id: str = Depends(get_current_user)):
     return await favorites_services.move_to_cart(user_id)
+
+@favorites_router.post("/create_share")
+async def create_share(user_id: str = Depends(get_current_user)):
+    return await favorites_services.create_favorites_share(user_id)
+
+@favorites_router.post("/get_shared_favorites")
+async def get_shared_favorites(token: str):
+    return await favorites_services.get_shared_favorites(token)

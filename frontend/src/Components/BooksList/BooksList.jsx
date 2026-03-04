@@ -66,8 +66,9 @@ function BookList() {
                                 padding: '8px',
                             }}
                         >
-                            {rowBooks.map((book) => (
-                                <div
+                            {rowBooks.map((book) => {
+                                console.log(book);
+                                return(<div
                                     key={book.id}
                                     style={{
                                         width: isGridDisplay ? '210px' : '97%',
@@ -78,8 +79,8 @@ function BookList() {
                                         book={book}
                                         isGridDisplay={isGridDisplay}
                                     />
-                                </div>
-                            ))}
+                                </div>);
+                            })}
                         </div>
                     );
                 }}

@@ -5,11 +5,12 @@ import { CiHeart } from "react-icons/ci";
 import { LuShoppingCart } from "react-icons/lu";
 import { Link, useNavigate } from 'react-router-dom';
 import { FaHeart } from "react-icons/fa6";
-import useWish from '../../Hooks/useWish';
+// import useWish from '../../Hooks/useWish';
 import { joinAuthors } from '../../Utils/JoinAuthors';
 import { UserContext } from '../../Context/UserContext';
 import { stopLinkPropagation } from '../../Utils/stopLinkPropagation';
 import {CartContext} from '../../Context/CartContext';
+import { WishlistContext } from '../../Context/WishlistContext';
 
 function BookCard(props) {
     const { book, isGridDisplay, wishlistChange, showActions = true } = props;
@@ -20,18 +21,30 @@ function BookCard(props) {
             return 0;
         return book.price ?? Math.floor(Math.random() * 40) + 10;
     }, [book]);
-    const [wish, toggleWish] = useWish(book, bookPrice);
+    // const [wish, toggleWish] = useWish(book, bookPrice);
+    const { wishlist, addToWishlist, removeFromWishlist } = useContext(WishlistContext);
+    const isWished = useMemo(() => {
+        return wishlist?.some(item => item.book?.id === book.id);
+    }, [wishlist, book.id]);
+
     const { addToCart } = useContext(CartContext);
 
     const handleWishlistClick = useCallback(
-        (e) => {
+        async (e) => {
             e.stopPropagation();
             e.preventDefault();
-            toggleWish();
+            console.log(book)
+            if (isWished) {
+                const wishlistItem= wishlist.find(item=>item.id===book.id)
+                console.log(wishlistItem)
+                await removeFromWishlist(book.id);
+            }else{
+                await addToWishlist(book);
+            }
             if (wishlistChange) 
                 wishlistChange();
         },
-        [toggleWish, wishlistChange]
+        [wishlistChange, isWished, book, wishlist, addToWishlist, removeFromWishlist]
     );
 
     const addToCartHandler = useCallback((book) => 
@@ -74,7 +87,7 @@ function BookCard(props) {
                             onClick={handleWishlistClick}
                             className={`row justify-content-center ${Style.wishlist}`}
                         >
-                            {!wish ? <CiHeart size={16} /> : <FaHeart size={16} color='red' />}
+                            {!isWished ? <CiHeart size={16} /> : <FaHeart size={16} color='red' />}
                         </button>
                     </>
                 )}

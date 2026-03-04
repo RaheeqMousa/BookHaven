@@ -1,4 +1,3 @@
-
 import BookCard from "../../Components/BookCard/BookCard";
 import { useParams } from "react-router-dom";
 import Style from './SharedWishlist.module.scss';
@@ -12,11 +11,7 @@ function SharedWishlist() {
     const { token } = useParams();
     const fetchWishlist= useCallback(async () => {
         try {
-            const res= await api.get("/favorites/get_favorites",{
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
+            const res= await api.get(`/favorites/get_shared_favorites/${token}`)
             setList(res.data.favorites)
         } catch (err) {
             console.log(err)
