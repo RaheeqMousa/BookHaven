@@ -33,6 +33,10 @@ function BookCard(props) {
         async (e) => {
             e.stopPropagation();
             e.preventDefault();
+            if (!user) {
+                    navigate('/auth/login');
+                    return;
+                }
             console.log(book)
             if (isWished) {
                 const wishlistItem= wishlist.find(item=>item.id===book.id)
@@ -44,7 +48,7 @@ function BookCard(props) {
             if (wishlistChange) 
                 wishlistChange();
         },
-        [wishlistChange, isWished, book, wishlist, addToWishlist, removeFromWishlist]
+        [wishlistChange, isWished, book, wishlist, addToWishlist, removeFromWishlist,user,navigate]
     );
 
     const addToCartHandler = useCallback((book) => 

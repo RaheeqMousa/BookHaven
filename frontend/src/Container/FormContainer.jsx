@@ -13,7 +13,7 @@ function FormContainer(props) {
         React.isValidElement(child) ? React.cloneElement(child, { register, errors }) : child
       )}
       <p className='error width-100 flex justify-content-center align-items-center mt-2'>{serverError}</p>
-      <button type='submit' >{type}</button>
+      {type && <button type='submit' >{type}</button>}
     </form>
   );
 }

@@ -3,9 +3,10 @@ import api from "../../Utils/axios";
 import Style from '../../Styles/Auth.module.scss';
 import ReadingImg from '../../assets/Images/Reading.jpg'
 import { IoBookOutline } from "react-icons/io5";
-import styles from "./SendResetCode.module.css";
+import Styles from "../../Styles/verification.module.scss";
 import FormContainer from "../../Container/FormContainer";
 import { useCallback } from "react";
+import Back from "../../Components/Back";
 
 function SendResetCode() {
     const [error, setError] = useState("");
@@ -50,33 +51,10 @@ function SendResetCode() {
     }, []);
 
   return (
-    <section className={Style['auth-layout']}>
-            <div className={Style['auth-design-wrapper']}>
-                <img src={ReadingImg} width={400} height={300} alt='Reading journey image' title='Reading journey Image' />
-                <div className={`row justify-content-center flex-direction-column ${Style['auth-design']}`}>
-                    <div className={`row ${Style.logo}`}>
-                        <div className={`row justify-content-center align-items-center ${Style.icon}`}>
-                            <IoBookOutline size={28} color='#1A237E' />
-                        </div>
-                        BookHaven
-                    </div>
-                    <h1>Welcome Back to Your <span>Literary Journey</span></h1>
-                    <p>Sign in to access your personal library, continue
-                        reading, and discover new books tailored just for you.</p>
-                    <div className={`row ${Style.dividers}`}>
-                        <div className={Style.divider}>
-
-                        </div>
-                        <div className={Style.divider}>
-
-                        </div>
-                        <div className={Style.divider}>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        <div className={'flex align-items-center justify-items-center '}>
+    <div className={`row justify-content-center gap-16 ${Styles['verify-layout']}`}>
+        <div className={`row flex-direction-column align-start `}>
+        <Back/>
+        <div className={`flex align-items-center justify-items-center ${Styles['card']}`}>
             <FormContainer
                 onSubmit={handleSend}
                 serverError={error}
@@ -84,7 +62,7 @@ function SendResetCode() {
                 
             >
                 <h2>Send Reset Code</h2>
-                <div className="field flex gap-2 justify-items-center justify-items-center width-50">
+                <div className="field flex gap-2 justify-content-center justify-items-center width-100">
                     <label>Email Address: </label>
                     <input 
                         type="email"
@@ -94,13 +72,14 @@ function SendResetCode() {
                         required 
                     />
                 </div>
-                <button type="submit" disabled={loading} className={styles['send-code-btn']}>
+                <button type="submit" disabled={loading} className={Styles['reset-pass']}>
                     {loading ? "Sending..." : "Send Reset Password Email"}
                 </button>
             </FormContainer>
 
         </div>
-    </section>
+        </div>
+        </div>
   );
 }
 

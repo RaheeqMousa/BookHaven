@@ -22,8 +22,6 @@ function BookList() {
         setStartIndex(newIndex);
         fetchBooks(newIndex);
     };
-    console.log(books);
-
     return (
         <section className={`row flex-direction-column ${Style['books-list']}`}>
             <div className={`row ${Style['list-options']}`}>
@@ -67,7 +65,7 @@ function BookList() {
                             }}
                         >
                             {rowBooks.map((book) => {
-                                console.log(book);
+                                
                                 return(<div
                                     key={book.id}
                                     style={{

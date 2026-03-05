@@ -10,6 +10,7 @@ import Loader from './Components/Loader/Loader'
 import { BooksProvider } from "./Context/BooksProvider";
 import { BooksProviderData } from './Context/BooksProviderData'
 
+
 const Signin = lazy(()=> import('./pages/Signin/Signin'))
 const Signup = lazy(()=> import('./pages/Signup/Signup'))
 const BookDetails = lazy(()=> import('./pages/BookDetails/BookDetails'))
@@ -19,7 +20,8 @@ const Cart = lazy(() => import('./pages/Cart/Cart'))
 const VerifyEmail = lazy(() => import('./pages/VerifyEmail/VerifyEmail'))
 const SendResetCode = lazy(() => import('./pages/SendResetCode/SendResetCode'))
 const ResetPassword = lazy(() => import('./pages/ResetPassword/ResetPassword'))
-
+const AuthLayout = lazy(() => import('./Layouts/AuthLayout'))
+const CheckEmailPage = lazy(() => import('./pages/CheckEmail/CheckEmailPage'))
 
 function App() {
   return (
@@ -38,17 +40,23 @@ function App() {
 
                 <Route element={<SecondaryLayout />}>
                   <Route path='/bookdetails/:id' element={<BookDetails />} />
+
                   <Route element={<AlreadyLoggedInRoute />}>
-                    <Route path="auth/login" element={<Signin />} />
-                    <Route path="auth/register" element={<Signup />} />
-                    <Route path="auth/verify" element={<VerifyEmail />} />
-                    <Route path="/auth/forgotpassword" element={<SendResetCode />} />
-                    <Route path="/auth/reset-password" element={<ResetPassword />} />
+                  
+                  
+                    <Route path="auth" element={<AuthLayout />}>
+                      <Route path="login" element={<Signin />} />
+                      <Route path="register" element={<Signup />} />
+                      <Route path="check-email" element={<CheckEmailPage />} />
+                      <Route path="verify" element={<VerifyEmail />} />
+                      <Route path="forgot-password" element={<SendResetCode />} />
+                      <Route path="reset-password" element={<ResetPassword />} />
+                    </Route>
                   </Route>
 
                   <Route element={<AuthProtectedRoute />}>
                     <Route path="user/wishlist" element={<Wishlist />} />
-                    <Route path='user/cart' element={<Cart />} />
+                    <Route path="user/cart" element={<Cart />} />
                   </Route>
                 </Route>
 

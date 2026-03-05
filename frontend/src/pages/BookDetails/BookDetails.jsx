@@ -20,10 +20,14 @@ import { useContext } from "react";
 import Loader from "../../Components/Loader/Loader.jsx";
 import { UseBooksContextData } from "../../Context/UseBooksContextData.jsx";
 import { WishlistContext } from "../../Context/WishlistContext.jsx";
+import { UserContext } from "../../Context/UserContext.jsx";
+import { useNavigate } from "react-router-dom";
 
 function BookDetails() {
     // const location = useLocation();
     // const book = location.state;
+    const { user } = useContext(UserContext);
+    const navigate = useNavigate();
     const {id}= useParams();
     const context = useContext(UseBooksContextData);
     
@@ -56,6 +60,10 @@ function BookDetails() {
         async (e) => {
             e.stopPropagation();//to prevent <Link> navigation
             e.preventDefault();
+            if (!user) {
+                    navigate('/auth/login');
+                    return;
+                }
             if(!book) return
             if (isWished) {
                 const wishlistItem= wishlist.find(item=>item.id===book.id)

@@ -9,6 +9,7 @@ import os
 from backend.app.database import users, email_verification
 from fastapi.concurrency import run_in_threadpool
 import secrets
+from backend.app.models import EmailStrRequest
 
 load_dotenv()
 
@@ -52,13 +53,19 @@ async def send_email(email: str, code: str, subject: str = "Verify your email", 
         }
 
 
-async def send_verification_code(email: str) -> dict:
+async def send_verification_code(email: str):
     email = email.lower().strip()
 
     user = await users.find_one({"email": email})
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
+    verification = await email_verification.find_one({"user_id": user["_id"]})
+
+    if verification and (verification["verified"] or verification["token"]== "USED" ):
+        print("token is used")
+        raise HTTPException(status_code=400, detail="Email already verified")
+    
     code = generate_verification_code()
     expiry = datetime.utcnow() + timedelta(minutes=10)
 
@@ -89,12 +96,15 @@ async def verify_code(email: str, code: str) -> dict:
         raise HTTPException(status_code=404, detail="Verification not found")
 
     if verification.get("verified") or verification.get("token") == "USED":
+        print("token is used")
         raise HTTPException(status_code=400, detail="Email already verified")
 
     if verification.get("token") != code:
+        print("not correct token")
         raise HTTPException(status_code=400, detail="Invalid verification code")
 
     if verification.get("expires_at") < datetime.utcnow():
+        print("expired token")
         raise HTTPException(status_code=400, detail="Verification code expired")
 
     await email_verification.update_one(

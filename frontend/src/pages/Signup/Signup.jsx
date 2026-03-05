@@ -19,7 +19,6 @@ function Signup() {
     const { setUser } = useContext(UserContext);
     const FACEBOOK_KEY = import.meta.env.VITE_FACEBOOK_APP_ID;
     const [serverError, setServerError] = useState('');
-    const [remember, setRemember] = useState(false);
     const navigate = useNavigate();
 
     const handleSignup = useCallback(async (formData) => {
@@ -37,9 +36,8 @@ function Signup() {
             email: formData.email, 
             });
             console.log(res)
-            navigate("/auth/verify", {
-                state: { email: formData.email },
-                remember: remember
+            navigate("/auth/check-email", {
+                state: { email: formData.email }
             });
 
 
@@ -61,7 +59,7 @@ function Signup() {
             }
 
             setServerError(message);
-        }}, [navigate, remember]);
+        }}, [navigate]);
 
 
 
@@ -96,10 +94,8 @@ function Signup() {
 
                                 users.push(user);
                                 localStorage.setItem("users", JSON.stringify(users));
-                                if (remember)
-                                    localStorage.setItem("user", JSON.stringify(user));
-                                else if (!remember)
-                                    sessionStorage.setItem("user", JSON.stringify(user));
+
+                                sessionStorage.setItem("user", JSON.stringify(user));
                                 setUser(user);
                                 navigate('/');
 
@@ -118,7 +114,7 @@ function Signup() {
         } catch (err) {
             console.error("Facebook SDK failed to load:", err);
         }
-    },[FACEBOOK_KEY, navigate, setUser, remember]);
+    },[FACEBOOK_KEY, navigate, setUser]);
 
     const signup = useGoogleLogin({
         onSuccess: async tokenResponse => {
@@ -146,10 +142,7 @@ function Signup() {
 
                 users.push(user);
                 localStorage.setItem("users", JSON.stringify(users));
-                if (remember)
-                    localStorage.setItem("user", JSON.stringify(user));
-                else if (!remember)
-                    sessionStorage.setItem("user", JSON.stringify(user));
+                sessionStorage.setItem("user", JSON.stringify(user));
                 setUser(user);
                 navigate('/');
             } catch (e) {
@@ -162,38 +155,9 @@ function Signup() {
         flow: "implicit"
     });
 
-    const handleCheckboxChange = useCallback(() => {
-        setRemember(!remember)
-    }, [remember]);
 
 
     return (
-        <section className={Style['auth-layout']}>
-            <div className={Style['auth-design-wrapper']}>
-                <img src={ReadingImg} width={400} height={300} alt='Reading journey image' title='Reading journey Image' />
-                <div className={`row justify-content-center flex-direction-column ${Style['auth-design']}`}>
-                    <div className={`row ${Style.logo}`}>
-                        <div className={`row justify-content-center align-items-center ${Style.icon}`}>
-                            <IoBookOutline size={28} color='#1A237E' />
-                        </div>
-                        BookHaven
-                    </div>
-                    <h1>Welcome Back to Your <span>Literary Journey</span></h1>
-                    <p>Sign in to access your personal library, continue
-                        reading, and discover new books tailored just for you.</p>
-                    <div className={`row ${Style.dividers}`}>
-                        <div className={Style.divider}>
-
-                        </div>
-                        <div className={Style.divider}>
-
-                        </div>
-                        <div className={Style.divider}>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div className={`row justify-content-center ${Style['auth-section']}`}>
                 <div className={`row flex-direction-column align-start ${Style['auth-process']}`}>
                     <Back />
@@ -204,14 +168,14 @@ function Signup() {
                     <div className={`row flex-direction-column ${Style.processes}`}>
                         <FormContainer onSubmit={handleSignup} serverError={serverError} initialData={null} type="Sign Up">
                             <SignupForm/>
-                            <>
+                            {/* <>
                             <div className='row width-100'>
                                 <div className={`row ${Style['remember-me']}`}>
                                     <input type='checkbox' onChange={handleCheckboxChange} />
                                     <p>Remember me</p>
                                 </div>
                             </div>
-                            </>
+                            </> */}
                         </FormContainer>
 
                         <p className={Style['auth-divider']}>or</p>
@@ -236,7 +200,6 @@ function Signup() {
                     </div>
                 </div>
             </div>
-        </section>
     );
 }
 export default Signup;

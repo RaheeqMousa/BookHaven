@@ -41,7 +41,6 @@ class VerifyCodeRequest(BaseModel):
 
 class SendCodeRequest(BaseModel):
     email: EmailStr
-    purpose: str
 
 # class SendCodeResponse(BaseModel):
 #     message: str
