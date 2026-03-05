@@ -62,6 +62,7 @@ async def signin(email: str, password: str):
     
     if not user.get("is_email_verified", False):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Email not verified")
+        
     
     access_token = create_access_token({"user_id": str(user["_id"])})
 
@@ -70,7 +71,8 @@ async def signin(email: str, password: str):
         "access_token": access_token,
         "token_type": "bearer",
         "username": user["username"],
-        "email": user["email"]
+        "email": user["email"],
+
     }
 
 async def signin_register_google(profile:dict):

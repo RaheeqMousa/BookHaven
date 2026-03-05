@@ -72,7 +72,7 @@ function BookDetails() {
             }else{
                 await addToWishlist(book);
             }
-        },[isWished, book, wishlist, addToWishlist, removeFromWishlist]);
+        },[isWished, book, wishlist, addToWishlist, removeFromWishlist, user, navigate]);
 
     const preview = book.volumeInfo.description
         ? book.volumeInfo.description.slice(0, 200) : "";

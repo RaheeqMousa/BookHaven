@@ -6,7 +6,7 @@ import { CartContext } from './CartContext';
 
 function WishlistContextProvider({children}){
 
-    const [wishlist, setWishlist] = useState([]);
+  const [wishlist, setWishlist] = useState([]);
   const { user } = useContext(UserContext);
   const {loadCart} = useContext(CartContext);
 
@@ -81,9 +81,7 @@ function WishlistContextProvider({children}){
 
   // Remove an item from wishlist
   const removeFromWishlist = useCallback(async (itemId) => {
-    if (!token){ 
-      return;
-    }
+    if (!token) return;
 
     try {
       const res=await api.delete("favorites/delete_favorite", { 
