@@ -11,7 +11,7 @@ app= FastAPI()
 origins = [
     "http://localhost:5173",
     "http://127.0.0.1:3000",
-    "https://myfrontend.com" #will change it in future
+    "https://bookhaven-v2-jeab.onrender.com/" 
 ]
 
 app.add_middleware(
