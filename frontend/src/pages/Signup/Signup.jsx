@@ -19,14 +19,17 @@ function Signup() {
     const { setUser } = useContext(UserContext);
     const FACEBOOK_KEY = import.meta.env.VITE_FACEBOOK_APP_ID;
     const [serverError, setServerError] = useState('');
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleSignup = useCallback(async (formData) => {
         try {
             setServerError('');
+            setLoading(true);
 
             if (!formData.username || !formData.email || !formData.password) {
                 setServerError('All fields are required');
+                setLoading(false);
                 return;
             }
 
@@ -39,8 +42,6 @@ function Signup() {
             navigate("/auth/check-email", {
                 state: { email: formData.email }
             });
-
-
 
         } catch (err) {
             console.log("Axios error:", err);
@@ -59,7 +60,10 @@ function Signup() {
             }
 
             setServerError(message);
-        }}, [navigate]);
+        } finally {
+            setLoading(false);
+        }
+    }, [navigate]);
 
 
 
@@ -76,30 +80,16 @@ function Signup() {
                         FB.api(
                             "/me",
                             { fields: "name,email,picture" },
-                            (profile) => {
-                                console.log(profile);
-                                const users = JSON.parse(localStorage.getItem("users") || "[]");
-                                let user = users.find((u) => u.id === profile.id);
+                            async (profile) => {
 
-                                if (user) {
-                                    setServerError("User with this facebook account already exists.");
-                                    return;
-                                }
-
-                                user = {
+                                const r= await api.post("/auth/facebook", {
                                     id: profile.id,
                                     name: profile.name,
                                     email: profile.email,
-                                };
+                                })
 
-                                users.push(user);
-                                localStorage.setItem("users", JSON.stringify(users));
-
-                                sessionStorage.setItem("user", JSON.stringify(user));
-                                setUser(user);
-                                navigate('/');
-
-                                console.log("Logged in user:", user);
+                                sessionStorage.setItem("user", JSON.stringify(r.data.access_token));
+                                navigate("/");
                             }
                         );
 
@@ -114,7 +104,7 @@ function Signup() {
         } catch (err) {
             console.error("Facebook SDK failed to load:", err);
         }
-    },[FACEBOOK_KEY, navigate, setUser]);
+    },[FACEBOOK_KEY, navigate]);
 
     const signup = useGoogleLogin({
         onSuccess: async tokenResponse => {
@@ -126,25 +116,13 @@ function Signup() {
                 });
                 const profile = await res.json(); // <-- Fetch profile first
 
-                const users = JSON.parse(localStorage.getItem("users") || "[]");
-                let user = users.find((u) => u.id === profile.sub);
-
-                if (user) {
-                    setServerError("User with this email already exists.");
-                    return;
-                }
-
-                user = {
-                    id: profile.sub,
+                const r= await api.post("/auth/google", {
+                    sub: profile.sub,
                     name: profile.name,
                     email: profile.email,
-                };
-
-                users.push(user);
-                localStorage.setItem("users", JSON.stringify(users));
-                sessionStorage.setItem("user", JSON.stringify(user));
-                setUser(user);
-                navigate('/');
+                })
+                sessionStorage.setItem("user", JSON.stringify(r.data.access_token));
+                navigate("/");
             } catch (e) {
                 setServerError("Google login failed", e);
             }
@@ -166,27 +144,19 @@ function Signup() {
                         <p>Enter your credentials to create an account</p>
                     </div>
                     <div className={`row flex-direction-column ${Style.processes}`}>
-                        <FormContainer onSubmit={handleSignup} serverError={serverError} initialData={null} type="Sign Up">
+                        <FormContainer onSubmit={handleSignup} serverError={serverError} initialData={null} type="Sign Up" isLoading={loading}>
                             <SignupForm/>
-                            {/* <>
-                            <div className='row width-100'>
-                                <div className={`row ${Style['remember-me']}`}>
-                                    <input type='checkbox' onChange={handleCheckboxChange} />
-                                    <p>Remember me</p>
-                                </div>
-                            </div>
-                            </> */}
                         </FormContainer>
 
                         <p className={Style['auth-divider']}>or</p>
 
 
                         <div className={`row flex-direction-column width-100 ${Style['auth-external']}`}>
-                            <button className={`row justify-content-center`} onClick={signup}>
+                            <button className={`row justify-content-center`} onClick={signup} disabled={loading}>
                                 <RiGoogleFill size={16} color='#333' />
                                 Continue with Google
                             </button>
-                            <button className={`row justify-content-center`} onClick={handleFacebookLogin}>
+                            <button className={`row justify-content-center`} onClick={handleFacebookLogin} disabled={loading}>
                                 <RiFacebookCircleFill size={16} color='#333' />
                                 Continue with Facebook
                             </button>

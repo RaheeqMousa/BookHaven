@@ -20,6 +20,7 @@ function ResetPassword() {
     const token = queryParams.get("code");
 
     const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -27,6 +28,17 @@ function ResetPassword() {
     const handleResetPassword = async () => {
         
         try {
+            // Validate passwords match
+            if (newPassword !== confirmPassword) {
+                setError("Passwords do not match");
+                return;
+            }
+
+            if (!newPassword || newPassword.length < 8) {
+                setError("Password must be at least 8 characters long");
+                return;
+            }
+
             console.log(email, token, newPassword);
             setLoading(true);
             setError("");
@@ -61,6 +73,10 @@ function ResetPassword() {
         setNewPassword(e.target.value);
     }, []);
 
+    const handleConfirmPasswordChange = useCallback((e) => {
+        setConfirmPassword(e.target.value);
+    }, []);
+
   return (
     <div className={`row justify-content-center gap-16 ${Styles['verify-layout']}`}>
         <div className={`row flex-direction-column align-start `}>
@@ -79,6 +95,16 @@ function ResetPassword() {
                         placeholder="Enter your new password"
                         value={newPassword}
                         onChange={handlePasswordChange}
+                        required 
+                    />
+                </div>
+                <div className="field flex gap-2 justify-items-center justify-items-center width-100">
+                    <label>Confirm Password: </label>
+                    <input 
+                        type="password"
+                        placeholder="Confirm your password"
+                        value={confirmPassword}
+                        onChange={handleConfirmPasswordChange}
                         required 
                     />
                 </div>
