@@ -10,13 +10,11 @@ import { RiFacebookCircleFill } from "react-icons/ri";
 import { RiGoogleFill } from "react-icons/ri";
 import { useGoogleLogin } from "@react-oauth/google";
 import Back from '../../Components/Back';
-import { useContext } from 'react';
 import { UserContext } from '../../Context/UserContext';
 import { loadFbSdk, resetFbSdk } from '../../Utils/facebooksdk';
 import api from "../../Utils/axios";
 
 function Signup() {
-    const { setUser } = useContext(UserContext);
     const FACEBOOK_KEY = import.meta.env.VITE_FACEBOOK_APP_ID;
     const [serverError, setServerError] = useState('');
     const [loading, setLoading] = useState(false);
