@@ -45,3 +45,7 @@ node_modules/
 /frontend/src/Hooks/useCart.jsx
 /frontend/src/Hooks/useWish.jsx
 /frontend/src/Hooks/useWishlist.jsx
+
+# Python cache
+__pycache__/
+*.py[cod]
