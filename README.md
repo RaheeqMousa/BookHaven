@@ -3,6 +3,8 @@
 A modern online bookstore platform for browsing, searching, and purchasing books. It offers a seamless and responsive experience across desktop and mobile devices.
 
 ## Project Demo
+The following video showcases **BookHaven V2**, which includes the latest version of the platform and its features:
+
 [Watch Full Video Demo](https://drive.google.com/file/d/1_6Aa0lEaVCuG7EMzgOssRvYw2Gx338_J/view?usp=drive_link)
 
 ## Project Release/v1 Live Demo (branch release/v1)
